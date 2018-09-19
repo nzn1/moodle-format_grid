@@ -1,5 +1,8 @@
 History
 =============
+Version 3.4.0.5
+  1. Fix CONTRIB-7270 - Popovers not working as expected in Grid reset options section of settings - Boost theme.
+
 Version 3.4.0.4
   1. Fix incorrect help for 'sectiontitleboxinsideposition' setting.
   2. Fix for grey out issue - https://moodle.org/mod/forum/discuss.php?d=364153#p1492053.
