@@ -921,7 +921,7 @@ class format_grid_renderer extends format_section_renderer_base {
                             'hidden' => true, 'aria-label' => $summary));
                     }
 
-                    $content .= $this->coursformat->output_section_image(
+                    $content .= $this->courseformat->output_section_image(
                         $section, $sectionname, $sectionimage, $contextid, $thissection, $gridimagepath, $this->output);
 
                     $content .= html_writer::end_tag('div');
