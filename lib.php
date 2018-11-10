@@ -2248,7 +2248,7 @@ class format_grid extends format_base {
         return $sectionimage;  // So that the caller can know the new value of displayedimageindex.
     }
 
-    public function output_section_image($section, $sectionname, $sectionimage, $contextid, $thissection, $gridimagepath) {
+    public function output_section_image($section, $sectionname, $sectionimage, $contextid, $thissection, $gridimagepath, $output) {
         $content = '';
         if (is_object($sectionimage) && ($sectionimage->displayedimageindex > 0)) {
             $imgurl = moodle_url::make_pluginfile_url(
@@ -2261,7 +2261,7 @@ class format_grid extends format_base {
                 'role' => 'img',
                 'aria-label' => $sectionname));
         } else if ($section == 0) {
-            $imgurl = $this->output->image_url('info', 'format_grid');
+            $imgurl = $output->image_url('info', 'format_grid');
             $content = html_writer::empty_tag('img', array(
                 'src' => $imgurl,
                 'alt' => $sectionname,
