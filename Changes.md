@@ -2,6 +2,7 @@ History
 =============
 Version 3.4.0.5
   1. Fix CONTRIB-7270 - Popovers not working as expected in Grid reset options section of settings - Boost theme.
+  2. Fix: Boost theme shadebox adjustment.
 
 Version 3.4.0.4
   1. Fix incorrect help for 'sectiontitleboxinsideposition' setting.
