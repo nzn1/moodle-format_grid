@@ -5,6 +5,7 @@ Version 3.4.0.5
   2. Fix: Boost theme shadebox adjustment.
   3. Fix: Convert displayed image to original mime type instead of only png patch when section zero in the grid.
   4. Fix: Cope with non-sequential section numbers.
+  5. New: French 'New activity image', thanks to Momar -> https://github.com/Momardiakhate.
 
 Version 3.4.0.4
   1. Fix incorrect help for 'sectiontitleboxinsideposition' setting.
