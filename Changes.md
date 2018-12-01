@@ -6,6 +6,7 @@ Version 3.3.0.6
   3. Fix: Convert displayed image to original mime type instead of only png patch when section zero in the grid.
   4. Fix: Cope with non-sequential section numbers.
   5. New: French 'New activity image', thanks to Momar -> https://github.com/Momardiakhate.
+  6. Fix PHPUnit test with 'defaultsectiontitlesummarybackgroundopacity' failure.
 
 Version 3.3.0.5
   1. Fix incorrect help for 'sectiontitleboxinsideposition' setting.
