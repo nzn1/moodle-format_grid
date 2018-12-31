@@ -1,6 +1,7 @@
 History
 =============
 Version 3.5.0.4
+  1. Fix section name box does not fill image container when inside with the Boost and Foundation themes.
 
 Version 3.5.0.3
   1. New: French 'New activity image', thanks to Momar -> https://github.com/Momardiakhate.
