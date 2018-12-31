@@ -8,6 +8,7 @@ Version 3.3.0.6
   5. New: French 'New activity image', thanks to Momar -> https://github.com/Momardiakhate.
   6. Fix PHPUnit test with 'defaultsectiontitlesummarybackgroundopacity' failure.
   7. Cope with 'sectionid' url parameter.
+  8. Fix section name box does not fill image container when inside with the Boost theme.
 
 Version 3.3.0.5
   1. Fix incorrect help for 'sectiontitleboxinsideposition' setting.
