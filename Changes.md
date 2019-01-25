@@ -7,6 +7,7 @@ Version 3.4.0.5
   4. Fix: Cope with non-sequential section numbers.
   5. New: French 'New activity image', thanks to Momar -> https://github.com/Momardiakhate.
   6. Fix PHPUnit test with 'defaultsectiontitlesummarybackgroundopacity' failure.
+  7. Cope with 'sectionid' url parameter.
 
 Version 3.4.0.4
   1. Fix incorrect help for 'sectiontitleboxinsideposition' setting.
