@@ -10,6 +10,7 @@ Version 3.5.0.6
   7. Add missing Moodle defined.
   8. Styles tidy up.
   9. Removed old convert_legacy_image.php script as was only needed for conversion from M1.9 grid courses - #93.
+ 10. New: WebP displayed image support.
 
 Version 3.5.0.5.1
   1. Fix existing courses have an incorrect number of courses when upgrading to 3.5.0.5 - #90.
