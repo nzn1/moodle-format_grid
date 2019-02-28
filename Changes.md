@@ -18,6 +18,7 @@ Version 3.3.0.6
  15. Add missing Moodle defined.
  16. Styles tidy up.
  17. Removed old convert_legacy_image.php script as was only needed for conversion from M1.9 grid courses - #93.
+ 18. New: WebP displayed image support.
 
 Version 3.3.0.5
   1. Fix incorrect help for 'sectiontitleboxinsideposition' setting.
