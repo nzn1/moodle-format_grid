@@ -47,7 +47,7 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Container alignment. */
+    // Container alignment.
     $name = 'format_grid/defaultimagecontaineralignment';
     $title = get_string('defaultimagecontaineralignment', 'format_grid');
     $description = get_string('defaultimagecontaineralignment_desc', 'format_grid');
@@ -55,7 +55,7 @@ if ($ADMIN->fulltree) {
     $choices = format_grid::get_horizontal_alignments();
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Icon width. */
+    // Icon width.
     $name = 'format_grid/defaultimagecontainerwidth';
     $title = get_string('defaultimagecontainerwidth', 'format_grid');
     $description = get_string('defaultimagecontainerwidth_desc', 'format_grid');
@@ -63,7 +63,7 @@ if ($ADMIN->fulltree) {
     $choices = format_grid::get_image_container_widths();
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Icon ratio. */
+    // Icon ratio.
     $name = 'format_grid/defaultimagecontainerratio';
     $title = get_string('defaultimagecontainerratio', 'format_grid');
     $description = get_string('defaultimagecontainerratio_desc', 'format_grid');
@@ -71,16 +71,29 @@ if ($ADMIN->fulltree) {
     $choices = format_grid::get_image_container_ratios();
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Resize method - 1 = scale, 2 = crop. */
+    // Resize method - 1 = scale, 2 = crop.
     $name = 'format_grid/defaultimageresizemethod';
     $title = get_string('defaultimageresizemethod', 'format_grid');
     $description = get_string('defaultimageresizemethod_desc', 'format_grid');
     $default = format_grid::get_default_image_resize_method();
     $choices = array(
-        1 => new lang_string('scale', 'format_grid'),   // Scale.
-        2 => new lang_string('crop', 'format_grid')   // Crop.
+        1 => new lang_string('scale', 'format_grid'),
+        2 => new lang_string('crop', 'format_grid')
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
+
+    // Displayed image file type - 1 = original, 2 = webp.
+    $name = 'format_grid/defaultdisplayedimagefiletype';
+    $title = get_string('defaultdisplayedimagefiletype', 'format_grid');
+    $description = get_string('defaultdisplayedimagefiletype_desc', 'format_grid');
+    $default = format_grid::get_default_image_file_type();
+    $choices = array(
+        1 => new lang_string('original', 'format_grid'),
+        2 => new lang_string('webp', 'format_grid')
+    );
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('grid_format_update_displayed_images');
+    $settings->add($setting);
 
     // Default border colour in hexadecimal RGB with preceding '#'.
     $name = 'format_grid/defaultbordercolour';
@@ -90,7 +103,7 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configcolourpicker($name, $title, $description, $default);
     $settings->add($setting);
 
-    /* Border width. */
+    // Border width.
     $name = 'format_grid/defaultborderwidth';
     $title = get_string('defaultborderwidth', 'format_grid');
     $description = get_string('defaultborderwidth_desc', 'format_grid');
@@ -98,7 +111,7 @@ if ($ADMIN->fulltree) {
     $choices = format_grid::get_border_widths();
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Border radius on / off. */
+    // Border radius on / off.
     $name = 'format_grid/defaultborderradius';
     $title = get_string('defaultborderradius', 'format_grid');
     $description = get_string('defaultborderradius_desc', 'format_grid');
@@ -141,7 +154,7 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configcolourpicker($name, $title, $description, $default);
     $settings->add($setting);
 
-    /* Hide section title - 1 = no, 2 = yes. */
+    // Hide section title - 1 = no, 2 = yes.
     $name = 'format_grid/defaulthidesectiontitle';
     $title = get_string('defaulthidesectiontitle', 'format_grid');
     $description = get_string('defaulthidesectiontitle_desc', 'format_grid');
@@ -152,14 +165,14 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Section title in grid box maximum length with 0 for no truncation. */
+    // Section title in grid box maximum length with 0 for no truncation.
     $name = 'format_grid/defaultsectiontitlegridlengthmaxoption';
     $title = get_string('defaultsectiontitlegridlengthmaxoption', 'format_grid');
     $description = get_string('defaultsectiontitlegridlengthmaxoption_desc', 'format_grid');
     $default = format_grid::get_default_section_title_grid_length_max_option();
     $settings->add(new admin_setting_configtext($name, $title, $description, $default, PARAM_INT));
 
-    /* Section title box position - 1 = Inside, 2 = Outside. */
+    // Section title box position - 1 = Inside, 2 = Outside.
     $name = 'format_grid/defaultsectiontitleboxposition';
     $title = get_string('defaultsectiontitleboxposition', 'format_grid');
     $description = get_string('defaultsectiontitleboxposition_desc', 'format_grid');
@@ -170,7 +183,7 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Section title box inside position - 1 = Top, 2 = Middle, 3 = Bottom. */
+    // Section title box inside position - 1 = Top, 2 = Middle, 3 = Bottom.
     $name = 'format_grid/defaultsectiontitleboxinsideposition';
     $title = get_string('defaultsectiontitleboxinsideposition', 'format_grid');
     $description = get_string('defaultsectiontitleboxinsideposition_desc', 'format_grid');
@@ -182,14 +195,14 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Section title box height. */
+    // Section title box height.
     $name = 'format_grid/defaultsectiontitleboxheight';
     $title = get_string('defaultsectiontitleboxheight', 'format_grid');
     $description = get_string('defaultsectiontitleboxheight_desc', 'format_grid');
     $default = format_grid::get_default_section_title_box_height();
     $settings->add(new admin_setting_configtext($name, $title, $description, $default, PARAM_INT));
 
-    /* Section title box opacity. */
+    // Section title box opacity.
     $name = 'format_grid/defaultsectiontitleboxopacity';
     $title = get_string('defaultsectiontitleboxopacity', 'format_grid');
     $description = get_string('defaultsectiontitleboxopacity_desc', 'format_grid');
@@ -197,7 +210,7 @@ if ($ADMIN->fulltree) {
     $choices = format_grid::get_default_opacities();
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Section title font size. */
+    // Section title font size.
     $name = 'format_grid/defaultsectiontitlefontsize';
     $title = get_string('defaultsectiontitlefontsize', 'format_grid');
     $description = get_string('defaultsectiontitlefontsize_desc', 'format_grid');
@@ -205,7 +218,7 @@ if ($ADMIN->fulltree) {
     $choices = format_grid::get_default_section_font_sizes();
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Section title alignment. */
+    // Section title alignment.
     $name = 'format_grid/defaultsectiontitlealignment';
     $title = get_string('defaultsectiontitlealignment', 'format_grid');
     $description = get_string('defaultsectiontitlealignment_desc', 'format_grid');
@@ -229,7 +242,7 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configcolourpicker($name, $title, $description, $default);
     $settings->add($setting);
 
-    /* Show section title summary on hover - 1 = no, 2 = yes. */
+    // Show section title summary on hover - 1 = no, 2 = yes.
     $name = 'format_grid/defaultshowsectiontitlesummary';
     $title = get_string('defaultshowsectiontitlesummary', 'format_grid');
     $description = get_string('defaultshowsectiontitlesummary_desc', 'format_grid');
@@ -240,7 +253,7 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Show section title summary on hover position - 1 = top, 2 = bottom, 3 = left and 4 = right. */
+    // Show section title summary on hover position - 1 = top, 2 = bottom, 3 = left and 4 = right.
     $name = 'format_grid/defaultsetshowsectiontitlesummaryposition';
     $title = get_string('defaultsetshowsectiontitlesummaryposition', 'format_grid');
     $description = get_string('defaultsetshowsectiontitlesummaryposition_desc', 'format_grid');
@@ -253,7 +266,7 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Section title summary maximum length with 0 for no truncation. */
+    // Section title summary maximum length with 0 for no truncation.
     $name = 'format_grid/defaultsectiontitlesummarymaxlength';
     $title = get_string('defaultsectiontitlesummarymaxlength', 'format_grid');
     $description = get_string('defaultsectiontitlesummarymaxlength_desc', 'format_grid');
@@ -276,7 +289,7 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configcolourpicker($name, $title, $description, $default);
     $settings->add($setting);
 
-    /* Section title title summary opacity on hover. */
+    // Section title title summary opacity on hover.
     $name = 'format_grid/defaultsectiontitlesummarybackgroundopacity';
     $title = get_string('defaultsectiontitlesummarybackgroundopacity', 'format_grid');
     $description = get_string('defaultsectiontitlesummarybackgroundopacity_desc', 'format_grid');
@@ -284,7 +297,7 @@ if ($ADMIN->fulltree) {
     $choices = format_grid::get_default_opacities();
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Show new activity notification image - 1 = no, 2 = yes. */
+    // Show new activity notification image - 1 = no, 2 = yes.
     $name = 'format_grid/defaultnewactivity';
     $title = get_string('defaultnewactivity', 'format_grid');
     $description = get_string('defaultnewactivity_desc', 'format_grid');
@@ -295,7 +308,7 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Fix the section container popup to the screen. 1 = no, 2 = yes */
+    // Fix the section container popup to the screen. 1 = no, 2 = yes.
     $name = 'format_grid/defaultfitsectioncontainertowindow';
     $title = get_string('defaultfitsectioncontainertowindow', 'format_grid');
     $description = get_string('defaultfitsectioncontainertowindow_desc', 'format_grid');
@@ -306,7 +319,7 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Grey out hidden sections. */
+    // Grey out hidden sections.
     $name = 'format_grid/defaultgreyouthidden';
     $title = get_string('greyouthidden', 'format_grid');
     $description = get_string('greyouthidden_desc', 'format_grid');
@@ -317,7 +330,7 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Section 0 on own page when out of the grid and course layout is 'Show one section per page'. */
+    // Section 0 on own page when out of the grid and course layout is 'Show one section per page'.
     $name = 'format_grid/defaultsection0ownpagenogridonesection';
     $title = get_string('defaultsection0ownpagenogridonesection', 'format_grid');
     $description = get_string('defaultsection0ownpagenogridonesection_desc', 'format_grid');
@@ -328,7 +341,7 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
-    /* Custom mouse pointers - 1 = no, 2 = yes. */
+    // Custom mouse pointers - 1 = no, 2 = yes.
     $name = 'format_grid/defaultcustommousepointers';
     $title = get_string('custommousepointers', 'format_grid');
     $description = get_string('custommousepointers_desc', 'format_grid');

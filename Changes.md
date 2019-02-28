@@ -11,6 +11,7 @@ Version 3.4.0.6
   8. Add missing Moodle defined.
   9. Styles tidy up.
  10. Removed old convert_legacy_image.php script as was only needed for conversion from M1.9 grid courses - #93.
+ 11. New: WebP displayed image support.
 
 Version 3.4.0.5
   1. Fix CONTRIB-7270 - Popovers not working as expected in Grid reset options section of settings - Boost theme.
