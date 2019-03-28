@@ -1,6 +1,7 @@
 History
 =============
 Version 3.5.0.5
+  1. Put back 'numsections'.  Thanks to "King's College London" for funding this enhancement.
 
 Version 3.5.0.4
   1. Fix section name box does not fill image container when inside with the Boost and Foundation themes.
