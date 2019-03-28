@@ -1,5 +1,7 @@
 History
 =============
+Version 3.5.0.5
+
 Version 3.5.0.4
   1. Fix section name box does not fill image container when inside with the Boost and Foundation themes.
   2. Cope with 'sectionid' url parameter.
