@@ -734,8 +734,9 @@ class format_grid_renderer extends format_section_renderer_base {
         $coursenumsections = $this->courseformat->get_last_section_number();
 
         foreach ($sections as $section => $thissection) {
-            if (($this->section0attop) && ($section == 0)) {
-                continue;
+            if ((($this->section0attop) && ($section == 0)) || 
+                ($section > $coursenumsections)) {
+                continue;  // Section 0 at the top and not in the grid / orphaned section.
             }
 
             // Check if section is visible to user.
@@ -1040,6 +1041,10 @@ class format_grid_renderer extends format_section_renderer_base {
         foreach ($sections as $section => $thissection) {
             if (!$hascapvishidsect && !$thissection->visible && $course->hiddensections) {
                 unset($sections[$section]);
+                continue;
+            }
+            if ($section > $coursenumsections) {
+                // Orphaned section.
                 continue;
             }
 
