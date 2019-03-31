@@ -734,8 +734,7 @@ class format_grid_renderer extends format_section_renderer_base {
         $coursenumsections = $this->courseformat->get_last_section_number();
 
         foreach ($sections as $section => $thissection) {
-            if ((($this->section0attop) && ($section == 0)) || 
-                ($section > $coursenumsections)) {
+            if ((($this->section0attop) && ($section == 0)) || ($section > $coursenumsections)) {
                 continue;  // Section 0 at the top and not in the grid / orphaned section.
             }
 
