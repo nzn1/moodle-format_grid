@@ -558,9 +558,17 @@ class format_grid extends format_base {
             $defaults = $this->get_course_format_colour_defaults();
 
             $courseconfig = get_config('moodlecourse');
+            $courseid = $this->get_courseid();
+            if ($courseid == 1) { // New course.
+                $defaultnumsections = $courseconfig->numsections;
+            } else { // Existing course that may not have 'numsections' - see get_last_section().
+                global $DB;
+                $defaultnumsections = $DB->get_field_sql('SELECT max(section) from {course_sections}
+                    WHERE course = ?', array($courseid));
+            }
             $courseformatoptions = array(
                 'numsections' => array(
-                    'default' => $courseconfig->numsections,
+                    'default' => $defaultnumsections,
                     'type' => PARAM_INT,
                 ),
                 'hiddensections' => array(
