@@ -12,6 +12,7 @@ Version 3.3.0.6
   9. Put back 'numsections'.  Thanks to "King's College London" for funding this enhancement.
  10. Fix existing courses have an incorrect number of courses - #90.
  11. Fix "Editing section summary and changing summary text breaks grid image" - #92.
+ 12. Fix summary tooltip opacity and not hiding when inside the grid box.
 
 Version 3.3.0.5
   1. Fix incorrect help for 'sectiontitleboxinsideposition' setting.
