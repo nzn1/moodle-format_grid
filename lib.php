@@ -1768,10 +1768,19 @@ class format_grid extends format_base {
     public function update_section_format_options($data) {
         $data = (array) $data;
 
-        // Resets the displayed image because changing the section name / details deletes the file.
-        // See CONTRIB-4784.
-        global $DB;
-        $DB->set_field('format_grid_icon', 'displayedimageindex', 0, array('sectionid' => $data['id']));
+        /* Resets the displayed image because changing the section name / details deletes the file.
+           See CONTRIB-4784. */
+        $sectionimage = $this->get_image($this->courseid, $data['id']);
+        if ($sectionimage) {
+            // Set up our table to get the displayed image back.  The 'auto repair' on page reload will do the rest.
+            global $DB;
+            $DB->set_field('format_grid_icon', 'displayedimageindex', 0, array('sectionid' => $sectionimage->sectionid));
+            // We know the file is normally deleted, but just in case...
+            $contextid = $this->get_context()->id;
+            $fs = get_file_storage();
+            $gridimagepath = $this->get_image_path();
+            $this->delete_displayed_image($contextid, $sectionimage, $gridimagepath, $fs);
+        }
 
         return parent::update_section_format_options($data);
     }
