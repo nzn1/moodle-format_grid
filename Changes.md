@@ -4,6 +4,7 @@ Version 3.4.0.6
   1. Fix section name box does not fill image container when inside with the Boost theme.
   2. Put back 'numsections'.  Thanks to "King's College London" for funding this enhancement.
   3. Fix existing courses have an incorrect number of courses - #90.
+  4. Fix "Editing section summary and changing summary text breaks grid image" - #92.
 
 Version 3.4.0.5
   1. Fix CONTRIB-7270 - Popovers not working as expected in Grid reset options section of settings - Boost theme.
