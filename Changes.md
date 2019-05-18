@@ -3,6 +3,7 @@ History
 Version 3.5.0.6
   1. Apply MDL-64819 - #91.
   2. Fix "Editing section summary and changing summary text breaks grid image" - #92.
+  3. Fix summary tooltip opacity and not hiding when inside the grid box.
 
 Version 3.5.0.5.1
   1. Fix existing courses have an incorrect number of courses when upgrading to 3.5.0.5 - #90.
