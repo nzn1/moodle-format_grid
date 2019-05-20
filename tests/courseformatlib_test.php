@@ -89,7 +89,7 @@ class format_grid_courseformatlib_testcase extends advanced_testcase {
                 'sectiontitlesummarybackgroundopacity' => '.7',
                 'setsection0ownpagenogridonesection' => 2),
             array('createsections' => true));
-        $this->courseformattwo = course_get_format($this->courseone);
+        $this->courseformattwo = course_get_format($this->coursetwo);
     }
 
     public function test_reset_image_container_alignment() {
