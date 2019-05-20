@@ -1827,7 +1827,7 @@ class format_grid extends format_base {
             $updatedata['imagecontaineralignment'] = get_config('format_grid', 'defaultimagecontaineralignment');
             $updateimagecontaineralignment = true;
         }
-        if ($imagecontainernavigationreset && has_capability('format/grid:changeimagecontaineralignment', $context) && $resetallifall) {
+        if ($imagecontainernavigationreset && has_capability('format/grid:changeimagecontainernavigation', $context) && $resetallifall) {
             $updatedata['setsection0ownpagenogridonesection'] = get_config('format_grid', 'defaultsection0ownpagenogridonesection');
             $updateimagecontainernavigation = true;
         }
