@@ -97,9 +97,11 @@ class format_grid_courseformatlib_testcase extends advanced_testcase {
         $data = new stdClass;
         $data->resetimagecontaineralignment = true;
         $this->courseformatone->update_course_format_options($data);
-        $cfo = $this->courseformatone->get_format_options();
+        $cfo1 = $this->courseformatone->get_format_options();
+        $cfo2 = $this->courseformattwo->get_format_options();
 
-        $this->assertEquals('center', $cfo['imagecontaineralignment']);
+        $this->assertEquals('center', $cfo1['imagecontaineralignment']);
+        $this->assertEquals('right', $cfo2['imagecontaineralignment']);
     }
 
     public function test_reset_all_image_container_alignments() {
@@ -119,9 +121,11 @@ class format_grid_courseformatlib_testcase extends advanced_testcase {
         $data = new stdClass;
         $data->resetimagecontainenavigation = true;
         $this->courseformatone->update_course_format_options($data);
-        $cfo = $this->courseformatone->get_format_options();
+        $cfo1 = $this->courseformatone->get_format_options();
+        $cfo2 = $this->courseformattwo->get_format_options();
 
-        $this->assertEquals(1, $cfo['setsection0ownpagenogridonesection']);
+        $this->assertEquals(1, $cfo1['setsection0ownpagenogridonesection']);
+        $this->assertEquals(2, $cfo2['setsection0ownpagenogridonesection']);
     }
 
     public function test_reset_all_image_container_navigations() {
@@ -141,9 +145,11 @@ class format_grid_courseformatlib_testcase extends advanced_testcase {
         $data = new stdClass;
         $data->resetimagecontainerstyle = true;
         $this->courseformatone->update_course_format_options($data);
-        $cfo = $this->courseformatone->get_format_options();
+        $cfo1 = $this->courseformatone->get_format_options();
+        $cfo2 = $this->courseformattwo->get_format_options();
 
-        $this->assertEquals('3b53ad', $cfo['currentselectedimagecontainertextcolour']);
+        $this->assertEquals('3b53ad', $cfo1['currentselectedimagecontainertextcolour']);
+        $this->assertEquals('3b53ad', $cfo2['currentselectedimagecontainertextcolour']);
     }
 
     public function test_reset_all_image_container_styles() {
@@ -155,7 +161,7 @@ class format_grid_courseformatlib_testcase extends advanced_testcase {
         $cfo2 = $this->courseformatone->get_format_options();
 
         $this->assertEquals('3b53ad', $cfo1['currentselectedimagecontainertextcolour']);
-        $this->assertEquals('3b53ad', $cfo2['currentselectedimagecontainertextcolour']);
+        $this->assertEquals('244896', $cfo2['currentselectedimagecontainertextcolour']);
     }
 
     public function test_reset_section_title_options() {
