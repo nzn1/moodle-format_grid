@@ -127,7 +127,7 @@ class format_grid_courseformatlib_testcase extends advanced_testcase {
     public function test_reset_all_image_container_navigations() {
         $this->setAdminUser();
         $data = new stdClass;
-        $data->resetallimagecontaineralignment = true;
+        $data->resetallimagecontainenavigation = true;
         $this->courseformatone->update_course_format_options($data);
         $cfo1 = $this->courseformatone->get_format_options();
         $cfo2 = $this->courseformattwo->get_format_options();
