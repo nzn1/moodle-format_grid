@@ -60,11 +60,11 @@ div#gridmiddle-column > ul {
 .course-content ul.gtopics li.section {
     list-style: none;
     margin: 5px 0 0 0;
-    padding:0;
+    padding: 0;
 }
 
 .course-content ul.gtopics li.section .content {
-    margin:0 40px;
+    margin: 0 40px;
 }
 
 .course-content ul.gtopics li.section .side {
@@ -293,7 +293,7 @@ body.jsenabled #gridshadebox_content.hide_content {
 
 #gridshadebox_content ul li ol li {
     list-style: decimal outside none;
-} 
+}
 
 .gridcursor #gridshadebox_close {
     /*rtl:ignore*/
@@ -324,7 +324,7 @@ body.jsenabled #gridshadebox_content.hide_content {
     opacity: 0.9;
 }
 
-.gridshadebox_area  {
+.gridshadebox_area {
     height: 100%;
     position: absolute;
     top: 0;
@@ -444,7 +444,8 @@ body.jsenabled #gridshadebox_content.hide_content {
     right: -18px;
 }
 
-.gridshadebox_arrow.gridshadebox_mobile, .gridshadebox_arrow.gridshadebox_mobile:hover {
+.gridshadebox_arrow.gridshadebox_mobile,
+.gridshadebox_arrow.gridshadebox_mobile:hover {
     opacity: 1;
 }
 
@@ -472,7 +473,8 @@ body.jsenabled #gridshadebox_content.hide_content {
     right: -31px;
 }
 
-.gridshadebox_arrow.gridshadebox_tablet, .gridshadebox_arrow.gridshadebox_tablet:hover {
+.gridshadebox_arrow.gridshadebox_tablet,
+.gridshadebox_arrow.gridshadebox_tablet:hover {
     opacity: 1;
 }
 
@@ -484,10 +486,6 @@ body.jsenabled #gridshadebox_content.hide_content {
 .course-content ul.gridicons li .image_holder.inaccessible {
     background-color: #999;
     border-color: #aaa;
-    -webkit-filter: grayscale(100%);
-    -moz-filter: grayscale(100%);
-    -ms-filter: grayscale(100%);
-    -o-filter: grayscale(100%);
     filter: grayscale(100%);
     filter: gray; /* IE 6-9 */
     filter: alpha(opacity=70);
