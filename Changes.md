@@ -9,6 +9,7 @@ Version 3.4.0.6
   6. Fix incorrect capability being checked in reset_grid_setting().
   7. Remove old redundant tests.
   8. Add missing Moodle defined.
+  9. Styles tidy up.
 
 Version 3.4.0.5
   1. Fix CONTRIB-7270 - Popovers not working as expected in Grid reset options section of settings - Boost theme.
