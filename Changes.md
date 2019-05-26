@@ -7,6 +7,7 @@ Version 3.5.0.6
   4. Fix incorrect capability being checked in reset_grid_setting().
   5. Fix section name box does not fill image container when inside with the Boost and Foundation themes.
   6. Remove old redundant tests.
+  7. Add missing Moodle defined.
 
 Version 3.5.0.5.1
   1. Fix existing courses have an incorrect number of courses when upgrading to 3.5.0.5 - #90.
