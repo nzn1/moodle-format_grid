@@ -16,6 +16,7 @@ Version 3.3.0.6
  13. Fix incorrect capability being checked in reset_grid_setting().
  14. Remove old redundant tests.
  15. Add missing Moodle defined.
+ 16. Styles tidy up.
 
 Version 3.3.0.5
   1. Fix incorrect help for 'sectiontitleboxinsideposition' setting.
