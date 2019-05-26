@@ -1,6 +1,7 @@
 History
 =============
 Version 3.6.0.6
+  1. Remove old redundant tests.
 
 Version 3.6.0.5
   1. Apply MDL-64819 - #91.
