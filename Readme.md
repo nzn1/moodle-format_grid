@@ -87,31 +87,6 @@ Upgrade Instructions
    under 'Home -> Site administration -> Development -> Purge all caches'.
 8. Put Moodle out of Maintenance Mode.
 
-Upgrading from M1.9
-===================
-When upgrading from Moodle 1.9 the grid icon images are moved to a 'legacy' files area.  So they will not show up when you
-view the course as the format can no longer find them.  Therefore AFTER upgrading to Moodle 2.2+ please run the script
-'convert_legacy_image.php' as follows:
-
-1. Ensure you have updated fully to Moodle 2.2+.
-2. Ensure you have updated properly to the Moodle 2.2+ version of the Grid format by clicking on 'Notifications' if you had
-   not replaced the folder before performing the Moodle 2.2+ upgrade.
-3. Change the URL to have from the root of your Moodle installation: /course/format/grid/upgrade/convert_legacy_image.php -
-   i.e: http://www.mysite.com/moodle/course/format/grid/upgrade/convert_legacy_image.php
-   If you wish to crop instead of scaling the images then append '?crop=1' to the end of the URL like so:
-   http://www.mysite.com/moodle/course/format/grid/upgrade/convert_legacy_image.php?crop=1
-   If you wish to get the full log output then append '?logverbose=1' to the end of the URL like so:
-   http://www.mysite.com/moodle/course/format/grid/upgrade/convert_legacy_image.php?logverbose=1
-   or with crop:
-   http://www.mysite.com/moodle/course/format/grid/upgrade/convert_legacy_image.php?logverbose=1&crop=1
-   But keep in mind that with lots of records in the 'files' table this can cause the script to fail.
-4. Observe the output of the script which is also replicated in the PHP log file.
-5. Go back to the grid format course and confirm that the images are there.  It is possible that some old legacy files remain from
-   old images that were replaced.  At the present moment in time I have no way of detecting them (to be certain that they are
-   from the Grid format) in code.
-6. I'm not sure of the security vulnerabilities of the script on the server so after you have used it and are confident of the
-   results then move it from the '/course/format/grid/upgrade/' folder to a safe non-served folder.
-
 Downgrading
 ===========
 If for any reason you need to downgrade to a previous version of the format then the procedure will inform you how to

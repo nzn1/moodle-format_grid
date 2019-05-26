@@ -4,6 +4,7 @@ Version 3.6.0.6
   1. Remove old redundant tests.
   2. Add missing Moodle defined.
   3. Styles tidy up.
+  4. Removed old convert_legacy_image.php script as was only needed for conversion from M1.9 grid courses - #93.
 
 Version 3.6.0.5
   1. Apply MDL-64819 - #91.
