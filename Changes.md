@@ -7,6 +7,7 @@ Version 3.4.0.6
   4. Fix "Editing section summary and changing summary text breaks grid image" - #92.
   5. Fix summary tooltip opacity and not hiding when inside the grid box.
   6. Fix incorrect capability being checked in reset_grid_setting().
+  7. Remove old redundant tests.
 
 Version 3.4.0.5
   1. Fix CONTRIB-7270 - Popovers not working as expected in Grid reset options section of settings - Boost theme.
