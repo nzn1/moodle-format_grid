@@ -2,6 +2,7 @@ History
 =============
 Version 3.6.0.6
   1. Remove old redundant tests.
+  2. Add missing Moodle defined.
 
 Version 3.6.0.5
   1. Apply MDL-64819 - #91.
