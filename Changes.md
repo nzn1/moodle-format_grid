@@ -5,12 +5,11 @@ Version 3.5.0.6
   2. Fix "Editing section summary and changing summary text breaks grid image" - #92.
   3. Fix summary tooltip opacity and not hiding when inside the grid box.
   4. Fix incorrect capability being checked in reset_grid_setting().
-  5. Fix section name box does not fill image container when inside with the Boost and Foundation themes.
-  6. Remove old redundant tests.
-  7. Add missing Moodle defined.
-  8. Styles tidy up.
-  9. Removed old convert_legacy_image.php script as was only needed for conversion from M1.9 grid courses - #93.
- 10. New: WebP displayed image support.
+  5. Remove old redundant tests.
+  6. Add missing Moodle defined.
+  7. Styles tidy up.
+  8. Removed old convert_legacy_image.php script as was only needed for conversion from M1.9 grid courses - #93.
+  9. New: WebP displayed image support.
 
 Version 3.5.0.5.1
   1. Fix existing courses have an incorrect number of courses when upgrading to 3.5.0.5 - #90.
