@@ -1,5 +1,7 @@
 History
 =============
+Version 3.6.0.6
+
 Version 3.6.0.5
   1. Apply MDL-64819 - #91.
   2. Fix "Editing section summary and changing summary text breaks grid image" - #92.
