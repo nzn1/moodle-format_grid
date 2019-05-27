@@ -1,5 +1,7 @@
 History
 =============
+Version 3.5.0.6
+
 Version 3.5.0.5.1
   1. Fix existing courses have an incorrect number of courses when upgrading to 3.5.0.5 - #90.
      Note: If on a version prior to 3.5.0.5 then bypass and install 3.5.0.5.1 or above.
