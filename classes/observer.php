@@ -56,4 +56,24 @@ class format_grid_observer {
             $DB->delete_records("format_grid_summary", array("courseid" => $event->objectid));
         }
     }
+
+    /**
+     * Observer for the event course_restored.
+     *
+     * Deletes the settings entry for the given course upon course deletion.
+     *
+     * @param \core\event\course_restored $event
+     */
+    public static function course_restored(\core\event\course_restored $event) {
+        global $DB;
+        $format = $DB->get_field('course', 'format', array('id' => $event->objectid));
+        if ($format != 'grid') {
+            // Then delete the images and any summary.
+            $courseformat = format_grid::get_instance($event->objectid);
+            $courseformat->delete_images();
+            unset($courseformat);  // Destruct.
+
+            $DB->delete_records("format_grid_summary", array("courseid" => $event->objectid));
+        }
+    }
 }
