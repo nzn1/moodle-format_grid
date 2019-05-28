@@ -154,12 +154,9 @@ class restore_format_grid_plugin extends restore_format_plugin {
 
         $data = (object) $data;
 
-        /* We only process this information if the course we are restoring to
-           has 'grid' format (target format can change depending of restore options). */
-        $format = $DB->get_field('course', 'format', array('id' => $this->task->get_courseid()));
-        if ($format != 'grid') {
-            return;
-        }
+        /* Allow this to process even if not in the grid format so that our event observer on 'course_restored'
+           can perform a clean up of restored grid image files after all the data is in place in the database
+           for this to happen properly. */
 
         $data->courseid = $this->task->get_courseid();
         $data->sectionid = $this->task->get_sectionid();
