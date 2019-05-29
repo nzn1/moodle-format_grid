@@ -44,16 +44,7 @@ class format_grid_observer {
     public static function course_content_deleted(\core\event\course_content_deleted $event) {
         if (class_exists('format_grid', false)) {
             // If class format_grid was never loaded, this is definitely not a course in 'Grid' format.
-            global $DB;
-            /* Delete any images associated with the course.
-               Done this way so will work if the course has
-               been a grid format course in the past even if
-               it is not now. */
-            $courseformat = format_grid::get_instance($event->objectid);
-            $courseformat->delete_images();
-            unset($courseformat);  // Destruct.
-
-            $DB->delete_records("format_grid_summary", array("courseid" => $event->objectid));
+            self::delete_images_and_summary($event->objectid);
         }
     }
 
@@ -69,11 +60,17 @@ class format_grid_observer {
         $format = $DB->get_field('course', 'format', array('id' => $event->objectid));
         if ($format != 'grid') {
             // Then delete the images and any summary.
-            $courseformat = format_grid::get_instance($event->objectid);
-            $courseformat->delete_images();
-            unset($courseformat);  // Destruct.
-
-            $DB->delete_records("format_grid_summary", array("courseid" => $event->objectid));
+            self::delete_images_and_summary($event->objectid);
         }
+    }
+
+    protected static function delete_images_and_summary($courseid) {
+        global $DB;
+        // Delete any images associated with the course.
+        $courseformat = format_grid::get_instance($courseid);
+        $courseformat->delete_images();
+        unset($courseformat);  // Destruct.
+
+        $DB->delete_records("format_grid_summary", array("courseid" => $courseid));
     }
 }
