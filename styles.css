@@ -132,6 +132,7 @@ div#gridmiddle-column > ul {
     background-color: white;
     color: black;
     height: 40px;
+    margin: auto;
     opacity: 0.8;
     overflow-wrap: break-word;
     padding: 10px;
@@ -140,17 +141,21 @@ div#gridmiddle-column > ul {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+.course-content ul.gridicons li .icon_content.content_inside.top {
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
 .course-content ul.gridicons li .icon_content.content_inside.middle {
     bottom: 0;
     left: 0;
-    margin: auto;
     right: 0;
     top: 0;
 }
 .course-content ul.gridicons li .icon_content.content_inside.bottom {
     bottom: 0;
     left: 0;
-    margin: auto;
     right: 0;
 }
 
