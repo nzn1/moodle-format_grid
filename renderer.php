@@ -784,11 +784,17 @@ class format_grid_renderer extends format_section_renderer_base {
                         }
                     }
                     if ($canshow) {
-                        $sectiontitleclass .= ' content_inside';
-                        if ($this->settings['sectiontitleboxinsideposition'] == 2) {
-                            $sectiontitleclass .= ' middle';
-                        } else if ($this->settings['sectiontitleboxinsideposition'] == 3) {
-                            $sectiontitleclass .= ' bottom';
+                        $sectiontitleclass .= ' content_inside ';
+                        switch ($this->settings['sectiontitleboxinsideposition']) {
+                            case 1:
+                                $sectiontitleclass .= 'top';
+                                break;
+                            case 2:
+                                $sectiontitleclass .= 'middle';
+                                break;
+                            case 3:
+                                $sectiontitleclass .= 'bottom';
+                                break;
                         }
                     }
                 }
