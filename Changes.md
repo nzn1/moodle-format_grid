@@ -11,6 +11,7 @@ Version 3.5.0.6
   8. Removed old convert_legacy_image.php script as was only needed for conversion from M1.9 grid courses - #93.
   9. New: WebP displayed image support.
  10. Fix cannot change image tiles when importing a grid format course - #66.
+ 11. Fix 2-3 image ratio.
 
 Version 3.5.0.5.1
   1. Fix existing courses have an incorrect number of courses when upgrading to 3.5.0.5 - #90.

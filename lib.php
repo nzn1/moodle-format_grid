@@ -2108,7 +2108,7 @@ class format_grid extends format_base {
                 $basewidth = $width / 3;
                 break;
             case 4: // 2-3.
-                $basewidth = $width / 1;
+                $basewidth = $width / 2;
                 break;
             case 5: // 1-3.
                 $basewidth = $width;
