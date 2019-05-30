@@ -2257,7 +2257,15 @@ class format_grid extends format_base {
             } else {
                 $newmime = $mime;
             }
-            $data = self::generate_image($tmpfilepath, $displayedimageinfo['width'], $displayedimageinfo['height'], $crop, $icbc, $newmime);
+            $debugdata = array(
+                'itemid' => $imagecontainerpathfile->get_itemid(),
+                'filename' => $imagecontainerpathfile->get_filename(),
+                'sectionimage_sectionid' => $sectionimage->sectionid,
+                'sectionimage_image' => $sectionimage->image,
+                'sectionimage_displayedimageindex' => $sectionimage->displayedimageindex,
+                'sectionimage_newimage' => $sectionimage->newimage
+            );
+            $data = self::generate_image($tmpfilepath, $displayedimageinfo['width'], $displayedimageinfo['height'], $crop, $icbc, $newmime, $debugdata);
             if (!empty($data)) {
                 // Updated image.
                 $sectionimage->displayedimageindex++;
@@ -2299,6 +2307,7 @@ class format_grid extends format_base {
                 $DB->set_field('format_grid_icon', 'displayedimageindex', $sectionimage->displayedimageindex,
                     array('sectionid' => $sectionimage->sectionid));
             } else {
+                // TODO: Determine if this can actually be called.
                 print_error('cannotconvertuploadedimagetodisplayedimage', 'format_grid',
                         $CFG->wwwroot . "/course/view.php?id=" . $this->courseid);
             }
@@ -2505,9 +2514,11 @@ class format_grid extends format_base {
      * @param bool $crop false = scale, true = crop.
      * @param array $icbc The 'imagecontainerbackgroundcolour' as an RGB array.
      * @param string $mime The mime type.
+     * @param array $debugdata Debug data if the image generation fails.
+     *
      * @return string|bool false if a problem occurs or the image data.
      */
-    private static function generate_image($filepath, $requestedwidth, $requestedheight, $crop, $icbc, $mime) {
+    private static function generate_image($filepath, $requestedwidth, $requestedheight, $crop, $icbc, $mime, $debugdata) {
         if (empty($filepath) or empty($requestedwidth) or empty($requestedheight)) {
             return false;
         }
@@ -2515,13 +2526,19 @@ class format_grid extends format_base {
         $imageinfo = getimagesize($filepath);
 
         if (empty($imageinfo)) {
+            print_error('noimageinformation', 'format_grid', '', self::debugdata_decode($debugdata), 'generate_image');
             return false;
         }
 
         $originalwidth = $imageinfo[0];
         $originalheight = $imageinfo[1];
 
-        if (empty($originalwidth) or empty($originalheight)) {
+        if (empty($originalheight)) {
+            print_error('originalheightempty', 'format_grid', '', self::debugdata_decode($debugdata), 'generate_image');
+            return false;
+        }
+        if (empty($originalwidth)) {
+            print_error('originalwidthempty', 'format_grid', '', self::debugdata_decode($debugdata), 'generate_image');
             return false;
         }
 
@@ -2534,8 +2551,7 @@ class format_grid extends format_base {
                     $filters = PNG_NO_FILTER;
                     $quality = 1;
                 } else {
-                    debugging('PNG\'s are not supported at this server, please fix the system configuration'.
-                        ' to have the GD PHP extension installed.');
+                    print_error('formatnotsupported', 'format_grid', '', 'PNG, '.self::debugdata_decode($debugdata), 'generate_image');
                     return false;
                 }
                 break;
@@ -2545,8 +2561,7 @@ class format_grid extends format_base {
                     $filters = null;
                     $quality = 90;
                 } else {
-                    debugging('JPG\'s are not supported at this server, please fix the system configuration'.
-                        ' to have the GD PHP extension installed.');
+                    print_error('formatnotsupported', 'format_grid', '', 'JPG, '.self::debugdata_decode($debugdata), 'generate_image');
                     return false;
                 }
                 break;
@@ -2558,8 +2573,7 @@ class format_grid extends format_base {
                     $filters = null;
                     $quality = 90;
                 } else {
-                    debugging('WEBP\'s are not supported at this server, please fix the system configuration'.
-                        ' to have the GD PHP extension installed.');
+                    print_error('formatnotsupported', 'format_grid', '', 'WEBP, '.self::debugdata_decode($debugdata), 'generate_image');
                     return false;
                 }
                 break;
@@ -2569,13 +2583,12 @@ class format_grid extends format_base {
                     $filters = null;
                     $quality = null;
                 } else {
-                    debugging('GIF\'s are not supported at this server, please fix the system configuration'.
-                        ' to have the GD PHP extension installed.');
+                    print_error('formatnotsupported', 'format_grid', '', 'GIF, '.self::debugdata_decode($debugdata), 'generate_image');
                     return false;
                 }
                 break;
             default:
-                debugging('Mime type \''.$mime.'\' is not supported as an image format in the Grid format.');
+                print_error('mimetypenotsupported', 'format_grid', '', $mime.', '.self::debugdata_decode($debugdata), 'generate_image');
                 return false;
         }
 
@@ -2678,6 +2691,7 @@ class format_grid extends format_base {
         ob_start();
         if (!$imagefnc($finalimage, null, $quality, $filters)) {
             ob_end_clean();
+            print_error('functionfailed', 'format_grid', '', $imagefnc.', '.self::debugdata_decode($debugdata), 'generate_image');
             return false;
         }
         $data = ob_get_clean();
@@ -2686,6 +2700,18 @@ class format_grid extends format_base {
         imagedestroy($finalimage);
 
         return $data;
+    }
+
+    private static function debugdata_decode($debugdata) {
+        $o = 'itemid > '.$debugdata['itemid'];
+        $o .= ', filename > '.$debugdata['filename'];
+        $o .= ', sectionimage_sectionid > '.$debugdata['sectionimage_sectionid'];
+        $o .= ', sectionimage_image > '.$debugdata['sectionimage_image'];
+        $o .= ', sectionimage_newimage > '.$debugdata['sectionimage_newimage'];
+        $o .= ' and sectionimage_displayedimageindex > '.$debugdata['sectionimage_displayedimageindex'].'.  ';
+        $o .= get_string('reporterror', 'format_grid');
+
+        return $o;
     }
 
     /**
