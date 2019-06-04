@@ -309,9 +309,11 @@ class format_grid_renderer extends format_section_renderer_base {
             echo $this->start_section_list();
 
             echo $this->section_header_onsectionpage_topic0notattop($thissection, $course);
-            // Show completion help icon.
-            $completioninfo = new completion_info($course);
-            echo $completioninfo->display_help_icon();
+            if ($course->enablecompletion) {
+                // Show completion help icon.
+                $completioninfo = new completion_info($course);
+                echo $completioninfo->display_help_icon();
+            }
 
             echo $this->courserenderer->course_section_cm_list($course, $thissection, $displaysection);
             echo $this->courserenderer->course_section_add_cm_control($course, $displaysection, $displaysection);
