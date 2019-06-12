@@ -1,6 +1,7 @@
 History
 =============
 Version 3.6.0.7
+  1. Reduced size of Tooltip JS - #94.
 
 Version 3.6.0.6
   1. Remove old redundant tests.
