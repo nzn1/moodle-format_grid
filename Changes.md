@@ -3,6 +3,7 @@ History
 Version 3.6.0.7
   1. Reduced size of Tooltip JS - #94.
   2. Attempted fix for "found more than one record" for format_grid_summary table - #97.
+  3. Use a shown section count for the number of grid boxes.
 
 Version 3.6.0.6
   1. Remove old redundant tests.
