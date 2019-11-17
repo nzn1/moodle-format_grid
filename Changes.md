@@ -1,6 +1,6 @@
 History
 =============
-Version 3.7.1.1
+Version 3.7.1.1 - 17/11/2019
   1. Fix section one not shown - #105.
 
 Version 3.7.1.0
