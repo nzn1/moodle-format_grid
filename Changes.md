@@ -5,6 +5,8 @@ Version 3.8.0.2 - TDB
   2. Fix scroll bar in main region when editing in Boost.
   3. Remove redundant 'defaultcoursedisplay' setting - #119.
   4. Tidy up old strings.
+  5. Apply 'Add index to courseid format_grid_icon could improve performance' - #122,
+     thanks to John (https://github.com/yao9394) for the patch.
 
 Version 3.8.0.1 - 17/11/2019
   1. Fix section one not shown - #105.
