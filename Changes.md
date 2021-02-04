@@ -1,6 +1,7 @@
 History
 =============
 Version 3.8.1.1 - TBR
+ 1. Fix 'Duplicated section name' - #134.
 
 Version 3.8.1.0 - 14/11/20
   1. Fix 'Same color setting for "set or change img" as currentselectedimagecontainertextcolor in editing on' - #106.
