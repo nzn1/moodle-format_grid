@@ -1310,7 +1310,7 @@ class format_grid extends format_base {
      */
     private function generate_default_entry($settingname, $defaultindex, $values) {
         $defaultvalue = get_config('format_grid', 'default'.$settingname);
-        $defarray = array($defaultindex => new lang_string('default', 'format_grid', $values[$defaultvalue]));
+        $defarray = array($defaultindex => get_string('default', 'format_grid', $values[$defaultvalue]));
 
         return array_replace($defarray, $values);
     }
