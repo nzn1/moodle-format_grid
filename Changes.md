@@ -7,6 +7,7 @@ Version 3.9.1.1 - TBR
     set the value of the setting to the this 'new' default value.  The default colour value is '-' and the colour picker box will
     show the colour that has been set as the default.  All other settings will state what the default currently is.
  3. Fix settings not being reset: 'Greyout hidden' and 'Section 0 on its own page'.
+ 4. Fix incorrect value of 'numsections' when not present in the backup file.
 
 Version 3.9.1.0 - 14/11/2020
   1. Fix summary tooltip dismissing itself when floating over the section name.  If you find it is still an issue, then
