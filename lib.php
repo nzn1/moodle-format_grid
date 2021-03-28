@@ -3002,6 +3002,15 @@ class format_grid extends format_base {
         return $rv;
     }
 
+    /**
+     * Restores the numsections if was not in the backup.
+     * @param int $numsections The number of sections.
+     */
+    public function restore_numsections($numsections) {
+        $data = array('numsections' => $numsections);
+        $this->update_course_format_options($data);
+    }
+
     private function get_context() {
         global $SITE;
 
