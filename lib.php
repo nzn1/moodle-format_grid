@@ -55,7 +55,7 @@ class format_grid extends format_base {
        '.5' => '0.5', '.6' => '0.6', '.7' => '0.7', '.8' => '0.8', '.9' => '0.9', '1' => '1.0');
     private static $sectiontitlefontsizes = array(0 => '0', 12 => '12', 13 => '13', 14 => '14', 15 => '15', 16 => '16',
        17 => '17', 18 => '18', 19 => '19', 20 => '20', 21 => '21', 22 => '22', 23 => '23', 24 => '24');
-    private $settings;
+    private $settings = null;
     private $section0attop = null; // Boolean to state if section zero is at the top (true) or in the grid (false), if null then uninitialized.
 
     /**
@@ -391,9 +391,13 @@ class format_grid extends format_base {
 
     /**
      * Returns the format's settings and gets them if they do not exist.
+     * @param bool $invalidate Invalidate the existing known settings and get a fresh set.  Set when you know the settings have changed.
      * @return array The settings as an array.
      */
-    public function get_settings() {
+    public function get_settings($invalidate = false) {
+        if ($invalidate) {
+            $this->settings = null;
+        }
         if (empty($this->settings) == true) {
             $this->settings = $this->get_format_options();
             foreach ($this->settings as $settingname => $settingvalue) {
@@ -1861,8 +1865,7 @@ class format_grid extends format_base {
 
         // Now we can change the displayed images if needed.
         if ($changedisplayedimages && (!$imageschanged)) {
-            $this->settings = null; // Invalidate as changed.
-            $settings = $this->get_settings();
+            $settings = $this->get_settings(true); // Invalidate as changed.
 
             $this->update_displayed_images($this->courseid, $this, $settings, true);
         }
@@ -2066,9 +2069,7 @@ class format_grid extends format_base {
                 if (($updateimagecontainersize) || ($updateimageresizemethod)) {
                     $currentsettings = $courseformat->get_settings();
                     $courseformat->update_format_options($updatedata);
-                    // Ensure we get the new values.
-                    $courseformat->settings = null;
-                    $newsettings = $courseformat->get_settings();
+                    $newsettings = $courseformat->get_settings(true); // Ensure we get the new values.
 
                     if (($updateimagecontainersize) &&
                             (($currentsettings['imagecontainerwidth'] != $newsettings['imagecontainerwidth']) ||
@@ -2663,9 +2664,9 @@ class format_grid extends format_base {
 
         $sectionimages = $us->get_images($courseid);
         if (is_array($sectionimages)) {
-            $context = $this->get_context();
+            $context = $us->get_context();
 
-            $icbc = self::hex2rgb($this->get_settings()['imagecontainerbackgroundcolour']);
+            $icbc = self::hex2rgb($settings['imagecontainerbackgroundcolour']);
             $t = $DB->start_delegated_transaction();
             foreach ($sectionimages as $sectionimage) {
                 if ($sectionimage->displayedimageindex > 0) {
@@ -2918,6 +2919,20 @@ class format_grid extends format_base {
     }
 
     /**
+     * Class instance update images callback.
+     */
+    public static function update_displayed_images_callback() {
+        global $DB;
+        if ($gridformatcourses = $DB->get_records('course', array('format' => 'grid'), '', 'id')) {
+            foreach ($gridformatcourses as $gridformatcourse) {
+                $courseformat = course_get_format($gridformatcourse->id);
+                $settings = $courseformat->get_settings(true);
+                $courseformat->update_displayed_images($gridformatcourse->id, $courseformat, $settings, true);
+            }
+        }
+    }
+
+    /**
      * Returns a new instance of us so that specialised methods can be called.
      * @param int $courseid The course id of the course.
      * @return format_grid object.
@@ -3051,15 +3066,4 @@ function callback_grid_load_content(&$navigation, $course, $coursenode) {
  */
 function callback_grid_definition() {
     return get_string('topic', 'format_grid');
-}
-
-function grid_format_update_displayed_images() {
-    global $DB;
-
-    if ($gridformatcourses = $DB->get_records('course', array('format' => 'grid'), '', 'id')) {
-        foreach ($gridformatcourses as $gridformatcourse) {
-            $courseformat = course_get_format($gridformatcourse->id);
-            $courseformat->delete_displayed_images();
-        }
-    }
 }

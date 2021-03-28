@@ -45,7 +45,7 @@ if ($ADMIN->fulltree) {
     $default = format_grid::get_default_image_container_width();
     $choices = format_grid::get_image_container_widths();
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-    $setting->set_updatedcallback('grid_format_update_displayed_images');
+    $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
     $settings->add($setting);
 
     // Icon ratio.
@@ -55,7 +55,7 @@ if ($ADMIN->fulltree) {
     $default = format_grid::get_default_image_container_ratio();
     $choices = format_grid::get_image_container_ratios();
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-    $setting->set_updatedcallback('grid_format_update_displayed_images');
+    $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
     $settings->add($setting);
 
     // Resize method - 1 = scale, 2 = crop.
@@ -68,7 +68,7 @@ if ($ADMIN->fulltree) {
         2 => new lang_string('crop', 'format_grid')
     );
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-    $setting->set_updatedcallback('grid_format_update_displayed_images');
+    $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
     $settings->add($setting);
 
     // Default border colour in hexadecimal RGB with preceding '#'.
@@ -305,7 +305,7 @@ if ($ADMIN->fulltree) {
         2 => new lang_string('webp', 'format_grid')
     );
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-    $setting->set_updatedcallback('grid_format_update_displayed_images');
+    $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
     $settings->add($setting);
 
     // Grey out hidden sections.
