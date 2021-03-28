@@ -44,16 +44,6 @@ class restore_format_grid_plugin extends restore_format_plugin {
      * @return bool Need to restore numsections.
      */
     protected function need_restore_numsections() {
-        $backupinfo = $this->step->get_task()->get_info();
-        $backuprelease = $backupinfo->backup_release;
-        $prethreethree = version_compare($backuprelease, '3.3', 'lt');
-        if ($prethreethree) {
-            // Pre version 3.3 so, yes!
-            return true;
-        }
-        /* Post 3.3 may or may not have numsections in the backup depending on the version.
-           of Grid used.  So use the existance of 'numsections' in the course.xml
-           part of the backup to determine this. */
         $data = $this->connectionpoint->get_data();
         return (isset($data['tags']['numsections']));
     }
@@ -199,9 +189,38 @@ class restore_format_grid_plugin extends restore_format_plugin {
      */
     public function after_restore_course() {
         if (!$this->need_restore_numsections()) {
-            /* Backup file was made in Moodle 3.3 or later and does not contain 'numsections',
-               so we don't need to process 'numsections'. */
-               return;
+            /* Backup file does not contain 'numsections' so we need to set it from
+               the number of sections we can determine the course has.  The 'default'
+               might be wrong, so there could be an entry in the db already with this
+               wrong value. */
+            global $DB;
+
+            $courseid = $this->step->get_task()->get_courseid();
+            $numsections = $DB->get_field_sql('SELECT max(section) from {course_sections}
+                WHERE course = ?', array($courseid));
+
+            $data = new stdClass;
+            $data->courseid = $this->task->get_courseid();
+            $data->format = 'grid';
+            $data->sectionid = 0;
+            $data->name = 'numsections';
+            $data->value = $numsections;
+
+            if ($old = $DB->get_record('course_format_options', array(
+                    'courseid' => $data->courseid,
+                    'format' => 'grid',
+                    'sectionid' => $data->sectionid,
+                    'name' => 'numsections'
+                    ))) {
+                $data->id = $old->id;
+                if (!$DB->update_record('course_format_options', $data)) {
+                    throw new moodle_exception('invalidrecordid', 'format_grid', '', 'Could not update numsections.');
+                }
+            } else if (!$DB->insert_record('course_format_options', $data)) {
+                throw new moodle_exception('invalidrecordid', 'format_grid', '', 'Could not add numsections.');
+            }
+
+            return;
         }
 
         $data = $this->connectionpoint->get_data();
