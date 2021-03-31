@@ -284,6 +284,19 @@ if ($ADMIN->fulltree) {
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
+    // Show the grid image in the section summary on a single page.
+    $name = 'format_grid/defaultsinglepagesummaryimage';
+    $title = get_string('defaultsinglepagesummaryimage', 'format_grid');
+    $description = get_string('defaultsinglepagesummaryimage_desc', 'format_grid');
+    $default = 1;
+    $choices = array(
+        1 => new lang_string('off', 'format_grid'),
+        2 => new lang_string('left', 'format_grid'),
+        3 => new lang_string('centre', 'format_grid'),
+        4 => new lang_string('right', 'format_grid')
+    );
+    $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
+
     // Fix the section container popup to the screen. 1 = no, 2 = yes.
     $name = 'format_grid/defaultfitsectioncontainertowindow';
     $title = get_string('defaultfitsectioncontainertowindow', 'format_grid');

@@ -708,6 +708,10 @@ class format_grid extends format_base {
                     'default' => 0,
                     'type' => PARAM_INT
                 ),
+                'singlepagesummaryimage' => array(
+                    'default' => 0,
+                    'type' => PARAM_INT
+                ),
                 'fitsectioncontainertowindow' => array(
                     'default' => 0,
                     'type' => PARAM_INT
@@ -1200,6 +1204,24 @@ class format_grid extends format_base {
                 'help_component' => 'format_grid'
             );
 
+            $singlepagesummaryimagevalues = $this->generate_default_entry(
+                'singlepagesummaryimage',
+                0,
+                array(
+                    1 => new lang_string('off', 'format_grid'),
+                    2 => new lang_string('left', 'format_grid'),
+                    3 => new lang_string('centre', 'format_grid'),
+                    4 => new lang_string('right', 'format_grid')
+                )
+            );
+            $courseformatoptionsedit['singlepagesummaryimage'] = array(
+                'label' => new lang_string('singlepagesummaryimage', 'format_grid'),
+                'element_type' => 'select',
+                'element_attributes' => array($singlepagesummaryimagevalues),
+                'help' => 'singlepagesummaryimage',
+                'help_component' => 'format_grid'
+            );
+
             $fitsectioncontainertowindowvalues = $this->generate_default_entry(
                 'fitsectioncontainertowindow',
                 0,
@@ -1458,6 +1480,10 @@ class format_grid extends format_base {
             $resetelements[] = & $mform->createElement('checkbox', 'resetnewactivity', '', $checkboxname);
             $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetnewactivity', 'format_grid'));
 
+            $checkboxname = get_string('resetsinglepagesummaryimage', 'format_grid');
+            $resetelements[] = & $mform->createElement('checkbox', 'resetsinglepagesummaryimage', '', $checkboxname);
+            $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetsinglepagesummaryimage', 'format_grid'));
+
             $checkboxname = get_string('resetfitpopup', 'format_grid');
             $resetelements[] = & $mform->createElement('checkbox', 'resetfitpopup', '', $checkboxname);
             $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetfitpopup', 'format_grid'));
@@ -1469,6 +1495,10 @@ class format_grid extends format_base {
             $checkboxname = get_string('resetnewactivity', 'format_grid').
                 $OUTPUT->help_icon('resetnewactivity', 'format_grid');
             $resetelements[] = & $mform->createElement('checkbox', 'resetnewactivity', '', $checkboxname);
+
+            $checkboxname = get_string('resetsinglepagesummaryimage', 'format_grid').
+                $OUTPUT->help_icon('resetsinglepagesummaryimage', 'format_grid');
+            $resetelements[] = & $mform->createElement('checkbox', 'resetsinglepagesummaryimage', '', $checkboxname);
 
             $checkboxname = get_string('resetfitpopup', 'format_grid').
                 $OUTPUT->help_icon('resetfitpopup', 'format_grid');
@@ -1512,6 +1542,10 @@ class format_grid extends format_base {
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallnewactivity', '', $checkboxname);
                 $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallnewactivity', 'format_grid'));
 
+                $checkboxname = get_string('resetallsinglepagesummaryimage', 'format_grid');
+                $resetelements[] = & $mform->createElement('checkbox', 'resetallsinglepagesummaryimage', '', $checkboxname);
+                $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallsinglepagesummaryimage', 'format_grid'));
+
                 $checkboxname = get_string('resetallfitpopup', 'format_grid');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallfitpopup', '', $checkboxname);
                 $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallfitpopup', 'format_grid'));
@@ -1547,6 +1581,10 @@ class format_grid extends format_base {
                 $checkboxname = get_string('resetallnewactivity', 'format_grid').
                     $OUTPUT->help_icon('resetallnewactivity', 'format_grid');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallnewactivity', '', $checkboxname);
+
+                $checkboxname = get_string('resetallsinglepagesummaryimage', 'format_grid').
+                    $OUTPUT->help_icon('resetallsinglepagesummaryimage', 'format_grid');
+                $resetallelements[] = & $mform->createElement('checkbox', 'resetallsinglepagesummaryimage', '', $checkboxname);
 
                 $checkboxname = get_string('resetallfitpopup', 'format_grid').
                     $OUTPUT->help_icon('resetallfitpopup', 'format_grid');
@@ -1703,6 +1741,7 @@ class format_grid extends format_base {
         $resetimagecontainerstyle = false;
         $resetsectiontitleoptions = false;
         $resetnewactivity = false;
+        $resetsinglepagesummaryimage = false;
         $resetfitpopup = false;
         $resetgreyouthidden = false;
         $resetallimagecontaineralignment = false;
@@ -1712,6 +1751,7 @@ class format_grid extends format_base {
         $resetallimagecontainerstyle = false;
         $resetallsectiontitleoptions = false;
         $resetallnewactivity = false;
+        $resetallsinglepagesummaryimage = false;
         $resetallfitpopup = false;
         $resetallgreyouthidden = false;
         if (isset($data->resetimagecontaineralignment) == true) {
@@ -1741,6 +1781,10 @@ class format_grid extends format_base {
         if (isset($data->resetnewactivity) == true) {
             $resetnewactivity = true;
             unset($data->resetnewactivity);
+        }
+        if (isset($data->resetsinglepagesummaryimage) == true) {
+            $resetsinglepagesummaryimage = true;
+            unset($data->resetsinglepagesummaryimage);
         }
         if (isset($data->resetfitpopup) == true) {
             $resetfitpopup = true;
@@ -1777,6 +1821,10 @@ class format_grid extends format_base {
         if (isset($data->resetallnewactivity) == true) {
             $resetallnewactivity = true;
             unset($data->resetallnewactivity);
+        }
+        if (isset($data->resetallsinglepagesummaryimage) == true) {
+            $resetallsinglepagesummaryimage = true;
+            unset($data->resetallsinglepagesummaryimage);
         }
         if (isset($data->resetallfitpopup) == true) {
             $resetfitpopup = true;
@@ -1841,11 +1889,13 @@ class format_grid extends format_base {
             ($resetallimagecontainerstyle) ||
             ($resetallsectiontitleoptions) ||
             ($resetallnewactivity) ||
+            ($resetallsinglepagesummaryimage) ||
             ($resetallfitpopup) ||
             ($resetallgreyouthidden)) {
             $imageschanged = $this->reset_grid_setting(0, $resetallimagecontaineralignment, $resetallimagecontainernavigation,
                 $resetallimagecontainersize, $resetallimageresizemethod, $resetallimagecontainerstyle,
-                $resetallsectiontitleoptions, $resetallnewactivity, $resetallfitpopup, $resetallgreyouthidden);
+                $resetallsectiontitleoptions, $resetallnewactivity, $resetallsinglepagesummaryimage, $resetallfitpopup,
+                $resetallgreyouthidden);
             $changes = true;
         } else if (
             ($resetimagecontaineralignment) ||
@@ -1855,11 +1905,12 @@ class format_grid extends format_base {
             ($resetimagecontainerstyle) ||
             ($resetsectiontitleoptions) ||
             ($resetnewactivity) ||
+            ($resetsinglepagesummaryimage) ||
             ($resetfitpopup) ||
             ($resetgreyouthidden)) {
             $imageschanged = $this->reset_grid_setting($this->courseid, $resetimagecontaineralignment, $resetimagecontainernavigation,
                 $resetimagecontainersize, $resetimageresizemethod, $resetimagecontainerstyle,
-                $resetsectiontitleoptions, $resetnewactivity, $resetfitpopup, $resetgreyouthidden);
+                $resetsectiontitleoptions, $resetnewactivity, $resetsinglepagesummaryimage, $resetfitpopup, $resetgreyouthidden);
             $changes = true;
         }
 
@@ -1959,6 +2010,7 @@ class format_grid extends format_base {
      * @param int $imagecontainerstylereset If true, reset the colour to the default in the settings for the format.
      * @param int $sectiontitleoptionsreset If true, reset the section title options to the default in the settings for the format.
      * @param int $newactivityreset If true, reset the new activity to the default in the settings for the format.
+     * @param int $singlepagesummaryimagereset If true, reset the single page summary image to the default in the settings for the format.
      * @param int $fitpopupreset If true, reset the fit popup to the default in the settings for the format.
      * @param int $greyouthidden If true, reset the greyout hidden to the default in the settings for the format.
      *
@@ -1966,7 +2018,7 @@ class format_grid extends format_base {
      */
     public function reset_grid_setting($courseid, $imagecontaineralignmentreset, $imagecontainernavigationreset,
         $imagecontainersizereset, $imageresizemethodreset, $imagecontainerstylereset, $sectiontitleoptionsreset,
-        $newactivityreset, $fitpopupreset, $greyouthidden) {
+        $newactivityreset, $singlepagesummaryimagereset, $fitpopupreset, $greyouthidden) {
         global $DB, $USER;
 
         $imagesupdated = false;
@@ -1989,6 +2041,7 @@ class format_grid extends format_base {
         $updateimagecontainerstyle = false;
         $updatesectiontitleoptions = false;
         $updatenewactivity = false;
+        $updatesinglepagesummaryimage = false;
         $updatefitpopup = false;
         $updategreyouthidden = false;
         if ($imagecontaineralignmentreset && has_capability('format/grid:changeimagecontaineralignment', $context) && $resetallifall) {
@@ -2040,6 +2093,10 @@ class format_grid extends format_base {
         if ($newactivityreset && $resetallifall) {
             $updatedata['newactivity'] = 0;
             $updatenewactivity = true;
+        }
+        if ($singlepagesummaryimagereset && $resetallifall) {
+            $updatedata['singlepagesummaryimage'] = 0;
+            $updatesinglepagesummaryimage = true;
         }
         if ($fitpopupreset && $resetallifall) {
             $updatedata['fitsectioncontainertowindow'] = 0;
@@ -2771,85 +2828,59 @@ class format_grid extends format_base {
                 return false;
         }
 
-        $width = $requestedwidth;
-        $height = $requestedheight;
-
-        // Note: Code transformed from original 'resizeAndCrop' in 'imagelib.php' in the Moodle 1.9 version.
         if ($crop) {
-            $ratio = $width / $height;
+            $ratio = $requestedwidth / $requestedheight;
             $originalratio = $originalwidth / $originalheight;
             if ($originalratio < $ratio) {
                 // Change the supplied height - 'resizeToWidth'.
-                $ratio = $width / $originalwidth;
+                $ratio = $requestedwidth / $originalwidth;
+                $width = $requestedwidth;
                 $height = $originalheight * $ratio;
                 $cropheight = true;
             } else {
                 // Change the supplied width - 'resizeToHeight'.
-                $ratio = $height / $originalheight;
+                $ratio = $requestedheight / $originalheight;
                 $width = $originalwidth * $ratio;
+                $height = $requestedheight;
                 $cropheight = false;
             }
-        }
 
-        if (function_exists('imagecreatetruecolor')) {
-            $tempimage = imagecreatetruecolor($width, $height);
-            if ($imagefnc === 'imagepng') {
-                imagealphablending($tempimage, false);
-                imagefill($tempimage, 0, 0, imagecolorallocatealpha($tempimage, 0, 0, 0, 127));
-                imagesavealpha($tempimage, true);
-            } else if (($imagefnc === 'imagejpeg') || ($imagefnc === 'imagewebp') || ($imagefnc === 'imagegif')) {
-                imagealphablending($tempimage, false);
-                imagefill($tempimage, 0, 0, imagecolorallocate($tempimage, $icbc['r'], $icbc['g'], $icbc['b']));
+            if (function_exists('imagecreatetruecolor')) {
+                $tempimage = imagecreatetruecolor($width, $height);
+            } else {
+                $tempimage = imagecreate($width, $height);
             }
-        } else {
-            $tempimage = imagecreate($width, $height);
-        }
 
-        if ($crop) {
             // First step, resize.
             imagecopybicubic($tempimage, $original, 0, 0, 0, 0, $width, $height, $originalwidth, $originalheight);
-            imagedestroy($original);
-            $original = $tempimage;
 
             // Second step, crop.
             if ($cropheight) {
-                // Reset after change for resizeToWidth.
-                $height = $requestedheight;
                 // This is 'cropCenterHeight'.
-                $width = imagesx($original);
-                $srcoffset = (imagesy($original) / 2) - ($height / 2);
+                $srcoffset = ($height / 2) - ($requestedheight / 2);
+                $height = $requestedheight;
             } else {
-                // Reset after change for resizeToHeight.
-                $width = $requestedwidth;
                 // This is 'cropCenterWidth'.
-                $height = imagesy($original);
-                $srcoffset = (imagesx($original) / 2) - ($width / 2);
+                $srcoffset = ($width / 2) - ($requestedwidth / 2);
+                $width = $requestedwidth;
             }
 
             if (function_exists('imagecreatetruecolor')) {
                 $finalimage = imagecreatetruecolor($width, $height);
-                if ($imagefnc === 'imagepng') {
-                    imagealphablending($finalimage, false);
-                    imagefill($finalimage, 0, 0, imagecolorallocatealpha($finalimage, 0, 0, 0, 127));
-                    imagesavealpha($finalimage, true);
-                } else if (($imagefnc === 'imagejpeg') || ($imagefnc === 'imagegif')) {
-                    imagealphablending($tempimage, false);
-                    imagefill($finalimage, 0, 0, imagecolorallocate($finalimage, $icbc['r'], $icbc['g'], $icbc['b']));
-                }
             } else {
                 $finalimage = imagecreate($width, $height);
             }
 
             if ($cropheight) {
                 // This is 'cropCenterHeight'.
-                imagecopybicubic($finalimage, $original, 0, 0, 0, $srcoffset, $width, $height, $width, $height);
+                imagecopybicubic($finalimage, $tempimage, 0, 0, 0, $srcoffset, $width, $height, $width, $height);
             } else {
                 // This is 'cropCenterWidth'.
-                imagecopybicubic($finalimage, $original, 0, 0, $srcoffset, 0, $width, $height, $width, $height);
+                imagecopybicubic($finalimage, $tempimage, 0, 0, $srcoffset, 0, $width, $height, $width, $height);
             }
-        } else {
-            $finalimage = $tempimage;
-            $ratio = min($width / $originalwidth, $height / $originalheight);
+            imagedestroy($tempimage);
+        } else { // Scale.
+            $ratio = min($requestedwidth / $originalwidth, $requestedheight / $originalheight);
 
             if ($ratio < 1) {
                 $targetwidth = floor($originalwidth * $ratio);
@@ -2860,11 +2891,13 @@ class format_grid extends format_base {
                 $targetheight = $originalheight;
             }
 
-            $dstx = floor(($width - $targetwidth) / 2);
-            $dsty = floor(($height - $targetheight) / 2);
+            if (function_exists('imagecreatetruecolor')) {
+                $finalimage = imagecreatetruecolor($targetwidth, $targetheight);
+            } else {
+                $finalimage = imagecreate($targetwidth, $targetheight);
+            }
 
-            imagecopybicubic($finalimage, $original, $dstx, $dsty, 0, 0, $targetwidth, $targetheight, $originalwidth,
-                $originalheight);
+            imagecopybicubic($finalimage, $original, 0, 0, 0, 0, $targetwidth, $targetheight, $originalwidth, $originalheight);
         }
 
         ob_start();
