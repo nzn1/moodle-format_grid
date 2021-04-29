@@ -298,17 +298,17 @@ class format_grid_renderer extends format_section_renderer_base {
                 }
 
                 $sectionimage = $this->courseformat->get_image($course->id, $section->id);
+                $coursecontext = context_course::instance($course->id);
                 /* If the image is set then check that displayedimageindex is greater than 0 otherwise create the displayed image.
                    This is a catch-all for existing courses. */
                 if (isset($sectionimage->image) && ($sectionimage->displayedimageindex < 1)) {
                     // Set up the displayed image:...
                     $sectionimage->newimage = $sectionimage->image;
                     $icbc = $this->courseformat->hex2rgb($this->settings['imagecontainerbackgroundcolour']);
-                    $sectionimage = $this->courseformat->setup_displayed_image($sectionimage, $contextid,
+                    $sectionimage = $this->courseformat->setup_displayed_image($sectionimage, $coursecontext->id,
                         $this->settings, $icbc);
                 }
 
-                $coursecontext = context_course::instance($course->id);
                 $gridimagepath = $this->courseformat->get_image_path();
                 $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
 
