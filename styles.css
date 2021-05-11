@@ -199,7 +199,7 @@ div#gridmiddle-column > ul {
     position: relative;
 }
 
-.course-content ul.gridicons li img {
+.course-content ul.gridicons li .image_holder img {
     left: 50%;
     position: absolute;
     top: 50%;
