@@ -2,6 +2,7 @@ History
 =============
 Version 3.9.1.3 - TBR
 ===========================
+ 1. Fix grid image placement for RTL languages.
 
 Version 3.9.1.2 - 15/05/21
 ===========================
