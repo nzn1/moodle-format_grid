@@ -1256,7 +1256,7 @@ class format_grid extends format_base {
 
             if (has_capability('format/grid:changeimagecontainernavigation', $context)) {
                 $setsection0ownpagenogridonesectionvalues = $this->generate_default_entry(
-                    'section0ownpagenogridonesection',
+                    'setsection0ownpagenogridonesection',
                     0,
                     array(
                         1 => new lang_string('no'), // No.
