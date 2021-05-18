@@ -297,21 +297,22 @@ class format_grid_renderer extends format_section_renderer_base {
                         $data->left = true;
                 }
 
-                $sectionimage = $this->courseformat->get_image($course->id, $section->id);
+                $sectionimage = \format_grid\toolbox::get_image($course->id, $section->id);
                 $coursecontext = context_course::instance($course->id);
                 /* If the image is set then check that displayedimageindex is greater than 0 otherwise create the displayed image.
                    This is a catch-all for existing courses. */
                 if (isset($sectionimage->image) && ($sectionimage->displayedimageindex < 1)) {
                     // Set up the displayed image:...
                     $sectionimage->newimage = $sectionimage->image;
-                    $sectionimage = $this->courseformat->setup_displayed_image($sectionimage, $coursecontext->id,
-                        $this->settings);
+                    $icbc = \format_grid\toolbox::hex2rgb($this->settings['imagecontainerbackgroundcolour']);
+                    $sectionimage = \format_grid\toolbox::setup_displayed_image($sectionimage, $coursecontext->id,
+                        $course->id, $this->settings, $icbc);
                 }
 
-                $gridimagepath = $this->courseformat->get_image_path();
+                $gridimagepath = \format_grid\toolbox::get_image_path();
                 $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
 
-                $data->image = $this->courseformat->output_section_image(
+                $data->image = \format_grid\toolbox::output_section_image(
                     $section->id, $sectionname, $sectionimage, $coursecontext->id, $section, $gridimagepath, $this, $iswebp);
                 $data->summary = $summary;
 
@@ -724,7 +725,7 @@ class format_grid_renderer extends format_section_renderer_base {
                 $strhidesummaryalt = get_string('hide_summary_alt', 'format_grid');
 
                 echo html_writer::link(
-                        $this->courseformat->grid_moodle_url('mod_summary.php', array(
+                        \format_grid\toolbox::grid_moodle_url('mod_summary.php', array(
                             'sesskey' => sesskey(),
                             'course' => $course->id,
                             'showsummary' => 0)), html_writer::empty_tag('img', array(
@@ -800,10 +801,10 @@ class format_grid_renderer extends format_section_renderer_base {
         }
 
         // Get the section images for the course.
-        $sectionimages = $this->courseformat->get_images($course->id);
+        $sectionimages = \format_grid\toolbox::get_images($course->id);
 
         // CONTRIB-4099:...
-        $gridimagepath = $this->courseformat->get_image_path();
+        $gridimagepath = \format_grid\toolbox::get_image_path();
 
         if ($course->coursedisplay == COURSE_DISPLAY_MULTIPAGE) {
             $singlepageurl = $this->courseformat->get_view_url(null)->out(true);
@@ -927,7 +928,7 @@ class format_grid_renderer extends format_section_renderer_base {
                 // Ensure the record exists.
                 if (($sectionimages === false) || (!array_key_exists($thissection->id, $sectionimages))) {
                     // Method get_image has 'repair' functionality for when there are issues with the data.
-                    $sectionimage = $this->courseformat->get_image($course->id, $thissection->id);
+                    $sectionimage = \format_grid\toolbox::get_image($course->id, $thissection->id);
                 } else {
                     $sectionimage = $sectionimages[$thissection->id];
                 }
@@ -937,8 +938,9 @@ class format_grid_renderer extends format_section_renderer_base {
                 if (isset($sectionimage->image) && ($sectionimage->displayedimageindex < 1)) {
                     // Set up the displayed image:...
                     $sectionimage->newimage = $sectionimage->image;
-                    $sectionimage = $this->courseformat->setup_displayed_image($sectionimage, $contextid,
-                        $this->settings);
+                    $icbc = \format_grid\toolbox::hex2rgb($this->settings['imagecontainerbackgroundcolour']);
+                    $sectionimage = \format_grid\toolbox::setup_displayed_image($sectionimage, $contextid,
+                        $course->id, $this->settings, $icbc);
                 }
 
                 if ($course->coursedisplay != COURSE_DISPLAY_MULTIPAGE) {
@@ -980,7 +982,7 @@ class format_grid_renderer extends format_section_renderer_base {
                             'hidden' => true, 'aria-label' => $summary));
                     }
 
-                    echo $this->courseformat->output_section_image(
+                    echo \format_grid\toolbox::output_section_image(
                         $section, $sectionname, $sectionimage, $contextid, $thissection, $gridimagepath, $this->output, $iswebp);
 
                     echo html_writer::end_tag('div');
@@ -1018,7 +1020,7 @@ class format_grid_renderer extends format_section_renderer_base {
                             'hidden' => true, 'aria-label' => $summary));
                     }
 
-                    $content .= $this->courseformat->output_section_image(
+                    $content .= \format_grid\toolbox::output_section_image(
                         $section, $sectionname, $sectionimage, $contextid, $thissection, $gridimagepath, $this->output, $iswebp);
 
                     $content .= html_writer::end_tag('div');
@@ -1067,7 +1069,7 @@ class format_grid_renderer extends format_section_renderer_base {
         $streditimagealt = get_string('editimage_alt', 'format_grid');
 
         echo html_writer::link(
-            $this->courseformat->grid_moodle_url('editimage.php', array(
+            \format_grid\toolbox::grid_moodle_url('editimage.php', array(
                 'sectionid' => $thissection->id,
                 'contextid' => $contextid,
                 'userid' => $USER->id,
@@ -1084,7 +1086,7 @@ class format_grid_renderer extends format_section_renderer_base {
         $strdisplaysummaryalt = get_string('display_summary_alt', 'format_grid');
 
         echo html_writer::link(
-            $this->courseformat->grid_moodle_url('mod_summary.php', array(
+            \format_grid\toolbox::grid_moodle_url('mod_summary.php', array(
                 'sesskey' => sesskey(),
                 'course' => $course->id,
                 'showsummary' => 1,
