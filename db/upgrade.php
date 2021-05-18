@@ -151,10 +151,10 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
         upgrade_plugin_savepoint(true, 2020070703, 'format', 'grid');
     }
 
-    if ($oldversion < 2020111403) {
+    if ($oldversion < 2020070704) {
         // Any transparent PNG's need regenerating.
         format_grid::update_displayed_images_callback();
-        upgrade_plugin_savepoint(true, 2020111403, 'format', 'grid');
+        upgrade_plugin_savepoint(true, 2020070704, 'format', 'grid');
     }
 
     // Automatic 'Purge all caches'....
