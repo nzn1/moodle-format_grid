@@ -2847,6 +2847,10 @@ class format_grid extends format_base {
 
             if (function_exists('imagecreatetruecolor')) {
                 $tempimage = imagecreatetruecolor($width, $height);
+                if ($imagefnc === 'imagepng') {
+                    imagealphablending($tempimage, false);
+                    imagesavealpha($tempimage, true);
+                }
             } else {
                 $tempimage = imagecreate($width, $height);
             }
@@ -2867,6 +2871,10 @@ class format_grid extends format_base {
 
             if (function_exists('imagecreatetruecolor')) {
                 $finalimage = imagecreatetruecolor($width, $height);
+                if ($imagefnc === 'imagepng') {
+                    imagealphablending($finalimage, false);
+                    imagesavealpha($finalimage, true);
+                }
             } else {
                 $finalimage = imagecreate($width, $height);
             }
@@ -2893,6 +2901,10 @@ class format_grid extends format_base {
 
             if (function_exists('imagecreatetruecolor')) {
                 $finalimage = imagecreatetruecolor($targetwidth, $targetheight);
+                if ($imagefnc === 'imagepng') {
+                    imagealphablending($finalimage, false);
+                    imagesavealpha($finalimage, true);
+                }
             } else {
                 $finalimage = imagecreate($targetwidth, $targetheight);
             }
