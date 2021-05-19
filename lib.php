@@ -2436,8 +2436,7 @@ class format_grid extends format_base {
 
                 // Set up the displayed image:...
                 $sectionimage->newimage = $storedfilerecord['filename'];
-                $icbc = self::hex2rgb($this->get_settings()['imagecontainerbackgroundcolour']);
-                $this->setup_displayed_image($sectionimage, $storedfilerecord['contextid'], $this->get_settings(), $icbc, $mime);
+                $this->setup_displayed_image($sectionimage, $storedfilerecord['contextid'], $this->get_settings(), $mime);
             } else {
                 print_error('imagecannotbeused', 'format_grid', $CFG->wwwroot . "/course/view.php?id=" . $this->courseid);
             }
@@ -2456,11 +2455,10 @@ class format_grid extends format_base {
      * @param array $sectionimage Section information from its row in the 'format_grid_icon' table.
      * @param array $contextid The context id to which the image relates.
      * @param array $settings The course settings to apply.
-     * @param array $icbc The 'imagecontainerbackgroundcolour' as an RGB array.
      * @param string $mime The mime type if already known.
      * @return array The updated $sectionimage data.
      */
-    public function setup_displayed_image($sectionimage, $contextid, $settings, $icbc, $mime = null) {
+    public function setup_displayed_image($sectionimage, $contextid, $settings, $mime = null) {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/repository/lib.php');
         require_once($CFG->libdir . '/gdlib.php');
@@ -2499,7 +2497,7 @@ class format_grid extends format_base {
                 'sectionimage_displayedimageindex' => $sectionimage->displayedimageindex,
                 'sectionimage_newimage' => $sectionimage->newimage
             );
-            $data = self::generate_image($tmpfilepath, $displayedimageinfo['width'], $displayedimageinfo['height'], $crop, $icbc, $newmime, $debugdata);
+            $data = self::generate_image($tmpfilepath, $displayedimageinfo['width'], $displayedimageinfo['height'], $crop, $newmime, $debugdata);
             if (!empty($data)) {
                 // Updated image.
                 $sectionimage->displayedimageindex++;
@@ -2723,12 +2721,11 @@ class format_grid extends format_base {
         if (is_array($sectionimages)) {
             $context = $us->get_context();
 
-            $icbc = self::hex2rgb($settings['imagecontainerbackgroundcolour']);
             $t = $DB->start_delegated_transaction();
             foreach ($sectionimages as $sectionimage) {
                 if ($sectionimage->displayedimageindex > 0) {
                     $sectionimage->newimage = $sectionimage->image;
-                    $sectionimage = $us->setup_displayed_image($sectionimage, $context->id, $settings, $icbc);
+                    $sectionimage = $us->setup_displayed_image($sectionimage, $context->id, $settings);
                 }
             }
             $t->allow_commit();
@@ -2748,13 +2745,12 @@ class format_grid extends format_base {
      * @param int $requestedwidth the width of the requested image.
      * @param int $requestedheight the height of the requested image.
      * @param bool $crop false = scale, true = crop.
-     * @param array $icbc The 'imagecontainerbackgroundcolour' as an RGB array.
      * @param string $mime The mime type.
      * @param array $debugdata Debug data if the image generation fails.
      *
      * @return string|bool false if a problem occurs or the image data.
      */
-    private static function generate_image($filepath, $requestedwidth, $requestedheight, $crop, $icbc, $mime, $debugdata) {
+    private static function generate_image($filepath, $requestedwidth, $requestedheight, $crop, $mime, $debugdata) {
         if (empty($filepath) or empty($requestedwidth) or empty($requestedheight)) {
             return false;
         }
