@@ -461,7 +461,7 @@ class toolbox {
         }
 
         if (!$sectionimagecontainers = $DB->get_records('format_grid_icon', array('courseid' => $courseid), '',
-                'sectionid, image, displayedimageindex, alttext')) {
+                'sectionid, image, displayedimageindex, updatedisplayedimage, alttext')) {
             $sectionimagecontainers = false;
         }
         return $sectionimagecontainers;
@@ -485,11 +485,13 @@ class toolbox {
         // Only allow this code to be executed once at the same time for the given section id (the id is unique).
         $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
         if ($lock = $lockfactory->get_lock('sectionid'.$sectionid, 5)) {
-            if (!$sectionimage = $DB->get_record('format_grid_icon', array('sectionid' => $sectionid))) {
+            if (!$sectionimage = $DB->get_record('format_grid_icon', array('sectionid' => $sectionid),
+                'courseid, sectionid, image, displayedimageindex, updatedisplayedimage, alttext')) {
                 $newimagecontainer = new \stdClass();
                 $newimagecontainer->sectionid = $sectionid;
                 $newimagecontainer->courseid = $courseid;
                 $newimagecontainer->displayedimageindex = 0;
+                $newimagecontainer->updatedisplayedimage = 0;
 
                 if (!$newimagecontainer->id = $DB->insert_record('format_grid_icon', $newimagecontainer, true)) {
                     $lock->release();
@@ -628,20 +630,6 @@ class toolbox {
         return $storedfilerecord;
     }
 
-    /**
-     * Class instance update images callback.
-     */
-    public static function update_displayed_images_callback() {
-        global $DB;
-        if ($gridformatcourses = $DB->get_records('course', array('format' => 'grid'), '', 'id')) {
-            foreach ($gridformatcourses as $gridformatcourse) {
-                $courseformat = course_get_format($gridformatcourse->id);
-                $settings = $courseformat->get_settings(true);
-                self::update_displayed_images($gridformatcourse->id, $courseformat->get_contextid(), $settings, true);
-            }
-        }
-    }
-
     public static function delete_displayed_images($courseformat) {
         $sectionimages = self::get_images($courseformat->get_courseid());
 
@@ -722,8 +710,7 @@ class toolbox {
                 // Set up the displayed image:...
                 $sectionimage->newimage = $storedfilerecord['filename'];
                 $settings = $courseformat->get_settings();
-                $icbc = self::hex2rgb($settings['imagecontainerbackgroundcolour']);
-                self::setup_displayed_image($sectionimage, $storedfilerecord['contextid'], $courseformat->get_courseid(), $settings, $icbc, $mime);
+                self::setup_displayed_image($sectionimage, $storedfilerecord['contextid'], $courseformat->get_courseid(), $settings, $mime);
             } else {
                 print_error('imagecannotbeused', 'format_grid', $CFG->wwwroot . "/course/view.php?id=" . $courseformat->get_courseid());
             }
@@ -743,11 +730,10 @@ class toolbox {
      * @param int $contextid The context id to which the image relates.
      * @param int $courseid The course id to which the image relates.
      * @param array $settings The course settings to apply.
-     * @param array $icbc The 'imagecontainerbackgroundcolour' as an RGB array.
      * @param string $mime The mime type if already known.
      * @return array The updated $sectionimage data.
      */
-    public static function setup_displayed_image($sectionimage, $contextid, $courseid, $settings, $icbc, $mime = null) {
+    public static function setup_displayed_image($sectionimage, $contextid, $courseid, $settings, $mime = null) {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/repository/lib.php');
         require_once($CFG->libdir . '/gdlib.php');
@@ -786,7 +772,7 @@ class toolbox {
                 'sectionimage_displayedimageindex' => $sectionimage->displayedimageindex,
                 'sectionimage_newimage' => $sectionimage->newimage
             );
-            $data = self::generate_image($tmpfilepath, $displayedimageinfo['width'], $displayedimageinfo['height'], $crop, $icbc, $newmime, $debugdata);
+            $data = self::generate_image($tmpfilepath, $displayedimageinfo['width'], $displayedimageinfo['height'], $crop, $newmime, $debugdata);
             if (!empty($data)) {
                 // Updated image.
                 $sectionimage->displayedimageindex++;
@@ -827,6 +813,11 @@ class toolbox {
                 }
                 $DB->set_field('format_grid_icon', 'displayedimageindex', $sectionimage->displayedimageindex,
                     array('sectionid' => $sectionimage->sectionid));
+                if ($sectionimage->updatedisplayedimage == 1) {
+                    $DB->set_field('format_grid_icon', 'updatedisplayedimage', 0,
+                        array('sectionid' => $sectionimage->sectionid));
+                    $sectionimage->updatedisplayedimage = 0;
+                }
             } else {
                 print_error('cannotconvertuploadedimagetodisplayedimage', 'format_grid',
                     $CFG->wwwroot."/course/view.php?id=".$courseid,
@@ -965,23 +956,33 @@ class toolbox {
     }
 
     /**
+     * Class instance update images callback.
+     */
+    public static function update_displayed_images_callback() {
+        global $DB;
+        if ($gridformatcourses = $DB->get_records('course', array('format' => 'grid'), '', 'id')) {
+            foreach ($gridformatcourses as $gridformatcourse) {
+                self::update_displayed_images($gridformatcourse->id, true);
+            }
+        }
+    }
+
+    /**
      * Updates the displayed images because the settings have changed.
+     *
      * @param int $courseid The course id.
-     * @param int $contextid The contextid to use.
-     * @param array $settings The settings to use.
      * @param int $ignorenorecords True we should not worry about no records existing, possibly down to a restore of a course.
      */
-    public static function update_displayed_images($courseid, $contextid, $settings, $ignorenorecords) {
+    public static function update_displayed_images($courseid, $ignorenorecords) {
         global $DB;
 
         $sectionimages = self::get_images($courseid);
         if (is_array($sectionimages)) {
-            $icbc = self::hex2rgb($settings['imagecontainerbackgroundcolour']);
             $t = $DB->start_delegated_transaction();
             foreach ($sectionimages as $sectionimage) {
                 if ($sectionimage->displayedimageindex > 0) {
-                    $sectionimage->newimage = $sectionimage->image;
-                    $sectionimage = self::setup_displayed_image($sectionimage, $contextid, $courseid, $settings, $icbc);
+                    $DB->set_field('format_grid_icon', 'updatedisplayedimage', 1,
+                        array('sectionid' => $sectionimage->sectionid));
                 }
             }
             $t->allow_commit();
@@ -1001,13 +1002,12 @@ class toolbox {
      * @param int $requestedwidth the width of the requested image.
      * @param int $requestedheight the height of the requested image.
      * @param bool $crop false = scale, true = crop.
-     * @param array $icbc The 'imagecontainerbackgroundcolour' as an RGB array.
      * @param string $mime The mime type.
      * @param array $debugdata Debug data if the image generation fails.
      *
      * @return string|bool false if a problem occurs or the image data.
      */
-    private static function generate_image($filepath, $requestedwidth, $requestedheight, $crop, $icbc, $mime, $debugdata) {
+    private static function generate_image($filepath, $requestedwidth, $requestedheight, $crop, $mime, $debugdata) {
         if (empty($filepath) or empty($requestedwidth) or empty($requestedheight)) {
             return false;
         }
@@ -1015,6 +1015,7 @@ class toolbox {
         $imageinfo = getimagesize($filepath);
 
         if (empty($imageinfo)) {
+            unlink($filepath);
             print_error('noimageinformation', 'format_grid', '', self::debugdata_decode($debugdata), 'generate_image');
             return false;
         }
@@ -1023,10 +1024,12 @@ class toolbox {
         $originalheight = $imageinfo[1];
 
         if (empty($originalheight)) {
+            unlink($filepath);
             print_error('originalheightempty', 'format_grid', '', self::debugdata_decode($debugdata), 'generate_image');
             return false;
         }
         if (empty($originalwidth)) {
+            unlink($filepath);
             print_error('originalwidthempty', 'format_grid', '', self::debugdata_decode($debugdata), 'generate_image');
             return false;
         }
@@ -1040,6 +1043,7 @@ class toolbox {
                     $filters = PNG_NO_FILTER;
                     $quality = 1;
                 } else {
+                    unlink($filepath);
                     print_error('formatnotsupported', 'format_grid', '', 'PNG, '.self::debugdata_decode($debugdata), 'generate_image');
                     return false;
                 }
@@ -1050,6 +1054,7 @@ class toolbox {
                     $filters = null;
                     $quality = 90;
                 } else {
+                    unlink($filepath);
                     print_error('formatnotsupported', 'format_grid', '', 'JPG, '.self::debugdata_decode($debugdata), 'generate_image');
                     return false;
                 }
@@ -1062,6 +1067,7 @@ class toolbox {
                     $filters = null;
                     $quality = 90;
                 } else {
+                    unlink($filepath);
                     print_error('formatnotsupported', 'format_grid', '', 'WEBP, '.self::debugdata_decode($debugdata), 'generate_image');
                     return false;
                 }
@@ -1072,11 +1078,13 @@ class toolbox {
                     $filters = null;
                     $quality = null;
                 } else {
+                    unlink($filepath);
                     print_error('formatnotsupported', 'format_grid', '', 'GIF, '.self::debugdata_decode($debugdata), 'generate_image');
                     return false;
                 }
                 break;
             default:
+                unlink($filepath);
                 print_error('mimetypenotsupported', 'format_grid', '', $mime.', '.self::debugdata_decode($debugdata), 'generate_image');
                 return false;
         }
@@ -1168,6 +1176,7 @@ class toolbox {
         ob_start();
         if (!$imagefnc($finalimage, null, $quality, $filters)) {
             ob_end_clean();
+            unlink($filepath);
             print_error('functionfailed', 'format_grid', '', $imagefnc.', '.self::debugdata_decode($debugdata), 'generate_image');
             return false;
         }

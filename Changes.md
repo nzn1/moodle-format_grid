@@ -2,6 +2,11 @@ History
 =============
 Version 3.9.1.4 - TBR
 ===========================
+ 1. Rewrite of update of displayed images process, such that should fix #143 when upgrades are conducted on
+    staged Moodle installations where there is no data folder.  This also speeds up in general the update process
+    as the displayed images are only regenerated when the course is accessed - thus a 'reset all' should be
+    much faster.  The downside of all of this is a slower page load for the first user to access a course that has
+    had the displayed images updated.
 
 Version 3.9.1.3 - 19/05/21
 ===========================
