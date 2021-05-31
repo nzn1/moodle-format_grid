@@ -1491,14 +1491,7 @@ class format_grid extends format_base {
             unset($data->resetallgreyouthidden);
         }
 
-        $settings = $this->get_settings();
-        $changedisplayedimages = false;
-        if (isset($data->imagecontainerwidth)) {
-            /* We have the CONTRIB-4099 options and this is not from a pre-CONTRIB-4099 backup file, so tell the reset
-               so that it does even if it does not update the images as a result of setting value changes. */
-            $changedisplayedimages = true;
-        }
-
+        $currentsettings = $this->get_settings();
         $data = (array) $data;
         if ($oldcourse !== null) {
             $oldcourse = (array) $oldcourse;
@@ -1536,6 +1529,7 @@ class format_grid extends format_base {
         }
 
         // Now we can do the reset.
+        $ourimageschanged = false;
         if (($resetallimagecontaineralignment) ||
             ($resetallimagecontainernavigation) ||
             ($resetallimagecontainersize) ||
@@ -1546,7 +1540,7 @@ class format_grid extends format_base {
             ($resetallsinglepagesummaryimage) ||
             ($resetallfitpopup) ||
             ($resetallgreyouthidden)) {
-            $this->reset_grid_setting(0, $changedisplayedimages, $resetallimagecontaineralignment,
+            $ourimageschanged = $this->reset_grid_setting(0, $currentsettings, $resetallimagecontaineralignment,
                 $resetallimagecontainernavigation, $resetallimagecontainersize, $resetallimageresizemethod,
                 $resetallimagecontainerstyle, $resetallsectiontitleoptions, $resetallnewactivity,
                 $resetallsinglepagesummaryimage, $resetallfitpopup, $resetallgreyouthidden);
@@ -1562,10 +1556,32 @@ class format_grid extends format_base {
             ($resetsinglepagesummaryimage) ||
             ($resetfitpopup) ||
             ($resetgreyouthidden)) {
-            $this->reset_grid_setting($this->courseid, $changedisplayedimages, $resetimagecontaineralignment,
+            $ourimageschanged = $this->reset_grid_setting($this->courseid, $currentsettings, $resetimagecontaineralignment,
                 $resetimagecontainernavigation, $resetimagecontainersize, $resetimageresizemethod, $resetimagecontainerstyle,
                 $resetsectiontitleoptions, $resetnewactivity, $resetsinglepagesummaryimage, $resetfitpopup, $resetgreyouthidden);
             $changes = true;
+        }
+
+        if (!$ourimageschanged) {
+            // A reset has not changed the images, so check if they need to be.
+            $newsettings = $this->get_settings(true); // Ensure we get the new values.
+
+            if (($currentsettings['imagecontainerwidth'] != $newsettings['imagecontainerwidth']) ||
+                ($currentsettings['imagecontainerratio'] != $newsettings['imagecontainerratio'])) {
+                $performimagecontainersize = true;
+            } else {
+                $performimagecontainersize = false;
+            }
+
+            if (($currentsettings['imageresizemethod'] != $newsettings['imageresizemethod'])) {
+                $performimageresizemethod = true;
+            } else {
+                $performimageresizemethod = false;
+            }
+
+            if (($performimagecontainersize) || ($performimageresizemethod)) {
+                \format_grid\toolbox::update_displayed_images($this->courseid, false);
+            }
         }
 
         return $changes;
@@ -1650,7 +1666,6 @@ class format_grid extends format_base {
     /**
      * Resets the format setting to the default.
      * @param int $courseid If not 0, then a specific course to reset.
-     * @param bool $changedisplayedimages If the displayed images need changing.
      * @param int $imagecontaineralignmentreset If true, reset the alignment to the default in the settings for the format.
      * @param int $imagecontainernavigationreset If true, reset the alignment to the default in the settings for the format.
      * @param int $imagecontainersizereset If true, reset the layout to the default in the settings for the format.
@@ -1661,8 +1676,10 @@ class format_grid extends format_base {
      * @param int $singlepagesummaryimagereset If true, reset the single page summary image to the default in the settings for the format.
      * @param int $fitpopupreset If true, reset the fit popup to the default in the settings for the format.
      * @param int $greyouthidden If true, reset the greyout hidden to the default in the settings for the format.
+     *
+     * @return bool If our images have changed.
      */
-    private function reset_grid_setting($courseid, $changedisplayedimages, $imagecontaineralignmentreset,
+    private function reset_grid_setting($courseid, $ourcurrentsettings, $imagecontaineralignmentreset,
         $imagecontainernavigationreset, $imagecontainersizereset, $imageresizemethodreset, $imagecontainerstylereset,
         $sectiontitleoptionsreset, $newactivityreset, $singlepagesummaryimagereset, $fitpopupreset, $greyouthidden) {
         global $DB, $USER;
@@ -1751,6 +1768,7 @@ class format_grid extends format_base {
             $updategreyouthidden = true;
         }
 
+        $ourimagesupdated = false;
         foreach ($records as $record) {
             if (($updateimagecontaineralignment) ||
                 ($updateimagecontainernavigation) ||
@@ -1762,27 +1780,30 @@ class format_grid extends format_base {
                 ($updatefitpopup) ||
                 ($updategreyouthidden)) {
 
-                $imagesupdated = false;
                 if ($record->id !== $this->courseid) {
                     $courseformat = course_get_format($record->id);
                 } else {
                     $courseformat = $this;
                 }
                 if (($updateimagecontainersize) || ($updateimageresizemethod)) {
-                    $currentsettings = $courseformat->get_settings();
+                    if ($record->id === $this->courseid) {
+                        $currentsettings = $ourcurrentsettings;
+                    } else {
+                        $currentsettings = $courseformat->get_settings();
+                    }
                     $courseformat->update_format_options($updatedata);
                     $newsettings = $courseformat->get_settings(true); // Ensure we get the new values.
 
                     if (($updateimagecontainersize) &&
-                            (($currentsettings['imagecontainerwidth'] != $newsettings['imagecontainerwidth']) ||
-                            ($currentsettings['imagecontainerratio'] != $newsettings['imagecontainerratio']))) {
+                        (($currentsettings['imagecontainerwidth'] != $newsettings['imagecontainerwidth']) ||
+                         ($currentsettings['imagecontainerratio'] != $newsettings['imagecontainerratio']))) {
                         $performimagecontainersize = true;
                     } else {
                         $performimagecontainersize = false;
                     }
 
                     if (($updateimageresizemethod) &&
-                            ($currentsettings['imageresizemethod'] != $newsettings['imageresizemethod'])) {
+                        ($currentsettings['imageresizemethod'] != $newsettings['imageresizemethod'])) {
                         $performimageresizemethod = true;
                     } else {
                         $performimageresizemethod = false;
@@ -1790,18 +1811,17 @@ class format_grid extends format_base {
 
                     if (($performimagecontainersize) || ($performimageresizemethod)) {
                         \format_grid\toolbox::update_displayed_images($record->id, false);
-                        $imagesupdated = true;
+                        if ($record->id === $this->courseid) {
+                            $ourimagesupdated = true;
+                        }
                     }
                 } else {
                     $courseformat->update_format_options($updatedata);
                 }
-
-                // Now we can change the displayed images if needed.
-                if ($changedisplayedimages && (!$imagesupdated)) {
-                    \format_grid\toolbox::update_displayed_images($record->id, true);
-                }
             }
         }
+
+        return $ourimagesupdated;
     }
 
     // Grid specific methods...
