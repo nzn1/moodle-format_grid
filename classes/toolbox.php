@@ -923,12 +923,15 @@ class toolbox {
         }
     }
 
-    public static function delete_images($courseformat) {
-        $courseid = $courseformat->get_courseid();
+    public static function delete_images($courseid) {
         $sectionimages = self::get_images($courseid);
 
         if (is_array($sectionimages)) {
-            global $DB;
+            global $CFG, $DB;
+
+            require_once($CFG->dirroot . '/course/format/lib.php'); // For 'course_get_format()'.
+            $courseformat = course_get_format($courseid);
+
             $contextid = $courseformat->get_contextid();
             $fs = get_file_storage();
             $gridimagepath = self::get_image_path();

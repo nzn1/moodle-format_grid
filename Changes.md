@@ -8,6 +8,7 @@ Version 3.9.1.4 - TBR
     much faster.  The downside of all of this is a slower page load for the first user to access a course that has
     had the displayed images updated.
  2. Fix backup files do not contain 'alttext' field for the image.
+ 3. Fix 'Exception when using course import function' - #144.
 
 Version 3.9.1.3 - 19/05/21
 ===========================
