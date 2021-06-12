@@ -9,6 +9,7 @@ Version 3.9.1.4 - TBR
     had the displayed images updated.
  2. Fix backup files do not contain 'alttext' field for the image.
  3. Fix 'Exception when using course import function' - #144.
+ 4. Fix 'Course restore fails with cannotgetimagesforcourse error' - #145.
 
 Version 3.9.1.3 - 19/05/21
 ===========================
