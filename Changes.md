@@ -1,6 +1,6 @@
 History
 =============
-Version 3.9.1.4 - TBR
+Version 3.9.1.4 - 01/07/21
 ===========================
  1. Rewrite of update of displayed images process, such that should fix #143 when upgrades are conducted on
     staged Moodle installations where there is no data folder.  This also speeds up in general the update process
