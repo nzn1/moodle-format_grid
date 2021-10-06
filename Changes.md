@@ -2,6 +2,7 @@ History
 =============
 Version 3.9.1.5 - 14/01/22
 ===========================
+ 1. Fix 'Observer throws error on course restore format_{name}::get_contextid()' - #149.
 
 Version 3.9.1.4 - 01/07/21
 ===========================
