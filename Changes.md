@@ -3,6 +3,7 @@ History
 Version 3.10.1.5 - TBR
 ============================
  1. Fix 'Observer throws error on course restore format_{name}::get_contextid()' - #149.
+ 2. Added support information and settings for such.
 
 Version 3.10.1.4 - 01/07/21
 ============================
