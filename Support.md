@@ -2,7 +2,7 @@ The Grid format story
 =====================
 The Grid format was originally written by Paul Krix, then taken over by Julian Ridden, and then me in 2012.  It is topics based format that 
 uses a grid of user selectable images to pop up a light box of the section.  The format takes time, skill, knowledge and talent to develop.  This 
-is why I'm asking for your financial support in my endeavours.
+is why I'm now asking for your financial support in my endeavours.  Without your support, there will no longer be any further major releases of the format.
 
 If you'd like to sponsor, get support or fund improvements, then please do get in touch via:
 
