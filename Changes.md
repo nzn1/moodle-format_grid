@@ -1,5 +1,8 @@
 History
 =============
+Version 3.9.1.5 - 14/01/22
+===========================
+
 Version 3.9.1.4 - 01/07/21
 ===========================
  1. Rewrite of update of displayed images process, such that should fix #143 when upgrades are conducted on
