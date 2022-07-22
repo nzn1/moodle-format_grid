@@ -45,4 +45,52 @@ class content extends content_base {
     public function get_template_name(\renderer_base $renderer): string {
         return 'format_grid/local/content';
     }
+
+    /**
+     * Export this data so it can be used as the context for a mustache template (core/inplace_editable).
+     *
+     * @param renderer_base $output typically, the renderer that's calling this function
+     * @return stdClass data context for a mustache template
+     */
+    public function export_for_template(\renderer_base $output) {
+        //global $PAGE;
+        $format = $this->format;
+
+        // Most formats uses section 0 as a separate section so we remove from the list.
+        $sections = $this->export_sections($output);
+        $initialsection = '';
+        if (!empty($sections)) {
+            $initialsection = array_shift($sections);
+        }
+
+        $data = (object)[
+            'title' => $format->page_title(), // This method should be in the course_format class.
+            'initialsection' => $initialsection,
+            'sections' => $sections,
+            'format' => $format->get_format(),
+            'sectionreturn' => 0,
+        ];
+
+        // The single section format has extra navigation.
+        $singlesection = $this->format->get_section_number();
+        if ($singlesection) {
+            //if (!$PAGE->theme->usescourseindex) {
+                $sectionnavigation = new $this->sectionnavigationclass($format, $singlesection);
+                $data->sectionnavigation = $sectionnavigation->export_for_template($output);
+
+                $sectionselector = new $this->sectionselectorclass($format, $sectionnavigation);
+                $data->sectionselector = $sectionselector->export_for_template($output);
+            //}
+            $data->hasnavigation = true;
+            $data->singlesection = array_shift($data->sections);
+            $data->sectionreturn = $singlesection;
+        }
+
+        if ($this->hasaddsection) {
+            $addsection = new $this->addsectionclass($format);
+            $data->numsections = $addsection->export_for_template($output);
+        }
+
+        return $data;
+    }
 }

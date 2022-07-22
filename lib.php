@@ -31,6 +31,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/course/format/lib.php'); // For format_base.
 
 class format_grid extends core_courseformat\base {
+    // Used to determine the type of view URL to generate - parameter or anchor.
+    private $coursedisplay = COURSE_DISPLAY_SINGLEPAGE;
 
     private $settings = null;
 
@@ -44,11 +46,26 @@ class format_grid extends core_courseformat\base {
      * @return format_grid
      */
     protected function __construct($format, $courseid) {
+        parent::__construct($format, $courseid);
         if ($courseid === 0) {
             global $COURSE;
             $courseid = $COURSE->id;  // Save lots of global $COURSE as we will never be the site course.
         }
         parent::__construct($format, $courseid);
+
+        $section = optional_param('section', 0, PARAM_INT);
+        if ($section) {
+            $this->coursedisplay = COURSE_DISPLAY_MULTIPAGE;
+        }
+    }
+
+    /**
+     * Get the course display value for the current course.
+     *
+     * @return int The current value (COURSE_DISPLAY_MULTIPAGE or COURSE_DISPLAY_SINGLEPAGE).
+     */
+    public function get_course_display(): int {
+        return $this->coursedisplay;
     }
 
     /**
@@ -173,7 +190,7 @@ class format_grid extends core_courseformat\base {
                     $usercoursedisplay = COURSE_DISPLAY_SINGLEPAGE;
                 }
             } else {
-                $usercoursedisplay = $course->coursedisplay ?? COURSE_DISPLAY_SINGLEPAGE;
+                $usercoursedisplay = $this->coursedisplay;
             }
             if ($sectionno != 0 && $usercoursedisplay == COURSE_DISPLAY_MULTIPAGE) {
                 $url->param('section', $sectionno);
@@ -303,10 +320,6 @@ class format_grid extends core_courseformat\base {
                 'hiddensections' => array(
                     'default' => $courseconfig->hiddensections,
                     'type' => PARAM_INT
-                ),
-                'coursedisplay' => array(
-                    'default' => $courseconfig->coursedisplay,
-                    'type' => PARAM_INT
                 )
             );
         }
@@ -335,18 +348,6 @@ class format_grid extends core_courseformat\base {
                             1 => new lang_string('hiddensectionsinvisible')
                         )
                     ),
-                ),
-                'coursedisplay' => array(
-                    'label' => new lang_string('coursedisplay'),
-                    'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
-                            COURSE_DISPLAY_SINGLEPAGE => new lang_string('coursedisplay_single'),
-                            COURSE_DISPLAY_MULTIPAGE => new lang_string('coursedisplay_multi')
-                        )
-                    ),
-                    'help' => 'coursedisplay',
-                    'help_component' => 'moodle'
                 )
             );
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);

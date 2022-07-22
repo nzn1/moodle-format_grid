@@ -31,7 +31,7 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
 
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2022072201) {
+    if ($oldversion < 2022072200) {
         // Define table format_grid_image to be created.
         $table = new xmldb_table('format_grid_image');
 
@@ -56,7 +56,7 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
         }
 
         // Grid savepoint reached.
-        upgrade_plugin_savepoint(true, 2022041900, 'format', 'drill');
+        upgrade_plugin_savepoint(true, 2022072200, 'format', 'drill');
     }
 
     // Automatic 'Purge all caches'....
