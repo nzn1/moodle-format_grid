@@ -357,6 +357,44 @@ class format_grid extends core_courseformat\base {
     }
 
     /**
+     * Adds format options elements to the course/section edit form.
+     *
+     * This function is called from {@link course_edit_form::definition_after_data()}.
+     *
+     * @param MoodleQuickForm $mform form the elements are added to.
+     * @param bool $forsection 'true' if this is a section edit form, 'false' if this is course edit form.
+     * @return array array of references to the added form elements.
+     */
+    public function create_edit_form_elements(&$mform, $forsection = false) {
+        global $CFG;
+        MoodleQuickForm::registerElementType(
+            'sectionfilemanager',
+            "$CFG->dirroot/course/format/grid/form/sectionfilemanager.php",
+            'MoodleQuickForm_sectionfilemanager');
+
+        $elements = parent::create_edit_form_elements($mform, $forsection);
+
+        /* Increase the number of sections combo box values if the user has increased the number of sections
+           using the icon on the course page beyond course 'maxsections' or course 'maxsections' has been
+           reduced below the number of sections already set for the course on the site administration course
+           defaults page.  This is so that the number of sections is not reduced leaving unintended orphaned
+           activities / resources. */
+        if (!$forsection) {
+            $maxsections = get_config('moodlecourse', 'maxsections');
+            $numsections = $mform->getElementValue('numsections');
+            $numsections = $numsections[0];
+            if ($numsections > $maxsections) {
+                $element = $mform->getElement('numsections');
+                for ($i = $maxsections + 1; $i <= $numsections; $i++) {
+                    $element->addOption("$i", $i);
+                }
+            }
+        }
+
+        return $elements;
+    }
+
+    /**
      * Updates format options for a course
      *
      * In case if course format was changed to 'Grid', we try to copy options
@@ -410,6 +448,47 @@ class format_grid extends core_courseformat\base {
         return $changes;
     }
 
+    public function section_format_options($foreditform = false) {
+        static $sectionformatoptions = false;
+        if ($sectionformatoptions === false) {
+            $sectionformatoptions = array(
+                'sectionimage_filemanager' => array(
+                    'default' => '',
+                    'type' => PARAM_RAW
+                ),
+                'sectionimagealttext' => array(
+                    'default' => '',
+                    'type' => PARAM_ALPHANUMEXT
+                )
+            );
+        }
+        if ($foreditform && !isset($sectionformatoptions['sectionimage_filemanager']['label'])) {
+            $sectionformatoptionsedit = array(
+                'sectionimage_filemanager' => array(
+                    'label' => new lang_string('sectionimage', 'format_grid'),
+                    'help' => 'sectionimage',
+                    'help_component' => 'format_grid',
+                    'element_type' => 'sectionfilemanager',
+                    'element_attributes' => array(
+                        array(
+                            'course' => $this->course,
+                            'sectionid' => optional_param('id', 0, PARAM_INT)
+                        )
+                    )
+                ),
+                'sectionimagealttext' => array(
+                    'label' => new lang_string('sectionimagealttext', 'format_grid'),
+                    'help' => 'sectionimagealttext',
+                    'help_component' => 'format_grid',
+                    'element_type' => 'text'
+                )
+            );
+            $sectionformatoptions = array_merge_recursive($sectionformatoptions, $sectionformatoptionsedit);
+        }
+
+        return $sectionformatoptions;
+    }
+
     /**
      * Deletes a section
      *
@@ -438,7 +517,7 @@ class format_grid extends core_courseformat\base {
             return false;
         }
         if (parent::delete_section($section, $forcedeleteifnotempty)) {
-            //\format_grid\toolbox::delete_image($section->id, self::get_contextid($this), $this->get_courseid());
+            // \format_grid\toolbox::delete_image($section->id, self::get_contextid($this), $this->get_courseid());
             return true;
         }
         return false;
@@ -606,7 +685,7 @@ function format_grid_inplace_editable($itemtype, $itemid, $newvalue) {
     if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
         $section = $DB->get_record_sql(
             'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
-            [$itemid, 'drill'], MUST_EXIST);
+            [$itemid, 'grid'], MUST_EXIST);
         return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
     }
 }

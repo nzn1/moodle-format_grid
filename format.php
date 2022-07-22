@@ -25,7 +25,7 @@
  * @copyright  2006 The Open University
  * @author     N.D.Freear@open.ac.uk, and others.
  * @author     Based on code originally written by Paul Krix and Julian Ridden.
- * 
+ *
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
