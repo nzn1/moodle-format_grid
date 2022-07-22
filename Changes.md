@@ -1,5 +1,9 @@
 History
 =============
+Version 4.0.0.1 - TBR
+=============================
+ 1. Start of complete re-build from scratch - functionality added as funded.  Decision made due to the changes in the core API.
+
 Version 3.11.1.1 - TBR
 =============================
  1. Fix maturity information not showing in information site setting.
