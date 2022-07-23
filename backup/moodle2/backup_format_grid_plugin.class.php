@@ -57,7 +57,6 @@ class backup_format_grid_plugin extends backup_format_plugin {
         // Create one standard named plugin element (the visible container).
         // The sectionid and courseid not required as populated on restore.
         $recomendedname = $this->get_recommended_name();
-        error_log('define_section_plugin_structure $recomendedname - '.$recomendedname);
         $section = new backup_nested_element($recomendedname, array('sectionid'), array('image', 'contenthash'));
 
         // Connect the visible container ASAP.

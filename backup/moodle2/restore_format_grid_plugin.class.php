@@ -123,12 +123,37 @@ class restore_format_grid_plugin extends restore_format_plugin {
         }
 
         global $DB;
+        $courseid = $this->task->get_courseid();
+
+        // Sort out the files if old backup.
+        $fs = get_file_storage();
+        $coursecontext = context_course::instance($courseid);
+        $files = $fs->get_area_files($coursecontext->id, 'course', 'section');
+        foreach ($files as $file) {
+            if (!$file->is_directory()) {
+                $filename = $file->get_filename();
+                $filesectionid = $file->get_itemid();
+                $gridimage = $DB->get_record('format_grid_image', array('sectionid' => $filesectionid), 'image');
+                if ($gridimage) {
+                    $filerecord = new stdClass();
+                    $filerecord->contextid = $coursecontext->id;
+                    $filerecord->component = 'format_grid';
+                    $filerecord->filearea = 'sectionimage';
+                    $filerecord->itemid = $filesectionid;
+                    $filerecord->filename = $filename;
+                    $newfile = $fs->create_file_from_storedfile($filerecord, $file);
+                    if ($newfile) {
+                        $DB->set_field('format_grid_image', 'contenthash', $newfile->get_contenthash(), array('sectionid' => $filesectionid));
+                    }
+                }
+            }
+        }
+
         if (!$this->need_restore_numsections()) {
             /* Backup file does not contain 'numsections' so we need to set it from
                the number of sections we can determine the course has.  The 'default'
                might be wrong, so there could be an entry in the db already with this
                wrong value. */
-            $courseid = $this->task->get_courseid();
             $courseformat = course_get_format($courseid);
 
             $maxsection = $DB->get_field_sql('SELECT max(section) FROM {course_sections} WHERE course = ?', [$courseid]);
@@ -192,23 +217,34 @@ class restore_format_grid_plugin extends restore_format_plugin {
         $courseid = $this->task->get_courseid();
         $newsectionid = $this->task->get_sectionid();
 
-        /*if (!empty($data->imagepath)) {
-            $data->image = $data->imagepath;
-            unset($data->imagepath);
-        } else if (empty($data->image)) {
-            $data->image = null;
-        }*/
+        if (empty($data->contenthash)) {
+            // -M4.0 backup file
+            if (!empty($data->imagepath)) {
+                $data->image = $data->imagepath;
+                unset($data->imagepath);
+            } else if (empty($data->image)) {
+                $data->image = null;
+            }
+            
+            if (!empty($data->image)) {
+                $newimagecontainer = new \stdClass();
+                $newimagecontainer->sectionid = $newsectionid;
+                $newimagecontainer->courseid = $courseid;
+                $newimagecontainer->image = $data->image;
+                // Contenthash later!
+                $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);                
+            }
+        } else {
+            $oldsectionid = $data->sectionid;
+            $this->set_mapping('gridimage', $oldsectionid, $newsectionid, true);
+            $this->add_related_files('format_grid', 'sectionimage', 'gridimage');
 
-        $oldsectionid = $data->sectionid;
-        $this->set_mapping('gridimage', $oldsectionid, $newsectionid, true);
-
-        $newimagecontainer = new \stdClass();
-        $newimagecontainer->sectionid = $newsectionid;
-        $newimagecontainer->courseid = $courseid;
-        $newimagecontainer->image = $data->image;
-        $newimagecontainer->contenthash = $data->contenthash;
-        $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);
-
-        $this->add_related_files('format_grid', 'sectionimage', 'gridimage');
+            $newimagecontainer = new \stdClass();
+            $newimagecontainer->sectionid = $newsectionid;
+            $newimagecontainer->courseid = $courseid;
+            $newimagecontainer->image = $data->image;
+            $newimagecontainer->contenthash = $data->contenthash;
+            $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);
+        }
     }
 }

@@ -42,7 +42,7 @@ class format_grid_observer {
     public static function course_content_deleted(\core\event\course_content_deleted $event) {
         if (class_exists('format_grid', false)) {
             // If class format_grid was never loaded, this is definitely not a course in 'Grid' format.
-            self::delete_images_and_summary($event->objectid);
+            //self::delete_images_and_summary($event->objectid);
         }
     }
 
@@ -59,7 +59,7 @@ class format_grid_observer {
         // If not in the grid format, then don't need the images etc.
         if ($format != 'grid') {
             // Then delete the images and any summary.
-            self::delete_images_and_summary($event->objectid);
+            //self::delete_images_and_summary($event->objectid);
         }
     }
 
