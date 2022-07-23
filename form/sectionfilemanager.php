@@ -101,7 +101,7 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
                         $filename = $file->get_filename();
                         $contenthash = $file->get_contenthash();
                         $sectionimage = $DB->get_record_select(
-                            'format_grid_image', 
+                            'format_grid_image',
                             'courseid = ? AND sectionid = ? AND '.$DB->sql_compare_text('image') . ' = ?',
                             array($course->id, $sectionid, $filename)
                         );

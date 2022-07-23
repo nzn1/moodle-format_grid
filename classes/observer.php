@@ -42,7 +42,7 @@ class format_grid_observer {
     public static function course_content_deleted(\core\event\course_content_deleted $event) {
         if (class_exists('format_grid', false)) {
             // If class format_grid was never loaded, this is definitely not a course in 'Grid' format.
-            //self::delete_images_and_summary($event->objectid);
+            self::delete_images($event->objectid);
         }
     }
 
@@ -63,12 +63,16 @@ class format_grid_observer {
         }
     }
 
-    protected static function delete_images_and_summary($courseid) {
+    /*protected static function delete_images_and_summary($courseid) {
         global $DB;
         // Delete any images associated with the course.
         \format_grid\toolbox::delete_images($courseid);
-        unset($courseformat);  // Destruct.
 
         $DB->delete_records("format_grid_summary", array("courseid" => $courseid));
+    }*/
+
+    protected static function delete_images($courseid) {
+        // Delete any images associated with the course.
+        \format_grid\toolbox::delete_images($courseid);
     }
 }

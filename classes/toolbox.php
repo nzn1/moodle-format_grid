@@ -58,17 +58,16 @@ class toolbox {
      * @returns bool|array The records or false if the course id is 0 or the request failed.
      */
     public static function get_images($courseid) {
-        global $DB;
-
         if (!$courseid) {
             return false;
         }
 
-        if (!$sectionimagecontainers = $DB->get_records('format_grid_icon', array('courseid' => $courseid), '',
-                'sectionid, image, displayedimageindex, updatedisplayedimage, alttext')) {
-            $sectionimagecontainers = false;
+        global $DB;
+        if (!$sectionimages = $DB->get_records('format_grid_image', array('courseid' => $courseid), '',
+                'sectionid, image')) {
+            $sectionimages = false;
         }
-        return $sectionimagecontainers;
+        return $sectionimages;
     }
 
     /**
@@ -352,34 +351,18 @@ class toolbox {
         $sectionimages = self::get_images($courseid);
 
         if (is_array($sectionimages)) {
-            global $CFG, $DB;
+            global $DB;
 
-            require_once($CFG->dirroot . '/course/format/lib.php'); // For 'course_get_format()'.
-            $courseformat = course_get_format($courseid);
-
-            $contextid = \format_grid::get_contextid($courseformat);
             $fs = get_file_storage();
-            $gridimagepath = self::get_image_path();
-
-            foreach ($sectionimages as $sectionimage) {
-                // Delete the image if there is one.
-                if (!empty($sectionimage->image)) {
-                    if ($file = $fs->get_file($contextid, 'course', 'section', $sectionimage->sectionid, '/',
-                            $sectionimage->image)) {
-                        $file->delete();
-                        // Delete the displayed image(s).
-                        if ($file = $fs->get_file($contextid, 'course', 'section', $sectionimage->sectionid, $gridimagepath,
-                                $sectionimage->displayedimageindex . '_' . $sectionimage->image)) {
-                            $file->delete();
-                        }
-                        if ($file = $fs->get_file($contextid, 'course', 'section', $sectionimage->sectionid, $gridimagepath,
-                                $sectionimage->displayedimageindex . '_' . $sectionimage->image.'.webp')) {
-                            $file->delete();
-                        }
-                    }
+            $coursecontext = \context_course::instance($courseid);
+            $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage');
+            foreach ($files as $file) {
+                if (!$file->is_directory()) {
+                    $file->delete();
                 }
             }
-            $DB->delete_records("format_grid_icon", array('courseid' => $courseid));
+
+            $DB->delete_records("format_grid_image", array('courseid' => $courseid));
         }
     }
 
