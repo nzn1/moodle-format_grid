@@ -56,5 +56,18 @@ $page = new admin_settingpage('format_grid_settings',
 if ($ADMIN->fulltree) {
     $page->add(new admin_setting_heading('format_grid_settings', '',
         format_text(get_string('settingssettingsdesc', 'format_grid'), FORMAT_MARKDOWN)));
+
+    // Displayed image file type - 1 = original, 2 = webp.
+    $name = 'format_grid/defaultdisplayedimagefiletype';
+    $title = get_string('defaultdisplayedimagefiletype', 'format_grid');
+    $description = get_string('defaultdisplayedimagefiletype_desc', 'format_grid');
+    $default = 1; // Original.
+    $choices = array(
+        1 => new lang_string('original', 'format_grid'),
+        2 => new lang_string('webp', 'format_grid')
+    );
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
+    $page->add($setting);
 }
 $ADMIN->add('format_grid', $page);

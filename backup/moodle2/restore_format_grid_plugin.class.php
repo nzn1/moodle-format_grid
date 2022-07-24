@@ -225,12 +225,13 @@ class restore_format_grid_plugin extends restore_format_plugin {
             } else if (empty($data->image)) {
                 $data->image = null;
             }
-            
+
             if (!empty($data->image)) {
                 $newimagecontainer = new \stdClass();
                 $newimagecontainer->sectionid = $newsectionid;
                 $newimagecontainer->courseid = $courseid;
                 $newimagecontainer->image = $data->image;
+                $newimagecontainer->displayedimagestate = 0;
                 // Contenthash later!
                 $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);                
             }
@@ -244,6 +245,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
             $newimagecontainer->courseid = $courseid;
             $newimagecontainer->image = $data->image;
             $newimagecontainer->contenthash = $data->contenthash;
+            $newimagecontainer->displayedimagestate = 0;
             $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);
         }
     }

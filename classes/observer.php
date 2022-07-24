@@ -58,18 +58,10 @@ class format_grid_observer {
         $format = $DB->get_field('course', 'format', array('id' => $event->objectid));
         // If not in the grid format, then don't need the images etc.
         if ($format != 'grid') {
-            // Then delete the images and any summary.
-            //self::delete_images_and_summary($event->objectid);
+            // Then delete the images and any summary.  TODO!
+            error_log('TODO');
         }
     }
-
-    /*protected static function delete_images_and_summary($courseid) {
-        global $DB;
-        // Delete any images associated with the course.
-        \format_grid\toolbox::delete_images($courseid);
-
-        $DB->delete_records("format_grid_summary", array("courseid" => $courseid));
-    }*/
 
     protected static function delete_images($courseid) {
         // Delete any images associated with the course.

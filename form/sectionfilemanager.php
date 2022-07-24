@@ -66,7 +66,7 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
         }
         return $result;
     }
-    
+
     private function init() {
         $course = $this->getAttribute('course');
         $sectionid = $this->getAttribute('sectionid');
@@ -75,7 +75,7 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
         $fmd = file_prepare_standard_filemanager($course, 'sectionimage', self::$options, $coursecontext, 'format_grid', 'sectionimage', $sectionid);
     }
 
-        /**
+    /**
      * Check that all files have the allowed type.
      *
      * @param int $value Draft item id with the uploaded files.
@@ -87,43 +87,64 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
             $course = $this->getAttribute('course');
             $coursecontext = context_course::instance($course->id);
             $sectionid = $this->getAttribute('sectionid');
-            $indata = new stdClass();
-            $indata->sectionimage_filemanager = $value;
-            // The file manager deals with the files table when the image is deleted.
-            $outdata = file_postupdate_standard_filemanager($indata, 'sectionimage', self::$options, $coursecontext, 'format_grid', 'sectionimage', $sectionid);
-            global $DB;
-            if ($outdata->sectionimage == '1') {
-                // We have file(s).
-                $fs = get_file_storage();
-                $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $sectionid);
-                foreach ($files as $file) {
-                    if (!$file->is_directory()) {
-                        $filename = $file->get_filename();
-                        $contenthash = $file->get_contenthash();
-                        $sectionimage = $DB->get_record_select(
-                            'format_grid_image',
-                            'courseid = ? AND sectionid = ? AND '.$DB->sql_compare_text('image') . ' = ?',
-                            array($course->id, $sectionid, $filename)
-                        );
-                        if ($sectionimage) {
-                            if (($contenthash !== $sectionimage->contenthash) || ($filename !== $sectionimage->image)) {
-                                $conditionsarray = array('courseid' => $course->id, 'sectionid' => $sectionid, 'image' => $filename);
-                                $DB->set_field('format_grid_image', 'contenthash', $contenthash, $conditionsarray);
+
+            // Only allow this code to be executed once at the same time for the given section id (the id is unique).
+            $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
+            if ($lock = $lockfactory->get_lock('sectionid'.$sectionid, 5)) {
+                $indata = new stdClass();
+                $indata->sectionimage_filemanager = $value;
+                // The file manager deals with the files table when the image is deleted.
+                $outdata = file_postupdate_standard_filemanager($indata, 'sectionimage', self::$options, $coursecontext, 'format_grid', 'sectionimage', $sectionid);
+                global $DB;
+                if ($outdata->sectionimage == '1') {
+                    // We have file(s).
+                    $fs = get_file_storage();
+                    $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $sectionid);
+                    foreach ($files as $file) {
+                        if (!$file->is_directory()) {
+                            $filename = $file->get_filename();
+                            $contenthash = $file->get_contenthash();
+                            $sectionimage = $DB->get_record_select(
+                                'format_grid_image',
+                                'courseid = ? AND sectionid = ? AND '.$DB->sql_compare_text('image') . ' = ?',
+                                array($course->id, $sectionid, $filename)
+                            );
+                            if ($sectionimage) {
+                                if (($contenthash !== $sectionimage->contenthash) || ($filename !== $sectionimage->image)) {
+                                    // Change of image.
+                                    $conditionsarray = array('courseid' => $course->id, 'sectionid' => $sectionid, 'image' => $filename);
+                                    $DB->set_field('format_grid_image', 'contenthash', $contenthash, $conditionsarray);
+                                } // Else image not changed.
+                            } else {
+                                // New image.
+                                $newimagecontainer = new \stdClass();
+                                $newimagecontainer->sectionid = $sectionid;
+                                $newimagecontainer->courseid = $course->id;
+                                $newimagecontainer->image = $filename;
+                                $newimagecontainer->contenthash = $contenthash;
+                                $newimagecontainer->displayedimagestate = 0; // Not generated.
+                                $newimagecontainer->id = $DB->insert_record('format_grid_image', $newimagecontainer, true);
                             }
-                        } else {
-                            $newimagecontainer = new \stdClass();
-                            $newimagecontainer->sectionid = $sectionid;
-                            $newimagecontainer->courseid = $course->id;
-                            $newimagecontainer->image = $filename;
-                            $newimagecontainer->contenthash = $contenthash;
-                            $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);
+                            $toolbox = \format_grid\toolbox\get_instance();
+                            $toolbox->setup_displayed_image($sectionimage, $file, $course->id, $sectionid);
+                        }
+                    }
+                    // Note: Not done the case whereby 'a' file is removed - needed?
+                } else {
+                    // No files - possible deletion of existing image.
+                    $DB->delete_records('format_grid_image', array('courseid' => $course->id, 'sectionid' => $sectionid));
+                    // Remove existing displayed image.
+                    $existingfiles = $fs->get_area_files($coursecontext->id, 'format_grid', 'displayedsectionimage', $sectionid);
+                    foreach ($existingfiles as $existingfile) {
+                        if (!$existingfile->is_directory()) {
+                            $existingfile->delete();
                         }
                     }
                 }
-                // Note: Not done the case whereby 'a' file is removed - needed?
+                $lock->release();
             } else {
-                // No files.
-                $DB->delete_records('format_grid_image', array('courseid' => $course->id, 'sectionid' => $sectionid));
+                throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
+                    get_string('cannotgetmanagesectionimagelock', 'format_grid'));
             }
         }
 

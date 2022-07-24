@@ -39,9 +39,6 @@ class backup_format_grid_plugin extends backup_format_plugin {
         // Define the virtual plugin element with the condition to fulfill.
         $plugin = $this->get_plugin_element(null, '/course/format', 'grid');
 
-        // Temporarily remove the generated images so that they are not in the backup.
-        //$this->delete_displayed_images();
-
         // Don't need to annotate ids nor files.
         return $plugin;
     }

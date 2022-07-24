@@ -643,22 +643,6 @@ class format_grid extends core_courseformat\base {
         $this->update_course_format_options($data);
     }
 
-    public static function get_context($us) {
-        global $SITE;
-
-        if ($SITE->id == $us->courseid) {
-            // Use the context of the page which should be the course category.
-            global $PAGE;
-            return $PAGE->context;
-        } else {
-            return context_course::instance($us->courseid);
-        }
-    }
-
-    public static function get_contextid($us) {
-        return self::get_context($us)->id;
-    }
-
     /**
      * Return the plugin configs for external functions.
      *
@@ -668,6 +652,14 @@ class format_grid extends core_courseformat\base {
     public function get_config_for_external() {
         // Return everything (nothing to hide).
         return $this->get_format_options();
+    }
+
+    // Grid specific methods...
+    /**
+     * Class instance update images callback.
+     */
+    public static function update_displayed_images_callback() {
+        \format_grid\toolbox::update_displayed_images_callback();
     }
 }
 

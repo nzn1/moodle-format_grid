@@ -84,6 +84,14 @@ class content extends content_base {
             $data->hasnavigation = true;
             $data->singlesection = array_shift($data->sections);
             $data->sectionreturn = $singlesection;
+        } else {
+            //error_log(print_r($sections, true));
+            error_log(print_r($format->get_format_options(), true));
+            foreach($sections as $section) {
+                $sectionclass = new \stdClass();
+                $sectionclass->id = $section->id;
+                error_log($section->id.print_r($format->get_format_options($sectionclass), true));
+            }
         }
 
         if ($this->hasaddsection) {
