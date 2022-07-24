@@ -35,6 +35,11 @@ namespace format_grid;
  */
 class toolbox {
     /**
+     * @var toolbox Singleton instance of us.
+     */
+    protected static $instance = null;
+
+    /**
      * This is a lonely object.
      */
     private function __construct() {
@@ -62,8 +67,8 @@ class toolbox {
      */
     public function setup_displayed_image($sectionimage, $sectionfile, $courseid, $sectionid) {
         global $CFG, $DB;
-        //require_once($CFG->dirroot . '/repository/lib.php');
-        //require_once($CFG->libdir . '/gdlib.php');
+        // require_once($CFG->dirroot . '/repository/lib.php');
+        // require_once($CFG->libdir . '/gdlib.php');
 
         static $settings = array(
             'imagecontainerwidth' => 210,
@@ -97,7 +102,7 @@ class toolbox {
             $data = self::generate_image($tmpfilepath, $displayedimageinfo['width'], $displayedimageinfo['height'], $crop, $newmime, $debugdata);
             if (!empty($data)) {
                 // Updated image.
-                $coursecontext = context_course::instance($courseid);
+                $coursecontext = \context_course::instance($courseid);
 
                 // Remove existing displayed image.
                 $existingfiles = $fs->get_area_files($coursecontext->id, 'format_grid', 'displayedsectionimage', $sectionid);
@@ -225,7 +230,7 @@ class toolbox {
         }
 
         global $CFG;
-        //require_once($CFG->dirroot . '/repository/lib.php');
+        // require_once($CFG->dirroot . '/repository/lib.php');
         require_once($CFG->libdir . '/gdlib.php');
 
         $imageinfo = getimagesize($filepath);
@@ -421,7 +426,7 @@ class toolbox {
         $gridformatcourses = $DB->get_records('course', array('format' => 'grid'), '', 'id');
         if ($gridformatcourses) {
             foreach ($gridformatcourses as $gridformatcourse) {
-                //self::update_displayed_images($gridformatcourse->id);
+                self::update_displayed_images($gridformatcourse->id);  // TODO!
             }
         }
     }

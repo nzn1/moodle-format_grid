@@ -53,7 +53,7 @@ class content extends content_base {
      * @return stdClass data context for a mustache template
      */
     public function export_for_template(\renderer_base $output) {
-        // global $PAGE;
+        global $DB;
         $format = $this->format;
 
         // Most formats uses section 0 as a separate section so we remove from the list.
@@ -87,10 +87,44 @@ class content extends content_base {
         } else {
             //error_log(print_r($sections, true));
             error_log(print_r($format->get_format_options(), true));
-            foreach($sections as $section) {
+            foreach ($sections as $section) {
                 $sectionclass = new \stdClass();
                 $sectionclass->id = $section->id;
                 error_log($section->id.print_r($format->get_format_options($sectionclass), true));
+            }
+
+            if (!empty($sections)) {
+                $course = $format->get_course();
+                $toolbox = \format_grid\toolbox::get_instance();
+                $coursesectionimages = $DB->get_records('format_grid_image', array('courseid' => $course->id));
+                error_log($course->id.print_r($coursesectionimages, true));
+                if (!empty($coursesectionimages)) {
+                    $fs = get_file_storage();
+                    $coursecontext = \context_course::instance($course->id);
+                    foreach ($coursesectionimages as $coursesectionimage) {
+                        if (empty($coursesectionimage->displayedimagestate)) {
+                            $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
+                            if ($lock = $lockfactory->get_lock('sectionid'.$coursesectionimage->sectionid, 5)) {
+                                $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
+                                foreach ($files as $file) {
+                                    if (!$file->is_directory()) {
+                                        error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
+                                        try {
+                                            $toolbox->setup_displayed_image($coursesectionimage, $file, $course->id, $coursesectionimage->sectionid);
+                                        } catch (\Exception $e) {
+                                            $lock->release();
+                                            throw $e;
+                                        }
+                                    }
+                                }
+                                $lock->release();
+                            } else {
+                                throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
+                                    get_string('cannotgetmanagesectionimagelock', 'format_grid'));
+                            }
+                        }
+                    }
+                }
             }
         }
 

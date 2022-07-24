@@ -125,7 +125,7 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
                                 $newimagecontainer->displayedimagestate = 0; // Not generated.
                                 $newimagecontainer->id = $DB->insert_record('format_grid_image', $newimagecontainer, true);
                             }
-                            $toolbox = \format_grid\toolbox\get_instance();
+                            $toolbox = \format_grid\toolbox::get_instance();
                             $toolbox->setup_displayed_image($sectionimage, $file, $course->id, $sectionid);
                         }
                     }
