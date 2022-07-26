@@ -31,6 +31,8 @@ defined('MOODLE_INTERNAL') || die;
 use format_grid\admin_setting_information;
 use format_grid\admin_setting_markdown;
 
+require_once($CFG->dirroot . '/course/format/grid/lib.php'); // For format_grid static constants.
+
 $settings = null;
 $ADMIN->add('formatsettings', new admin_category('format_grid', get_string('pluginname', 'format_grid')));
 
@@ -56,6 +58,19 @@ $page = new admin_settingpage('format_grid_settings',
 if ($ADMIN->fulltree) {
     $page->add(new admin_setting_heading('format_grid_settings', '',
         format_text(get_string('settingssettingsdesc', 'format_grid'), FORMAT_MARKDOWN)));
+
+    // Resize method - 1 = scale, 2 = crop.
+    $name = 'format_grid/defaultimageresizemethod';
+    $title = get_string('defaultimageresizemethod', 'format_grid');
+    $description = get_string('defaultimageresizemethod_desc', 'format_grid');
+    $default = 1; // Scale.
+    $choices = array(
+        1 => new lang_string('scale', 'format_grid'),
+        2 => new lang_string('crop', 'format_grid')
+    );
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
+    $page->add($setting);
 
     // Displayed image file type - 1 = original, 2 = webp.
     $name = 'format_grid/defaultdisplayedimagefiletype';

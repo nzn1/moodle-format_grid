@@ -659,6 +659,7 @@ class format_grid extends core_courseformat\base {
      * Class instance update images callback.
      */
     public static function update_displayed_images_callback() {
+        error_log('format_grid:update_displayed_images_callback');
         \format_grid\toolbox::update_displayed_images_callback();
     }
 }

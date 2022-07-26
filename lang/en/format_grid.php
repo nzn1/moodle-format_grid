@@ -62,6 +62,12 @@ $string['sectionimage_help'] = 'The section image';
 $string['sectionimagealttext'] = 'Image alt text';
 $string['sectionimagealttext_help'] = 'This text will be set as the image alt attribute';
 
+// Image resize method.
+$string['scale'] = 'Scale';
+$string['crop'] = 'Crop';
+$string['defaultimageresizemethod'] = 'Default image resize method';
+$string['defaultimageresizemethod_desc'] = 'The default method of resizing the image to fit the container.';
+
 // Displayed image type.
 $string['original'] = 'Original';
 $string['webp'] = 'WebP';

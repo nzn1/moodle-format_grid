@@ -233,7 +233,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
                 $newimagecontainer->image = $data->image;
                 $newimagecontainer->displayedimagestate = 0;
                 // Contenthash later!
-                $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);                
+                $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);           
             }
         } else {
             $oldsectionid = $data->sectionid;

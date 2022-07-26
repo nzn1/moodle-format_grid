@@ -197,7 +197,12 @@ class content extends content_base {
         // Generate section list.
         $sections = [];
         $numsections = $format->get_last_section_number();
-        foreach ($modinfo->get_section_info_all() as $sectionnum => $thissection) {
+        $sectioninfos = $modinfo->get_section_info_all();
+        // Get rid of section 0;
+        if (!empty($sectioninfos)) {
+            array_shift($sectioninfos);
+        }
+        foreach ($sectioninfos as $sectionnum => $thissection) {
             // The course/view.php check the section existence but the output can be called
             // from other parts so we need to check it.
             if (!$thissection) {

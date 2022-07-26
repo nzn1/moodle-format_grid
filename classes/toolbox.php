@@ -59,7 +59,7 @@ class toolbox {
 
     /**
      * Set up the displayed image.
-     * @param arrau $sectionimage Section information from its row in the 'format_grid_image' table.
+     * @param array $sectionimage Section information from its row in the 'format_grid_image' table.
      * @param stored_file $sectionfile Section file.
      * @param int $courseid The course id to which the image relates.
      * @param int $sectionid The section id to which the image relates.
@@ -423,84 +423,43 @@ class toolbox {
     }
 
     /**
-     * Class instance update images callback.  TODO!
+     * Update images callback.
      */
     public static function update_displayed_images_callback() {
         global $DB;
-        $gridformatcourses = $DB->get_records('course', array('format' => 'grid'), '', 'id');
-        if ($gridformatcourses) {
-            foreach ($gridformatcourses as $gridformatcourse) {
-                self::update_displayed_images($gridformatcourse->id);  // TODO!
+
+        $coursesectionimages = $DB->get_records('format_grid_image');
+        error_log('update_displayed_images_callback - '.print_r($coursesectionimages, true));
+        if (!empty($coursesectionimages)) {
+            $fs = get_file_storage();
+            $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
+            $toolbox = self::get_instance();
+            foreach ($coursesectionimages as $coursesectionimage) {
+                $courseid = $coursesectionimage->courseid;
+                $coursecontext = \context_course::instance($courseid);
+                if ($lock = $lockfactory->get_lock('sectionid'.$coursesectionimage->sectionid, 5)) {
+                    $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
+                    foreach ($files as $file) {
+                        if (!$file->is_directory()) {
+                            //error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
+                            try {
+                                $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $courseid, $coursesectionimage->sectionid);
+                            } catch (\Exception $e) {
+                                $lock->release();
+                                throw $e;
+                            }
+                        }
+                    }
+                    $lock->release();
+                } else {
+                    throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
+                        get_string('cannotgetmanagesectionimagelock', 'format_grid'));
+                }
             }
         }
     }
-
 
     // Old.
-    protected static function remove_existing_new_displayed_image($displayedimagefilerecord, $fs) {
-        if ($fs->file_exists($displayedimagefilerecord['contextid'], $displayedimagefilerecord['component'],
-            $displayedimagefilerecord['filearea'], $displayedimagefilerecord['itemid'],
-            $displayedimagefilerecord['filepath'], $displayedimagefilerecord['filename'])) {
-            /* This can happen with previous CONTRIB-4099 versions where it was possible for the backup file to
-               have the 'gridimage' files too.  Therefore without this, then 'create_file_from_string' below will
-               baulk as the file already exists.   Unfortunately has to be here as the restore mechanism restores
-               the grid format data for the database and then the files.  And the Grid code is called at the 'data'
-               stage. */
-            if ($oldfile = $fs->get_file($displayedimagefilerecord['contextid'], $displayedimagefilerecord['component'],
-                $displayedimagefilerecord['filearea'], $displayedimagefilerecord['itemid'],
-                $displayedimagefilerecord['filepath'], $displayedimagefilerecord['filename'])) {
-                // Delete old file.
-                $oldfile->delete();
-            }
-        }
-        // WebP version.
-        if ($fs->file_exists($displayedimagefilerecord['contextid'], $displayedimagefilerecord['component'],
-            $displayedimagefilerecord['filearea'], $displayedimagefilerecord['itemid'],
-            $displayedimagefilerecord['filepath'], $displayedimagefilerecord['filename'].'.webp')) {
-            /* This can happen with previous CONTRIB-4099 versions where it was possible for the backup file to
-               have the 'gridimage' files too.  Therefore without this, then 'create_file_from_string' below will
-               baulk as the file already exists.   Unfortunately has to be here as the restore mechanism restores
-               the grid format data for the database and then the files.  And the Grid code is called at the 'data'
-               stage. */
-            if ($oldfile = $fs->get_file($displayedimagefilerecord['contextid'], $displayedimagefilerecord['component'],
-                $displayedimagefilerecord['filearea'], $displayedimagefilerecord['itemid'],
-                $displayedimagefilerecord['filepath'], $displayedimagefilerecord['filename'].'.webp')) {
-                // Delete old file.
-                $oldfile->delete();
-            }
-        }
-    }
-
-    public static function output_section_image($section, $sectionname, $sectionimage, $contextid, $thissection, $gridimagepath, $output, $iswebp) {
-        $content = '';
-        $alttext = isset($sectionimage->alttext) ? $sectionimage->alttext : '';
-
-        if (is_object($sectionimage) && ($sectionimage->displayedimageindex > 0)) {
-            $filename = $sectionimage->displayedimageindex . '_' . $sectionimage->image;
-            if ($iswebp) {
-                $filename .= '.webp';
-            }
-            $imgurl = \moodle_url::make_pluginfile_url(
-                $contextid, 'course', 'section', $thissection->id, $gridimagepath,
-                $filename
-            );
-            $content = \html_writer::empty_tag('img', array(
-                'src' => $imgurl,
-                'alt' => $alttext,
-                'role' => 'img',
-                'aria-label' => $sectionname));
-        } else if ($section == 0) {
-            $imgurl = $output->image_url('info', 'format_grid');
-            $content = \html_writer::empty_tag('img', array(
-                'src' => $imgurl,
-                'alt' => $alttext,
-                'class' => 'info',
-                'role' => 'img',
-                'aria-label' => $sectionname));
-        }
-        return $content;
-    }
-
     public static function delete_images($courseid) {
         $sectionimages = self::get_images($courseid);
 
