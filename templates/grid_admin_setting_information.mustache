@@ -15,23 +15,28 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template format_grid/grid
+    @template format_grid/grid_admin_setting_information
 
-    Displays the grid.
 
     Example context (json):
     {
+        "versioninfo": "Release 3.11.1.0, version 2021102700 on Moodle 3.11.4+ (Build: 20220111)",
+        "maturity": "Maturity info",
+        "maturityalert": "info",
+        "versioncheck": "Not supported on this version of Moodle"
     }
 }}
-<div id="thegrid" class="d-flex flex-wrap justify-content-between">
-    {{#gridsections}}
-    <div class="card">
-        <a href="{{sectionurl}}">
-            <div class="card-header">{{sectionname}}</div>
-            <div class="grid-image card-img-bottom text-center">
-                <img class="h-100 img-responsive" src="{{imageuri}}" alt="{{alttext}}">
-            </div>
-        </a>
-    </div>
-    {{/gridsections}}
+{{#maturity}}
+<div class="alert alert-{{maturityalert}} mb-3">
+<h3>{{versioninfo}}</h3>
+{{{maturity}}}
 </div>
+{{/maturity}}
+{{^maturity}}
+<h3>{{versioninfo}}</h3>
+{{/maturity}}
+{{#versioncheck}}
+<div class="alert alert-warning mb-3">
+{{{versioncheck}}}
+</div>
+{{/versioncheck}}

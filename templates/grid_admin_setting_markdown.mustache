@@ -15,23 +15,32 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template format_grid/grid
+    @template format_grid/grid_admin_setting_markdown
 
-    Displays the grid.
+    Admin setting markdown template.
+
+    Context variables required for this template:
+    * title - Setting title
+    * name - Setting name
+    * markdown - Setting makrdown
 
     Example context (json):
     {
+        "title": "Setting title",
+        "name": "Name",
+        "description": "Description goes here",
+        "markdown": "Markdown goes here"
     }
 }}
-<div id="thegrid" class="d-flex flex-wrap justify-content-between">
-    {{#gridsections}}
-    <div class="card">
-        <a href="{{sectionurl}}">
-            <div class="card-header">{{sectionname}}</div>
-            <div class="grid-image card-img-bottom text-center">
-                <img class="h-100 img-responsive" src="{{imageuri}}" alt="{{alttext}}">
-            </div>
-        </a>
+{{!
+    Setting description.
+}}
+<div class="form-item row">
+    <div class="form-label col-12">
+        <h1>{{{title}}}</h1>
+        <p>{{{description}}}</p>
     </div>
-    {{/gridsections}}
+    <div class="form-setting col-12">
+        <div>{{{markdown}}}</div>
+    </div>
 </div>
