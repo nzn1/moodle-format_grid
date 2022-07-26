@@ -17,12 +17,12 @@
 /**
  * Grid Format.
  *
- * @package    format_grid
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2021-onwards G J Barnard based upon work done by Marina Glancy.
- * @author     G J Barnard - {@link http://about.me/gjbarnard} and
- *                           {@link http://moodle.org/user/profile.php?id=442195}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   format_grid
+ * @version   See the value of '$plugin->version' in version.php.
+ * @copyright &copy; 2021-onwards G J Barnard based upon work done by Marina Glancy.
+ * @author    G J Barnard - {@link http://about.me/gjbarnard} and
+ *                          {@link http://moodle.org/user/profile.php?id=442195}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace format_grid;
@@ -120,6 +120,9 @@ class toolbox {
                     'itemid' => $sectionid,
                     'filepath' => '/',
                     'filename' => $filename,
+                    'userid' => $sectionfile->get_userid(),
+                    'author' => $sectionfile->get_author(),
+                    'license' => $sectionfile->get_license(),
                     'timecreated' => $created,
                     'timemodified' => $created,
                     'mimetype' => $mime);
@@ -130,14 +133,15 @@ class toolbox {
                     $displayedimagefilerecord['mimetype'] = $newmime;
                 }
                 $fs->create_file_from_string($displayedimagefilerecord, $data);
-                $displayedimagestate = 1; // Generated.
+                $sectionimage->displayedimagestate = 1; // Generated.
             } else {
-                $displayedimagestate = 2; // Cannot generate.
+                $sectionimage->displayedimagestate = 2; // Cannot generate.
             }
             unlink($tmpfilepath);
 
-            $DB->set_field('format_grid_image', 'displayedimagestate', $displayedimagestate, array('sectionid' => $sectionid));
-            if ($displayedimagestate == 2) {
+            $DB->set_field('format_grid_image', 'displayedimagestate', $sectionimage->displayedimagestate,
+                array('sectionid' => $sectionid));
+            if ($sectionimage->displayedimagestate == 2) {
                 print_error('cannotconvertuploadedimagetodisplayedimage', 'format_grid',
                     $CFG->wwwroot."/course/view.php?id=".$courseid,
                     'SI: '.var_export($displayedimagefilerecord, true).', DII: '.var_export($displayedimageinfo, true));
@@ -495,34 +499,6 @@ class toolbox {
                 'aria-label' => $sectionname));
         }
         return $content;
-    }
-
-    public static function delete_image($sectionid, $contextid, $courseid) {
-        $sectionimage = self::get_image($courseid, $sectionid);
-        if ($sectionimage) {
-            global $DB;
-            if (!empty($sectionimage->image)) {
-                $fs = get_file_storage();
-
-                // Delete the image.
-                if ($file = $fs->get_file($contextid, 'course', 'section', $sectionid, '/', $sectionimage->image)) {
-                    $file->delete();
-                    $DB->set_field('format_grid_icon', 'image', null, array('sectionid' => $sectionimage->sectionid));
-                    // Delete the displayed image(s).
-                    $gridimagepath = self::get_image_path();
-                    if ($file = $fs->get_file($contextid, 'course', 'section', $sectionid, $gridimagepath,
-                            $sectionimage->displayedimageindex . '_' . $sectionimage->image)) {
-                        $file->delete();
-                    }
-                    if ($file = $fs->get_file($contextid, 'course', 'section', $sectionid, $gridimagepath,
-                            $sectionimage->displayedimageindex . '_' . $sectionimage->image.'.webp')) {
-                        $file->delete();
-                    }
-                }
-            }
-            $DB->delete_records("format_grid_icon", array('courseid' => $courseid,
-                'sectionid' => $sectionimage->sectionid));
-        }
     }
 
     public static function delete_images($courseid) {

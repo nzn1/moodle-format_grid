@@ -17,10 +17,10 @@
 /**
  * Grid format.
  *
- * @package    format_grid
- * @copyright  &copy; 2022-onwards G J Barnard.
- * @author     G J Barnard - gjbarnard at gmail dot com and {@link http://moodle.org/user/profile.php?id=442195}
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   format_grid
+ * @copyright &copy; 2022-onwards G J Barnard.
+ * @author    G J Barnard - gjbarnard at gmail dot com and {@link http://moodle.org/user/profile.php?id=442195}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 

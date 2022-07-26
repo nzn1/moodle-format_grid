@@ -663,6 +663,58 @@ class format_grid extends core_courseformat\base {
     }
 }
 
+// Transposed from block_html_pluginfile
+/**
+ * Form for editing HTML block instances.
+ *
+ * @copyright 2010 Petr Skoda (http://skodak.org)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   block_html
+ * @category  files
+ * @param stdClass $course course object
+ * @param stdClass $birecord_or_cm block instance record
+ * @param stdClass $context context object
+ * @param string $filearea file area
+ * @param array $args extra arguments
+ * @param bool $forcedownload whether or not force download
+ * @param array $options additional options affecting the file serving
+ * @return bool
+ */
+function format_grid_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+    //global $DB, $CFG, $USER;
+
+    if ($context->contextlevel != CONTEXT_COURSE) {
+        send_file_not_found();
+    }
+
+    // Check if user has capability to access course.
+    require_course_login($course);
+
+    if ($filearea !== 'displayedsectionimage') {
+        send_file_not_found();
+    }
+
+    $fs = get_file_storage();
+
+    $filename = array_pop($args);
+    $sectionid = array_pop($args);
+    error_log('format_grid_pluginfile fn- '.$filename.' sid- '.$sectionid.' - '.print_r($args, true));
+    $filepath = $args ? '/'.implode('/', $args).'/' : '/';
+
+    error_log('format_grid_pluginfile - '.$filepath.' - '.print_r($args, true));
+
+    if (!$file = $fs->get_file($context->id, 'format_grid', 'displayedsectionimage', $sectionid, $filepath, $filename) or $file->is_directory()) {
+        send_file_not_found();
+    }
+
+    //$forcedownload = true;
+
+    // NOTE: it woudl be nice to have file revisions here, for now rely on standard file lifetime,
+    //       do not lower it because the files are dispalyed very often.
+    \core\session\manager::write_close();
+    send_stored_file($file, null, 0, $forcedownload, $options);
+}
+
 /**
  * Implements callback inplace_editable() allowing to edit values in-place.
  *

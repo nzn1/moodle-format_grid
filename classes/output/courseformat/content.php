@@ -19,6 +19,8 @@
  *
  * @package   format_grid
  * @copyright 2020 Ferran Recio <ferran@moodle.com>
+ * @copyright &copy; 2022-onwards G J Barnard.
+ * @author    G J Barnard - gjbarnard at gmail dot com and {@link http://moodle.org/user/profile.php?id=442195}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -50,7 +52,7 @@ class content extends content_base {
      * Export this data so it can be used as the context for a mustache template (core/inplace_editable).
      *
      * @param renderer_base $output typically, the renderer that's calling this function
-     * @return stdClass data context for a mustache template
+     * @return stdClass data context for a Mmustache template
      */
     public function export_for_template(\renderer_base $output) {
         global $DB;
@@ -97,7 +99,7 @@ class content extends content_base {
                 $course = $format->get_course();
                 $toolbox = \format_grid\toolbox::get_instance();
                 $coursesectionimages = $DB->get_records('format_grid_image', array('courseid' => $course->id));
-                error_log($course->id.print_r($coursesectionimages, true));
+                //error_log($course->id.print_r($coursesectionimages, true));
                 if (!empty($coursesectionimages)) {
                     $fs = get_file_storage();
                     $coursecontext = \context_course::instance($course->id);
@@ -108,9 +110,9 @@ class content extends content_base {
                                 $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
                                 foreach ($files as $file) {
                                     if (!$file->is_directory()) {
-                                        error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
+                                        //error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
                                         try {
-                                            $toolbox->setup_displayed_image($coursesectionimage, $file, $course->id, $coursesectionimage->sectionid);
+                                            $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $course->id, $coursesectionimage->sectionid);
                                         } catch (\Exception $e) {
                                             $lock->release();
                                             throw $e;
@@ -125,6 +127,41 @@ class content extends content_base {
                         }
                     }
                 }
+
+                // Suitable array.
+                $sectionimages = array();
+                foreach ($coursesectionimages as $coursesectionimage) {
+                    $sectionimages[$coursesectionimage->sectionid] = $coursesectionimage;
+                }
+                // Now iterate over the sections.
+                $data->gridsections = array();
+                foreach ($sections as $section) {
+                    // Do we have an image?
+                    if ((array_key_exists($section->id, $sectionimages)) && ($sectionimages[$section->id]->displayedimagestate == 1)) {
+                        // Yes.
+                        $image = \moodle_url::make_pluginfile_url(
+                            $coursecontext->id, 'format_grid', 'displayedsectionimage', $section->id, '/', $sectionimages[$section->id]->image
+                        );
+                        $sectionimages[$section->id]->imageuri = $image->out();
+                    } else {
+                        // No.
+                        $sectionimages[$section->id] = new \stdClass;
+                        $sectionimages[$section->id]->imageuri = $output->get_generated_image_for_id($section->id);
+                    }
+                    // Alt text.
+                    $sectionformatoptions = $format->get_format_options($section);
+                    $sectionimages[$section->id]->alttext = $sectionformatoptions['sectionimagealttext'];
+
+                    // Section link.
+                    $sectionimages[$section->id]->sectionurl = new \moodle_url('/course/view.php', array('id' => $course->id, 'section' => $section->num));
+                    $sectionimages[$section->id]->sectionurl = $sectionimages[$section->id]->sectionurl->out(false);
+
+                    // For the template.
+                    $data->gridsections[] = $sectionimages[$section->id];
+                }
+                //error_log('SI '.print_r($sectionimages, true));
+                //$data->gridsections = $sectionimages;
+                error_log('GSID '.print_r($data->gridsections, true));
             }
         }
 
