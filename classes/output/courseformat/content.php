@@ -156,12 +156,15 @@ class content extends content_base {
                     $sectionimages[$section->id]->sectionurl = new \moodle_url('/course/view.php', array('id' => $course->id, 'section' => $section->num));
                     $sectionimages[$section->id]->sectionurl = $sectionimages[$section->id]->sectionurl->out(false);
 
+                    // Section name.
+                    $sectionimages[$section->id]->sectionname = $section->header->name;
                     // For the template.
                     $data->gridsections[] = $sectionimages[$section->id];
                 }
                 //error_log('SI '.print_r($sectionimages, true));
                 //$data->gridsections = $sectionimages;
-                error_log('GSID '.print_r($data->gridsections, true));
+                //error_log('GSID '.print_r($data->gridsections, true));
+                error_log('S '.print_r($sections, true));
             }
         }
 

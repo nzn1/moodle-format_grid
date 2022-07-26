@@ -23,12 +23,13 @@
     {
     }
 }}
-<div class="d-flex">
-    <p>The grid</p>
+<div id="thegrid" class="d-flex flex-wrap justify-content-between">
     {{#gridsections}}
-        <p>The grid section</p>
+    <div class="card">
         <a href="{{sectionurl}}">
-            <img src="{{imageuri}}" alt="{{alttext}}">
+            <div class="card-header">{{sectionname}}</div>
+            <img class="grid-image card-img-bottom" src="{{imageuri}}" alt="{{alttext}}">
         </a>
+    </div>
     {{/gridsections}}
 </div>

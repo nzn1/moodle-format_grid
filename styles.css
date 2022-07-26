@@ -25,3 +25,8 @@
  * @author     Based on code originally written by Paul Krix and Julian Ridden.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+.format_grid #thegrid .grid-image {
+    height: 140px;
+    width: 210px;
+}
