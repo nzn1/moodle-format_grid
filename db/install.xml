@@ -9,7 +9,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="image" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="contenthash" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false" COMMENT="sha1 hash of file content"/>
-        <FIELD NAME="displayedimagestate" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="State of the displayed image, 0 - not generated, 1 - generated, 2 - cannot generate"/>
+        <FIELD NAME="displayedimagestate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="State of the displayed image, 0 - not generated, >= 1 - generated, -1 - cannot generate"/>
         <FIELD NAME="sectionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Needed to identify records when deleting a course"/>
       </FIELDS>

@@ -142,12 +142,18 @@ class content extends content_base {
             // Now iterate over the sections.
             $data->gridsections = array();
             $sectionsforgrid = $this->get_grid_sections();
+            $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
+
             foreach ($sectionsforgrid as $section) {
                 // Do we have an image?
-                if ((array_key_exists($section->id, $sectionimages)) && ($sectionimages[$section->id]->displayedimagestate == 1)) {
+                if ((array_key_exists($section->id, $sectionimages)) && ($sectionimages[$section->id]->displayedimagestate >= 1)) {
                     // Yes.
+                    $filename = $sectionimages[$section->id]->image;
+                    if ($iswebp) {
+                        $filename = $filename.'.webp';
+                    }
                     $image = \moodle_url::make_pluginfile_url(
-                        $coursecontext->id, 'format_grid', 'displayedsectionimage', $section->id, '/', $sectionimages[$section->id]->image
+                        $coursecontext->id, 'format_grid', 'displayedsectionimage', $section->id, '/'.$sectionimages[$section->id]->displayedimagestate.'/', $filename
                     );
                     $sectionimages[$section->id]->imageuri = $image->out();
                 } else {

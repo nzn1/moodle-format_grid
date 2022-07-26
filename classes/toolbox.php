@@ -73,7 +73,7 @@ class toolbox {
         static $settings = array(
             'imagecontainerwidth' => 210,
             'imagecontainerratio' => 1,
-            'imageresizemethod' => 1
+            'imageresizemethod' => 2
         );
 
         if (!empty($sectionfile)) {
@@ -85,7 +85,8 @@ class toolbox {
             $tmpfilepath = $tmproot . '/' . $sectionfile->get_contenthash();
             $sectionfile->copy_content_to($tmpfilepath);
 
-            $crop = ($settings['imageresizemethod'] == 1) ? false : true;
+            //$crop = ($settings['imageresizemethod'] == 1) ? false : true;
+            $crop = (get_config('format_grid', 'defaultimageresizemethod') == 1) ? false : true;
             $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
             if ($iswebp) { // WebP.
                 $newmime = 'image/webp';
@@ -133,15 +134,15 @@ class toolbox {
                     $displayedimagefilerecord['mimetype'] = $newmime;
                 }
                 $fs->create_file_from_string($displayedimagefilerecord, $data);
-                $sectionimage->displayedimagestate = 1; // Generated.
+                $sectionimage->displayedimagestate++; // Generated.
             } else {
-                $sectionimage->displayedimagestate = 2; // Cannot generate.
+                $sectionimage->displayedimagestate = -1; // Cannot generate.
             }
             unlink($tmpfilepath);
 
             $DB->set_field('format_grid_image', 'displayedimagestate', $sectionimage->displayedimagestate,
                 array('sectionid' => $sectionid));
-            if ($sectionimage->displayedimagestate == 2) {
+            if ($sectionimage->displayedimagestate == -1) {
                 print_error('cannotconvertuploadedimagetodisplayedimage', 'format_grid',
                     $CFG->wwwroot."/course/view.php?id=".$courseid,
                     'SI: '.var_export($displayedimagefilerecord, true).', DII: '.var_export($displayedimageinfo, true));

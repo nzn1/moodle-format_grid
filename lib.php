@@ -697,18 +697,22 @@ function format_grid_pluginfile($course, $birecord_or_cm, $context, $filearea, $
 
     $fs = get_file_storage();
 
-    $filename = array_pop($args);
-    $sectionid = array_pop($args);
-    error_log('format_grid_pluginfile fn- '.$filename.' sid- '.$sectionid.' - '.print_r($args, true));
     $filepath = $args ? '/'.implode('/', $args).'/' : '/';
 
     error_log('format_grid_pluginfile - '.$filepath.' - '.print_r($args, true));
 
-    if (!$file = $fs->get_file($context->id, 'format_grid', 'displayedsectionimage', $sectionid, $filepath, $filename) or $file->is_directory()) {
+    /*$filename = array_pop($args);
+    $displayedimagestate = array_pop($args);
+    $sectionid = array_pop($args); */
+    $filename = $args[2];
+    $sectionid = $args[0];
+    error_log('format_grid_pluginfile fn- '.$filename.' sid- '.$sectionid.' - '.print_r($args, true));
+    
+    if (!$file = $fs->get_file($context->id, 'format_grid', 'displayedsectionimage', $sectionid, '/', $filename) or $file->is_directory()) {
         send_file_not_found();
     }
 
-    //$forcedownload = true;
+    // $forcedownload = true;
 
     // NOTE: it woudl be nice to have file revisions here, for now rely on standard file lifetime,
     //       do not lower it because the files are dispalyed very often.
