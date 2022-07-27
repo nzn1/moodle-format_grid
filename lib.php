@@ -685,7 +685,7 @@ class format_grid extends core_courseformat\base {
      * Class instance update images callback.
      */
     public static function update_displayed_images_callback() {
-        error_log('format_grid:update_displayed_images_callback');
+        // error_log('format_grid:update_displayed_images_callback');
         \format_grid\toolbox::update_displayed_images_callback();
     }
 }
@@ -723,16 +723,16 @@ function format_grid_pluginfile($course, $birecord_or_cm, $context, $filearea, $
 
     $fs = get_file_storage();
 
-    $filepath = $args ? '/'.implode('/', $args).'/' : '/';
+    // $filepath = $args ? '/'.implode('/', $args).'/' : '/';
 
-    error_log('format_grid_pluginfile - '.$filepath.' - '.print_r($args, true));
+    // error_log('format_grid_pluginfile - '.$filepath.' - '.print_r($args, true));
 
     /*$filename = array_pop($args);
     $displayedimagestate = array_pop($args);
     $sectionid = array_pop($args); */
     $filename = $args[2];
     $sectionid = $args[0];
-    error_log('format_grid_pluginfile fn- '.$filename.' sid- '.$sectionid.' - '.print_r($args, true));
+    // error_log('format_grid_pluginfile fn- '.$filename.' sid- '.$sectionid.' - '.print_r($args, true));
     
     if (!$file = $fs->get_file($context->id, 'format_grid', 'displayedsectionimage', $sectionid, '/', $filename) or $file->is_directory()) {
         send_file_not_found();

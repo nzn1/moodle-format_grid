@@ -73,6 +73,7 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
 
         $coursecontext = context_course::instance($course->id);
         $fmd = file_prepare_standard_filemanager($course, 'sectionimage', self::$options, $coursecontext, 'format_grid', 'sectionimage', $sectionid);
+        $this->setValue($fmd->id);
     }
 
     /**
@@ -117,13 +118,13 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
                                 } // Else image not changed.
                             } else {
                                 // New image.
-                                $newimagecontainer = new \stdClass();
-                                $newimagecontainer->sectionid = $sectionid;
-                                $newimagecontainer->courseid = $course->id;
-                                $newimagecontainer->image = $filename;
-                                $newimagecontainer->contenthash = $contenthash;
-                                $newimagecontainer->displayedimagestate = 0; // Not generated.
-                                $newimagecontainer->id = $DB->insert_record('format_grid_image', $newimagecontainer, true);
+                                $sectionimage = new \stdClass();
+                                $sectionimage->sectionid = $sectionid;
+                                $sectionimage->courseid = $course->id;
+                                $sectionimage->image = $filename;
+                                $sectionimage->contenthash = $contenthash;
+                                $sectionimage->displayedimagestate = 0; // Not generated.
+                                $sectionimage->id = $DB->insert_record('format_grid_image', $sectionimage, true);
                             }
                             $toolbox = \format_grid\toolbox::get_instance();
                             $toolbox->setup_displayed_image($sectionimage, $file, $course->id, $sectionid);

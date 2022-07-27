@@ -94,8 +94,8 @@ class content extends content_base {
             $data->singlesection = array_shift($data->sections);
             $data->sectionreturn = $singlesection;
         } else if (!$editing) {
-            //error_log(print_r($sections, true));
-            /*error_log(print_r($format->get_format_options(), true));
+            // error_log(print_r($sections, true));
+            /* error_log(print_r($format->get_format_options(), true));
             foreach ($sections as $section) {
                 $sectionclass = new \stdClass();
                 $sectionclass->id = $section->id;
@@ -183,10 +183,10 @@ class content extends content_base {
                 // For the template.
                 $data->gridsections[] = $sectionimages[$section->id];
             }
-            //error_log('SI '.print_r($sectionimages, true));
-            //$data->gridsections = $sectionimages;
-            //error_log('GSID '.print_r($data->gridsections, true));
-            error_log('S '.print_r($sectionsforgrid, true));
+            // error_log('SI '.print_r($sectionimages, true));
+            // $data->gridsections = $sectionimages;
+            // error_log('GSID '.print_r($data->gridsections, true));
+            // error_log('S '.print_r($sectionsforgrid, true));
         }
 
         if ($this->hasaddsection) {

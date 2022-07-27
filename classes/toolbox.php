@@ -430,7 +430,7 @@ class toolbox {
         global $DB;
 
         $coursesectionimages = $DB->get_records('format_grid_image');
-        error_log('update_displayed_images_callback - '.print_r($coursesectionimages, true));
+        // error_log('update_displayed_images_callback - '.print_r($coursesectionimages, true));
         if (!empty($coursesectionimages)) {
             $fs = get_file_storage();
             $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
@@ -442,7 +442,7 @@ class toolbox {
                     $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
                     foreach ($files as $file) {
                         if (!$file->is_directory()) {
-                            //error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
+                            // error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
                             try {
                                 $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $courseid, $coursesectionimage->sectionid);
                             } catch (\Exception $e) {
