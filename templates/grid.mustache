@@ -23,9 +23,16 @@
     {
     }
 }}
-<div id="thegrid" class="d-flex flex-wrap justify-content-between">
+<div class="thegrid d-flex flex-wrap justify-content-between">
     {{#gridsections}}
-    <div class="card">
+    {{#sectionbreak}}
+    </div>
+    {{#sectionbreakheading}}
+    <h2>{{sectionbreakheading}}</h2>
+    {{/sectionbreakheading}}
+    <div class="thegrid d-flex flex-wrap justify-content-between">
+    {{/sectionbreak}}
+    <div class="card m-2">
         <a href="{{sectionurl}}">
             <div class="card-header">{{sectionname}}</div>
             <div class="grid-image card-img-bottom text-center">

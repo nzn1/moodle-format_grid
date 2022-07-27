@@ -459,6 +459,14 @@ class format_grid extends core_courseformat\base {
                 'sectionimagealttext' => array(
                     'default' => '',
                     'type' => PARAM_ALPHANUMEXT
+                ),
+                'sectionbreak' => array(
+                    'default' => 1, // No.
+                    'type' => PARAM_INT
+                ),
+                'sectionbreakheading' => array(
+                    'default' => '',
+                    'type' => PARAM_TEXT
                 )
             );
         }
@@ -479,6 +487,24 @@ class format_grid extends core_courseformat\base {
                 'sectionimagealttext' => array(
                     'label' => new lang_string('sectionimagealttext', 'format_grid'),
                     'help' => 'sectionimagealttext',
+                    'help_component' => 'format_grid',
+                    'element_type' => 'text'
+                ),
+                'sectionbreak' => array(
+                    'label' => new lang_string('sectionbreak', 'format_grid'),
+                    'help' => 'sectionbreak',
+                    'help_component' => 'format_grid',
+                    'element_type' => 'select',
+                    'element_attributes' => array(
+                        array(
+                            1 => new lang_string('no'),
+                            2 => new lang_string('yes')
+                        )
+                    ),
+                ),
+                'sectionbreakheading' => array(
+                    'label' => new lang_string('sectionbreakheading', 'format_grid'),
+                    'help' => 'sectionbreakheading',
                     'help_component' => 'format_grid',
                     'element_type' => 'text'
                 )
@@ -714,8 +740,9 @@ function format_grid_pluginfile($course, $birecord_or_cm, $context, $filearea, $
 
     // $forcedownload = true;
 
-    // NOTE: it woudl be nice to have file revisions here, for now rely on standard file lifetime,
-    //       do not lower it because the files are dispalyed very often.
+    // NOTE:
+    // It would be nice to have file revisions here, for now rely on standard file lifetime,
+    // do not lower it because the files are dispalyed very often.
     \core\session\manager::write_close();
     send_stored_file($file, null, 0, $forcedownload, $options);
 }

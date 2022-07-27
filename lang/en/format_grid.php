@@ -56,11 +56,17 @@ $string['newsectionname'] = 'New name for section {$a}';
 // Moodle 2.4 Course format refactoring - MDL-35218.
 $string['numbersections'] = 'Number of sections';
 
-// Settings.
+// Section image.
 $string['sectionimage'] = 'Section image';
-$string['sectionimage_help'] = 'The section image';
+$string['sectionimage_help'] = 'The section image.';
 $string['sectionimagealttext'] = 'Image alt text';
-$string['sectionimagealttext_help'] = 'This text will be set as the image alt attribute';
+$string['sectionimagealttext_help'] = 'This text will be set as the image alt attribute.';
+
+// Section break.
+$string['sectionbreak'] = 'Section break';
+$string['sectionbreak_help'] = 'Break in the grid at this section.';
+$string['sectionbreakheading'] = 'Section break heading';
+$string['sectionbreakheading_help'] = 'Show this heading at the point this section breaks in the grid.';
 
 // Image resize method.
 $string['scale'] = 'Scale';

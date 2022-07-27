@@ -91,6 +91,7 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
             // Only allow this code to be executed once at the same time for the given section id (the id is unique).
             $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
             if ($lock = $lockfactory->get_lock('sectionid'.$sectionid, 5)) {
+                $fs = get_file_storage();
                 $indata = new stdClass();
                 $indata->sectionimage_filemanager = $value;
                 // The file manager deals with the files table when the image is deleted.
@@ -98,7 +99,6 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
                 global $DB;
                 if ($outdata->sectionimage == '1') {
                     // We have file(s).
-                    $fs = get_file_storage();
                     $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $sectionid);
                     foreach ($files as $file) {
                         if (!$file->is_directory()) {

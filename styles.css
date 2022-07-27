@@ -26,7 +26,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-.format-grid #thegrid .grid-image {
+.format-grid .thegrid .grid-image {
     height: 140px;
     width: 210px;
 }
