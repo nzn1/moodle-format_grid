@@ -85,7 +85,7 @@ class toolbox {
             $tmpfilepath = $tmproot . '/' . $sectionfile->get_contenthash();
             $sectionfile->copy_content_to($tmpfilepath);
 
-            //$crop = ($settings['imageresizemethod'] == 1) ? false : true;
+            // $crop = ($settings['imageresizemethod'] == 1) ? false : true;
             $crop = (get_config('format_grid', 'defaultimageresizemethod') == 1) ? false : true;
             $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
             if ($iswebp) { // WebP.

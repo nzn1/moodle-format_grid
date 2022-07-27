@@ -105,7 +105,7 @@ class content extends content_base {
             $course = $format->get_course();
             $toolbox = \format_grid\toolbox::get_instance();
             $coursesectionimages = $DB->get_records('format_grid_image', array('courseid' => $course->id));
-            //error_log($course->id.print_r($coursesectionimages, true));
+            // error_log($course->id.print_r($coursesectionimages, true));
             if (!empty($coursesectionimages)) {
                 $fs = get_file_storage();
                 $coursecontext = \context_course::instance($course->id);
@@ -116,7 +116,7 @@ class content extends content_base {
                             $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
                             foreach ($files as $file) {
                                 if (!$file->is_directory()) {
-                                    //error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
+                                    // error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
                                     try {
                                         $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $course->id, $coursesectionimage->sectionid);
                                     } catch (\Exception $e) {
@@ -240,5 +240,5 @@ class content extends content_base {
         }
 
         return $sections;
-    }    
+    }
 }

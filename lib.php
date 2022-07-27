@@ -699,7 +699,7 @@ class format_grid extends core_courseformat\base {
  * @package   block_html
  * @category  files
  * @param stdClass $course course object
- * @param stdClass $birecord_or_cm block instance record
+ * @param stdClass $birecordorcm block instance record
  * @param stdClass $context context object
  * @param string $filearea file area
  * @param array $args extra arguments
@@ -707,8 +707,8 @@ class format_grid extends core_courseformat\base {
  * @param array $options additional options affecting the file serving
  * @return bool
  */
-function format_grid_pluginfile($course, $birecord_or_cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
-    //global $DB, $CFG, $USER;
+function format_grid_pluginfile($course, $birecordorcm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+    // global $DB, $CFG, $USER;
 
     if ($context->contextlevel != CONTEXT_COURSE) {
         send_file_not_found();
@@ -733,7 +733,7 @@ function format_grid_pluginfile($course, $birecord_or_cm, $context, $filearea, $
     $filename = $args[2];
     $sectionid = $args[0];
     // error_log('format_grid_pluginfile fn- '.$filename.' sid- '.$sectionid.' - '.print_r($args, true));
-    
+
     if (!$file = $fs->get_file($context->id, 'format_grid', 'displayedsectionimage', $sectionid, '/', $filename) or $file->is_directory()) {
         send_file_not_found();
     }
