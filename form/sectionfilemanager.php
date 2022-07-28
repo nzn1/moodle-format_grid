@@ -100,6 +100,7 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
                 global $DB;
                 if ($outdata->sectionimage == '1') {
                     // We have file(s).
+                    $format = course_get_format($course);
                     $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $sectionid);
                     foreach ($files as $file) {
                         if (!$file->is_directory()) {
@@ -127,7 +128,7 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
                                 $sectionimage->id = $DB->insert_record('format_grid_image', $sectionimage, true);
                             }
                             $toolbox = \format_grid\toolbox::get_instance();
-                            $toolbox->setup_displayed_image($sectionimage, $file, $course->id, $sectionid);
+                            $toolbox->setup_displayed_image($sectionimage, $file, $course->id, $sectionid, $format);
                         }
                     }
                     // Note: Not done the case whereby 'a' file is removed - needed?

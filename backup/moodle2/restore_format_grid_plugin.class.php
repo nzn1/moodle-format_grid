@@ -133,6 +133,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
             if (!$file->is_directory()) {
                 $filename = $file->get_filename();
                 $filesectionid = $file->get_itemid();
+                // TODO - compare filename?
                 $gridimage = $DB->get_record('format_grid_image', array('sectionid' => $filesectionid), 'image');
                 if ($gridimage) {
                     $filerecord = new stdClass();
@@ -197,13 +198,6 @@ class restore_format_grid_plugin extends restore_format_plugin {
     /**
      * Process the 'plugin_format_grid_section' element within the 'section' element in the 'section.xml' file in the
      * '/sections/section_sectionid' folder of the zipped backup 'mbz' file.
-     * Discovered that the files are contained in the course repository with the new section number, so we just need to alter to
-     * the new value if any. * This was undertaken by performing a restore and using the url
-     * 'http://localhost/moodle23/pluginfile.php/94/course/section/162/mc_fs.png' where I had an image called 'mc_fs.png' in
-     * section 1 which was id 129 but now 162 as the debug code told me.  '94' is just the context id.  The url was originally
-     * created in '_make_block_icon_topics' of lib.php of the format.
-     * Still need courseid in the 'format_grid_icon' table as it is used in discovering what records to remove when deleting a
-     * course.
      */
     public function process_gridsection($data) {
         global $DB;
@@ -233,7 +227,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
                 $newimagecontainer->image = $data->image;
                 $newimagecontainer->displayedimagestate = 0;
                 // Contenthash later!
-                $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true); 
+                $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);
             }
         } else {
             $oldsectionid = $data->sectionid;

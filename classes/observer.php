@@ -58,8 +58,8 @@ class format_grid_observer {
         $format = $DB->get_field('course', 'format', array('id' => $event->objectid));
         // If not in the grid format, then don't need the images etc.
         if ($format != 'grid') {
-            // Then delete the images and any summary.  TODO!
-            error_log('TODO');
+            // Then delete the images.
+            self::delete_images($event->objectid);
         }
     }
 

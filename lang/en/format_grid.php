@@ -56,6 +56,9 @@ $string['newsectionname'] = 'New name for section {$a}';
 // Moodle 2.4 Course format refactoring - MDL-35218.
 $string['numbersections'] = 'Number of sections';
 
+// Setting general.
+$string['default'] = 'Default - {$a}';
+
 // Section image.
 $string['sectionimage'] = 'Section image';
 $string['sectionimage_help'] = 'The section image.';
@@ -68,9 +71,23 @@ $string['sectionbreak_help'] = 'Break in the grid at this section.';
 $string['sectionbreakheading'] = 'Section break heading';
 $string['sectionbreakheading_help'] = 'Show this heading at the point this section breaks in the grid.';
 
+// Image container width.
+$string['imagecontainerwidth'] = 'Set the image container width';
+$string['imagecontainerwidth_help'] = 'Set the image container width to one of: 128, 192, 210, 256, 320, 384, 448, 512, 576, 640, 704 or 768';
+$string['defaultimagecontainerwidth'] = 'Default width of the image container';
+$string['defaultimagecontainerwidth_desc'] = 'The default width of the image container.';
+
+// Image container ratio.
+$string['imagecontainerratio'] = 'Set the image container ratio relative to the width';
+$string['imagecontainerratio_help'] = 'Set the image container ratio to one of: 3-2, 3-1, 3-3, 2-3, 1-3, 4-3 or 3-4.';
+$string['defaultimagecontainerratio'] = 'Default ratio of the image container relative to the width';
+$string['defaultimagecontainerratio_desc'] = 'The default ratio of the image container relative to the width.';
+
 // Image resize method.
 $string['scale'] = 'Scale';
 $string['crop'] = 'Crop';
+$string['imageresizemethod'] = 'Set the image resize method';
+$string['imageresizemethod_help'] = "Set the image resize method to: 'Scale' or 'Crop' when resizing the image to fit the container.";
 $string['defaultimageresizemethod'] = 'Default image resize method';
 $string['defaultimageresizemethod_desc'] = 'The default method of resizing the image to fit the container.';
 

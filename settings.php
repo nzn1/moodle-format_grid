@@ -59,6 +59,26 @@ if ($ADMIN->fulltree) {
     $page->add(new admin_setting_heading('format_grid_settings', '',
         format_text(get_string('settingssettingsdesc', 'format_grid'), FORMAT_MARKDOWN)));
 
+    // Icon width.
+    $name = 'format_grid/defaultimagecontainerwidth';
+    $title = get_string('defaultimagecontainerwidth', 'format_grid');
+    $description = get_string('defaultimagecontainerwidth_desc', 'format_grid');
+    $default = \format_grid\toolbox::get_default_image_container_width();
+    $choices = \format_grid\toolbox::get_image_container_widths();
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
+    $page->add($setting);
+
+    // Icon ratio.
+    $name = 'format_grid/defaultimagecontainerratio';
+    $title = get_string('defaultimagecontainerratio', 'format_grid');
+    $description = get_string('defaultimagecontainerratio_desc', 'format_grid');
+    $default = \format_grid\toolbox::get_default_image_container_ratio();
+    $choices = \format_grid\toolbox::get_image_container_ratios();
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
+    $page->add($setting);
+
     // Resize method - 1 = scale, 2 = crop.
     $name = 'format_grid/defaultimageresizemethod';
     $title = get_string('defaultimageresizemethod', 'format_grid');

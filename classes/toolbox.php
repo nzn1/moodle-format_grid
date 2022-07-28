@@ -39,6 +39,13 @@ class toolbox {
      */
     protected static $instance = null;
 
+    // Width constants - 128, 192, 210, 256, 320, 384, 448, 512, 576, 640, 704 and 768:...
+    private static $imagecontainerwidths = array(128 => '128', 192 => '192', 210 => '210', 256 => '256', 320 => '320',
+        384 => '384', 448 => '448', 512 => '512', 576 => '576', 640 => '640', 704 => '704', 768 => '768');
+    // Ratio constants - 3-2, 3-1, 3-3, 2-3, 1-3, 4-3 and 3-4:...
+    private static $imagecontainerratios = array(
+        1 => '3-2', 2 => '3-1', 3 => '3-3', 4 => '2-3', 5 => '1-3', 6 => '4-3', 7 => '3-4');
+
     /**
      * This is a lonely object.
      */
@@ -58,23 +65,58 @@ class toolbox {
     }
 
     /**
+     * Prevents ability to change a static variable outside of the class.
+     * @return array Array of imagecontainer widths.
+     */
+    public static function get_image_container_widths() {
+        return self::$imagecontainerwidths;
+    }
+
+    /**
+     * Gets the default image container width.
+     * @return int Default image container width.
+     */
+    public static function get_default_image_container_width() {
+        return 210;
+    }
+
+    /**
+     * Prevents ability to change a static variable outside of the class.
+     * @return array Array of image container ratios.
+     */
+    public static function get_image_container_ratios() {
+        return self::$imagecontainerratios;
+    }
+
+    /**
+     * Gets the default image container ratio.
+     * @return int Default image container ratio.
+     */
+    public static function get_default_image_container_ratio() {
+        return 1; // Ratio of '3-2'.
+    }
+
+    /**
      * Set up the displayed image.
      * @param array $sectionimage Section information from its row in the 'format_grid_image' table.
      * @param stored_file $sectionfile Section file.
      * @param int $courseid The course id to which the image relates.
      * @param int $sectionid The section id to which the image relates.
+     * @param stdClass $format The course format image that the image belongs to.
      * @return array The updated $sectionimage data.
      */
-    public function setup_displayed_image($sectionimage, $sectionfile, $courseid, $sectionid) {
+    public function setup_displayed_image($sectionimage, $sectionfile, $courseid, $sectionid, $format) {
         global $CFG, $DB;
         // require_once($CFG->dirroot . '/repository/lib.php');
         // require_once($CFG->libdir . '/gdlib.php');
 
-        static $settings = array(
+        // Get the settings!
+        $settings = $format->get_settings();
+        /*static $settings = array(
             'imagecontainerwidth' => 210,
             'imagecontainerratio' => 1,
             'imageresizemethod' => 2
-        );
+        );*/
 
         if (!empty($sectionfile)) {
             $fs = get_file_storage();
@@ -427,16 +469,44 @@ class toolbox {
      * Update images callback.
      */
     public static function update_displayed_images_callback() {
+        self::update_the_displayed_images();
+    }
+
+    /**
+     * Update images.
+     *
+     * @param int $courseid The course id.
+     *
+     */
+    public static function update_displayed_images($courseid) {
+        self::update_the_displayed_images($courseid);
+    }
+
+    /**
+     * Update images.
+     *
+     * @param int $courseid The course id.
+     *
+     */
+    private static function update_the_displayed_images($courseid = null) {
         global $DB;
 
-        $coursesectionimages = $DB->get_records('format_grid_image');
+        if (!empty($courseid)) {
+            $coursesectionimages = $DB->get_records('format_grid_image', array('courseid' => $courseid));
+        } else {
+            $coursesectionimages = $DB->get_records('format_grid_image');
+        }
         // error_log('update_displayed_images_callback - '.print_r($coursesectionimages, true));
         if (!empty($coursesectionimages)) {
             $fs = get_file_storage();
             $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
             $toolbox = self::get_instance();
+            $courseid = -1;
             foreach ($coursesectionimages as $coursesectionimage) {
-                $courseid = $coursesectionimage->courseid;
+                if ($courseid != $coursesectionimage->courseid) {
+                    $courseid = $coursesectionimage->courseid;                
+                    $format = course_get_format($courseid);
+                }
                 $coursecontext = \context_course::instance($courseid);
                 if ($lock = $lockfactory->get_lock('sectionid'.$coursesectionimage->sectionid, 5)) {
                     $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
@@ -444,7 +514,7 @@ class toolbox {
                         if (!$file->is_directory()) {
                             // error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
                             try {
-                                $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $courseid, $coursesectionimage->sectionid);
+                                $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $courseid, $coursesectionimage->sectionid, $format);
                             } catch (\Exception $e) {
                                 $lock->release();
                                 throw $e;
@@ -460,48 +530,27 @@ class toolbox {
         }
     }
 
-    // Old.
     public static function delete_images($courseid) {
-        $sectionimages = self::get_images($courseid);
+        global $DB;
 
-        if (is_array($sectionimages)) {
-            global $DB;
-
-            $fs = get_file_storage();
-            $coursecontext = \context_course::instance($courseid);
-            $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage');
-            foreach ($files as $file) {
-                if (!$file->is_directory()) {
-                    $file->delete();
-                }
+        $fs = get_file_storage();
+        $coursecontext = \context_course::instance($courseid);
+        // Images.
+        $images = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage');
+        foreach ($images as $image) {
+            if (!$image->is_directory()) {
+                $image->delete();
             }
+        }
 
-            $DB->delete_records("format_grid_image", array('courseid' => $courseid));
+        // Displayed images.
+        $displayedimages = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage');
+        foreach ($displayedimages as $displayedimage) {
+            if (!$displayedimage->is_directory()) {
+                $displayedimage->delete();
+            }
         }
-    }
 
-    /**
-     * Returns the RGB for the given hex.
-     *
-     * @param string $hex
-     * @return array
-     */
-    public static function hex2rgb($hex) {
-        if ($hex[0] == '#') {
-            $hex = substr($hex, 1);
-        }
-        if (strlen($hex) == 3) {
-            $r = substr($hex, 0, 1);
-            $r .= $r;
-            $g = substr($hex, 1, 1);
-            $g .= $g;
-            $b = substr($hex, 2, 1);
-            $b .= $b;
-        } else {
-            $r = substr($hex, 0, 2);
-            $g = substr($hex, 2, 2);
-            $b = substr($hex, 4, 2);
-        }
-        return array('r' => hexdec($r), 'g' => hexdec($g), 'b' => hexdec($b));
+        $DB->delete_records("format_grid_image", array('courseid' => $courseid));
     }
 }

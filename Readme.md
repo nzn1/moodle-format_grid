@@ -17,7 +17,7 @@ The Grid format is 'free' software under the terms of the GNU GPLv3 License, ple
 The primary source for downloading this branch of the format is https://moodle.org/plugins/view.php?plugin=format_grid
 with 'Select Moodle version:' set at 'Moodle 4.0'.
 
-The secondary source is a tagged version with the v3.11 prefix on https://github.com/gjb2048/moodle-format_grid/tags
+The secondary source is a tagged version with the v4.0 prefix on https://github.com/gjb2048/moodle-format_grid/tags
 
 If you download from the development area - https://github.com/gjb2048/moodle-format_grid - consider that
 the code is unstable and not for use in production environments.  This is because I develop the next version in stages

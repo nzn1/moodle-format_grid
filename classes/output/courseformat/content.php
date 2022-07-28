@@ -118,7 +118,7 @@ class content extends content_base {
                                 if (!$file->is_directory()) {
                                     // error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
                                     try {
-                                        $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $course->id, $coursesectionimage->sectionid);
+                                        $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $course->id, $coursesectionimage->sectionid, $format);
                                     } catch (\Exception $e) {
                                         $lock->release();
                                         throw $e;
@@ -182,6 +182,13 @@ class content extends content_base {
                 }
                 // For the template.
                 $data->gridsections[] = $sectionimages[$section->id];
+            }
+            $data->hasgridsections = (!empty($data->gridsections)) ? true : false;
+            if ($data->hasgridsections) {
+                $coursesettings = $format->get_settings();
+                $displayedimageinfo = $toolbox->get_displayed_image_container_properties($coursesettings);
+
+                $data->coursestyles = $displayedimageinfo;
             }
             // error_log('SI '.print_r($sectionimages, true));
             // $data->gridsections = $sectionimages;
