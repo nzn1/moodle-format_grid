@@ -504,7 +504,7 @@ class toolbox {
             $courseid = -1;
             foreach ($coursesectionimages as $coursesectionimage) {
                 if ($courseid != $coursesectionimage->courseid) {
-                    $courseid = $coursesectionimage->courseid;                
+                    $courseid = $coursesectionimage->courseid;
                     $format = course_get_format($courseid);
                 }
                 $coursecontext = \context_course::instance($courseid);

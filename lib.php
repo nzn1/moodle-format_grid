@@ -364,58 +364,47 @@ class format_grid extends core_courseformat\base {
                 )
             );
 
-            //if (has_capability('format/grid:changeimagecontainersize', $context)) {
-                $imagecontainerwidthvalues = $this->generate_default_entry(
-                    'imagecontainerwidth',
-                    0,
-                    \format_grid\toolbox::get_image_container_widths()
-                );
-                $courseformatoptionsedit['imagecontainerwidth'] = array(
-                    'label' => new lang_string('imagecontainerwidth', 'format_grid'),
-                    'help' => 'imagecontainerwidth',
-                    'help_component' => 'format_grid',
-                    'element_type' => 'select',
-                    'element_attributes' => array($imagecontainerwidthvalues)
-                );
-                $imagecontainerratiovalues = $this->generate_default_entry(
-                    'imagecontainerratio',
-                    '-',
-                    \format_grid\toolbox::get_image_container_ratios()
-                );
-                $courseformatoptionsedit['imagecontainerratio'] = array(
-                    'label' => new lang_string('imagecontainerratio', 'format_grid'),
-                    'help' => 'imagecontainerratio',
-                    'help_component' => 'format_grid',
-                    'element_type' => 'select',
-                    'element_attributes' => array($imagecontainerratiovalues)
-                );
-            /*} else {
-                $courseformatoptionsedit['imagecontainerwidth'] = array(
-                    'label' => '-', 'element_type' => 'hidden');
-                $courseformatoptionsedit['imagecontainerratio'] = array(
-                    'label' => 0, 'element_type' => 'hidden');
-            }*/
+            // TODO - Use capabilities?
+            $imagecontainerwidthvalues = $this->generate_default_entry(
+                'imagecontainerwidth',
+                0,
+                \format_grid\toolbox::get_image_container_widths()
+            );
+            $courseformatoptionsedit['imagecontainerwidth'] = array(
+                'label' => new lang_string('imagecontainerwidth', 'format_grid'),
+                'help' => 'imagecontainerwidth',
+                'help_component' => 'format_grid',
+                'element_type' => 'select',
+                'element_attributes' => array($imagecontainerwidthvalues)
+            );
+            $imagecontainerratiovalues = $this->generate_default_entry(
+                'imagecontainerratio',
+                '-',
+                \format_grid\toolbox::get_image_container_ratios()
+            );
+            $courseformatoptionsedit['imagecontainerratio'] = array(
+                'label' => new lang_string('imagecontainerratio', 'format_grid'),
+                'help' => 'imagecontainerratio',
+                'help_component' => 'format_grid',
+                'element_type' => 'select',
+                'element_attributes' => array($imagecontainerratiovalues)
+            );
 
-            // if (has_capability('format/grid:changeimageresizemethod', $context)) {
-                $imageresizemethodvalues = $this->generate_default_entry(
-                    'imageresizemethod',
-                    0,
-                    array(
-                        1 => new lang_string('scale', 'format_grid'), // Scale.
-                        2 => new lang_string('crop', 'format_grid')   // Crop.
-                    )
-                );
-                $courseformatoptionsedit['imageresizemethod'] = array(
-                    'label' => new lang_string('imageresizemethod', 'format_grid'),
-                    'help' => 'imageresizemethod',
-                    'help_component' => 'format_grid',
-                    'element_type' => 'select',
-                    'element_attributes' => array($imageresizemethodvalues)
-                );
-            /* } else {
-                $courseformatoptionsedit['imageresizemethod'] = array(
-                    'label' => 0, 'element_type' => 'hidden');
-            }*/
+            $imageresizemethodvalues = $this->generate_default_entry(
+                'imageresizemethod',
+                0,
+                array(
+                    1 => new lang_string('scale', 'format_grid'), // Scale.
+                    2 => new lang_string('crop', 'format_grid')   // Crop.
+                )
+            );
+            $courseformatoptionsedit['imageresizemethod'] = array(
+                'label' => new lang_string('imageresizemethod', 'format_grid'),
+                'help' => 'imageresizemethod',
+                'help_component' => 'format_grid',
+                'element_type' => 'select',
+                'element_attributes' => array($imageresizemethodvalues)
+            );
 
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }
