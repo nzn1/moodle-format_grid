@@ -440,7 +440,9 @@ class format_grid extends core_courseformat\base {
 
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
-        error_log('create_edit_form_elements - '.print_r($mform, true));
+        //error_log('create_edit_form_elements - '.print_r($mform, true));
+        $sectionbreakheading = $mform->getElement('sectionbreakheading');
+        $sectionbreakheading->setValue('Me');
 
         /* Increase the number of sections combo box values if the user has increased the number of sections
            using the icon on the course page beyond course 'maxsections' or course 'maxsections' has been
@@ -702,7 +704,8 @@ class format_grid extends core_courseformat\base {
             \format_grid\toolbox::delete_displayed_image($contextid, $sectionimage, $gridimagepath, $fs);
         }*/
 
-        $data['sectionbreakheading'] = $data['sectionbreakheading']['text'];
+        $data['sectionbreakheadingtext'] = $data['sectionbreakheading']['text'];
+        unset($data['sectionbreakheading']);
 
         error_log('update_section_format_options - '.print_r($data, true));
 
