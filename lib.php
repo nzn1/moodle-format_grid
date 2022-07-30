@@ -440,6 +440,8 @@ class format_grid extends core_courseformat\base {
 
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
+        error_log('create_edit_form_elements - '.print_r($mform, true));
+
         /* Increase the number of sections combo box values if the user has increased the number of sections
            using the icon on the course page beyond course 'maxsections' or course 'maxsections' has been
            reduced below the number of sections already set for the course on the site administration course
@@ -554,11 +556,11 @@ class format_grid extends core_courseformat\base {
                     'default' => '',
                     'type' => PARAM_RAW
                 ), */
-                /*'sectionbreakheading' => array(
+                'sectionbreakheading' => array(
                     'default' => '',
-                    'type' => PARAM_CLEANHTML
-                ), */
-                'sectionbreakheading_editor' => array(
+                    'type' => PARAM_RAW
+                ),
+                /*'sectionbreakheading_editor' => array(
                     'default' => '',
                     'type' => PARAM_CLEANHTML
                 )/*,
@@ -600,13 +602,13 @@ class format_grid extends core_courseformat\base {
                         )
                     ),
                 ),
-                /* 'sectionbreakheading' => array(
+                'sectionbreakheading' => array(
                     'label' => new lang_string('sectionbreakheading', 'format_grid'),
                     'help' => 'sectionbreakheading',
                     'help_component' => 'format_grid',
                     'element_type' => 'editor'
-                ), */
-                'sectionbreakheading_editor' => array(
+                ),
+                /*'sectionbreakheading_editor' => array(
                     'label' => new lang_string('sectionbreakheading', 'format_grid'),
                     'help' => 'sectionbreakheading',
                     'help_component' => 'format_grid',
@@ -699,6 +701,10 @@ class format_grid extends core_courseformat\base {
             $gridimagepath = \format_grid\toolbox::get_image_path();
             \format_grid\toolbox::delete_displayed_image($contextid, $sectionimage, $gridimagepath, $fs);
         }*/
+
+        $data['sectionbreakheading'] = $data['sectionbreakheading']['text'];
+
+        error_log('update_section_format_options - '.print_r($data, true));
 
         return parent::update_section_format_options($data);
     }

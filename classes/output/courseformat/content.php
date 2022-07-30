@@ -177,7 +177,7 @@ class content extends content_base {
                     $sectionimages[$section->id]->sectionbreak = true;
                     if (!empty ($sectionformatoptions['sectionbreakheading'])) {
                         // Note:  As a PARAM_TEXT, then does need to be passed through 'format_string' for multi-lang or not?
-                        $sectionimages[$section->id]->sectionbreakheading = $sectionformatoptions['sectionbreakheading'];
+                        $sectionimages[$section->id]->sectionbreakheading = format_text($sectionformatoptions['sectionbreakheading'], FORMAT_HTML);
                     }
                 }
                 // For the template.
