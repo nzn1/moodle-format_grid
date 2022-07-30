@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/course/format/lib.php'); // For format_base.
 
 class format_grid extends core_courseformat\base {
     // Used to determine the type of view URL to generate - parameter or anchor.
-    private $coursedisplay = COURSE_DISPLAY_SINGLEPAGE;
+    private $coursedisplay = COURSE_DISPLAY_MULTIPAGE;
 
     private $settings = null;
 
@@ -52,11 +52,6 @@ class format_grid extends core_courseformat\base {
             $courseid = $COURSE->id;  // Save lots of global $COURSE as we will never be the site course.
         }
         parent::__construct($format, $courseid);
-
-        $section = optional_param('section', 0, PARAM_INT);
-        if ($section) {
-            $this->coursedisplay = COURSE_DISPLAY_MULTIPAGE;
-        }
     }
 
     /**
@@ -555,10 +550,22 @@ class format_grid extends core_courseformat\base {
                     'default' => 1, // No.
                     'type' => PARAM_INT
                 ),
-                'sectionbreakheading' => array(
+                /*'sectionbreakheading_editor' => array(
                     'default' => '',
-                    'type' => PARAM_TEXT
-                )
+                    'type' => PARAM_RAW
+                ), */
+                /*'sectionbreakheading' => array(
+                    'default' => '',
+                    'type' => PARAM_CLEANHTML
+                ), */
+                'sectionbreakheading_editor' => array(
+                    'default' => '',
+                    'type' => PARAM_CLEANHTML
+                )/*,
+                'sectionbreakheadingformat' => array(
+                    'default' => FORMAT_HTML,
+                    'type' => PARAM_INT
+                )*/
             );
         }
         if ($foreditform && !isset($sectionformatoptions['sectionimage_filemanager']['label'])) {
@@ -593,12 +600,26 @@ class format_grid extends core_courseformat\base {
                         )
                     ),
                 ),
-                'sectionbreakheading' => array(
+                /* 'sectionbreakheading' => array(
                     'label' => new lang_string('sectionbreakheading', 'format_grid'),
                     'help' => 'sectionbreakheading',
                     'help_component' => 'format_grid',
-                    'element_type' => 'text'
-                )
+                    'element_type' => 'editor'
+                ), */
+                'sectionbreakheading_editor' => array(
+                    'label' => new lang_string('sectionbreakheading', 'format_grid'),
+                    'help' => 'sectionbreakheading',
+                    'help_component' => 'format_grid',
+                    'element_type' => 'editor'
+                )/*,
+                'sectionbreakheading' => array(
+                    'label' => 0, 
+                    'element_type' => 'hidden'
+                ),
+                'sectionbreakheadingformat' => array(
+                    'label' => 0, 
+                    'element_type' => 'hidden'
+                )*/
             );
             $sectionformatoptions = array_merge_recursive($sectionformatoptions, $sectionformatoptionsedit);
         }

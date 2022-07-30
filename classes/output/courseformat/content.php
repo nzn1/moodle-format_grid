@@ -220,18 +220,20 @@ class content extends content_base {
         $sections = [];
         $numsections = $format->get_last_section_number();
         $sectioninfos = $modinfo->get_section_info_all();
+        //error_log('SI1 '.print_r($sectioninfos, true));
         // Get rid of section 0;
         if (!empty($sectioninfos)) {
             array_shift($sectioninfos);
         }
-        foreach ($sectioninfos as $sectionnum => $thissection) {
+        //error_log('SI2 '.print_r($sectioninfos, true));
+        foreach ($sectioninfos as $thissection) {
             // The course/view.php check the section existence but the output can be called
             // from other parts so we need to check it.
             if (!$thissection) {
                 print_error('unknowncoursesection', 'error', course_get_url($course), format_string($course->fullname));
             }
 
-            if ($sectionnum > $numsections) {
+            if ($thissection->section > $numsections) {
                 continue;
             }
 
@@ -241,10 +243,11 @@ class content extends content_base {
 
             $section = new stdClass;
             $section->id = $thissection->id;
-            $section->num = $sectionnum;
+            $section->num = $thissection->section;
             $section->name = get_section_name($course, $thissection);
             $sections[] = $section;
         }
+        error_log('SI3 '.print_r($sections, true));
 
         return $sections;
     }
