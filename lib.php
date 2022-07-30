@@ -608,7 +608,7 @@ class format_grid extends core_courseformat\base {
                     'label' => new lang_string('sectionbreakheading', 'format_grid'),
                     'help' => 'sectionbreakheading',
                     'help_component' => 'format_grid',
-                    'element_type' => 'editor'
+                    'element_type' => 'textarea'
                 ),
                 /*'sectionbreakheading_editor' => array(
                     'label' => new lang_string('sectionbreakheading', 'format_grid'),
@@ -704,10 +704,10 @@ class format_grid extends core_courseformat\base {
             \format_grid\toolbox::delete_displayed_image($contextid, $sectionimage, $gridimagepath, $fs);
         }*/
 
-        $data['sectionbreakheadingtext'] = $data['sectionbreakheading']['text'];
-        unset($data['sectionbreakheading']);
+        //$data['sectionbreakheadingtext'] = $data['sectionbreakheading']['text'];
+        //unset($data['sectionbreakheading']);
 
-        error_log('update_section_format_options - '.print_r($data, true));
+        //error_log('update_section_format_options - '.print_r($data, true));
 
         return parent::update_section_format_options($data);
     }

@@ -69,7 +69,7 @@ $string['sectionimagealttext_help'] = 'This text will be set as the image alt at
 $string['sectionbreak'] = 'Section break';
 $string['sectionbreak_help'] = 'Break in the grid at this section.';
 $string['sectionbreakheading'] = 'Section break heading';
-$string['sectionbreakheading_help'] = 'Show this heading at the point this section breaks in the grid.';
+$string['sectionbreakheading_help'] = 'Show this heading at the point this section breaks in the grid.  HTML can be used.';
 
 // Image container width.
 $string['imagecontainerwidth'] = 'Set the image container width';
