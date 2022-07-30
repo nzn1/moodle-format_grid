@@ -104,5 +104,18 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
     $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
     $page->add($setting);
+
+    // Show the grid image in the section summary on a single page.
+    $name = 'format_grid/defaultsinglepagesummaryimage';
+    $title = get_string('defaultsinglepagesummaryimage', 'format_grid');
+    $description = get_string('defaultsinglepagesummaryimage_desc', 'format_grid');
+    $default = 1;
+    $choices = array(
+        1 => new lang_string('off', 'format_grid'),
+        2 => new lang_string('left', 'format_grid'),
+        3 => new lang_string('centre', 'format_grid'),
+        4 => new lang_string('right', 'format_grid')
+    );
+    $page->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 }
 $ADMIN->add('format_grid', $page);

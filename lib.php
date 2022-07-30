@@ -327,6 +327,10 @@ class format_grid extends core_courseformat\base {
                 'imageresizemethod' => array(
                     'default' => 0,
                     'type' => PARAM_INT
+                ),
+                'singlepagesummaryimage' => array(
+                    'default' => 0,
+                    'type' => PARAM_INT
                 )
             );
         }
@@ -401,6 +405,24 @@ class format_grid extends core_courseformat\base {
                 'element_attributes' => array($imageresizemethodvalues)
             );
 
+            $singlepagesummaryimagevalues = $this->generate_default_entry(
+                'singlepagesummaryimage',
+                0,
+                array(
+                    1 => new lang_string('off', 'format_grid'),
+                    2 => new lang_string('left', 'format_grid'),
+                    3 => new lang_string('centre', 'format_grid'),
+                    4 => new lang_string('right', 'format_grid')
+                )
+            );
+            $courseformatoptionsedit['singlepagesummaryimage'] = array(
+                'label' => new lang_string('singlepagesummaryimage', 'format_grid'),
+                'element_type' => 'select',
+                'element_attributes' => array($singlepagesummaryimagevalues),
+                'help' => 'singlepagesummaryimage',
+                'help_component' => 'format_grid'
+            );
+
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }
 
@@ -441,8 +463,8 @@ class format_grid extends core_courseformat\base {
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
         //error_log('create_edit_form_elements - '.print_r($mform, true));
-        $sectionbreakheading = $mform->getElement('sectionbreakheading');
-        $sectionbreakheading->setValue('Me');
+        //$sectionbreakheading = $mform->getElement('sectionbreakheading');
+        //$sectionbreakheading->setValue('Me');
 
         /* Increase the number of sections combo box values if the user has increased the number of sections
            using the icon on the course page beyond course 'maxsections' or course 'maxsections' has been

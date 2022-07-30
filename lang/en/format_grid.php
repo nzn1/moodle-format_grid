@@ -97,6 +97,16 @@ $string['webp'] = 'WebP';
 $string['defaultdisplayedimagefiletype'] = 'Displayed image type';
 $string['defaultdisplayedimagefiletype_desc'] = 'Set the displayed image type.';
 
+// Single page summary image.
+$string['off'] = 'Off';
+$string['centre'] = 'Centre';
+$string['left'] = 'Left';
+$string['right'] = 'Right';
+$string['singlepagesummaryimage'] = 'Show the grid image in the section summary on a single page.';
+$string['singlepagesummaryimage_help'] = "Show the grid image for that section in the section summary when there is a summary in the position stated.";
+$string['defaultsinglepagesummaryimage'] = 'Show the grid image in the section summary on a single page.';
+$string['defaultsinglepagesummaryimage_desc'] = "Show the grid image for that section in the section summary when there is a summary in the position stated.";
+
 // Other.
 $string['information'] = 'Information';
 $string['informationsettings'] = 'Information settings';

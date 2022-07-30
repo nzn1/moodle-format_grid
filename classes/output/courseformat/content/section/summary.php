@@ -73,79 +73,92 @@ class summary extends summary_base {
         $data = new stdClass();
 
         if ($section->uservisible || $section->visible) {
-            $data->summarytext = $this->singlepagesummaryimage().$this->format_summary_text();
+            $summary = $this->format_summary_text();
+            $data->summarytext = $this->singlepagesummaryimage($summary, $output);
         }
         return $data;
     }
 
     /**
-     * Generate html for a section summary text
-     *
+     * Generate html for a section summary image
+     * @param string $summary The summary text if any.
+     * @param object $output The output renderer.
+     * 
      * @return string HTML to output.
      */
-    public function format_summary_text(): string {
-        $section = $this->thesection;
-        $context = context_course::instance($section->course);
-        $summarytext = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php',
-            $context->id, 'course', 'section', $section->id);
-
-        $options = new stdClass();
-        $options->noclean = true;
-        $options->overflowdiv = true;
-        return format_text($summarytext, $section->summaryformat, $options);
-    }
-    
-    protected function singlepagesummaryimage(): string {
+    protected function singlepagesummaryimage($summary, $output): string {
         global $DB;
         $o = '';
 
-        if (true) {
-            //error_log('singlepagesummaryimage - '.print_r($this->thesection->course, true));
-            //error_log('singlepagesummaryimage - '.print_r($this->thesection->section, true));
-            //error_log('singlepagesummaryimage - '.print_r($this->thesection->id, true));
+        if (!empty($summary)) {
+            $o = $summary;
+            $coursesettings = $this->format->get_settings();
+            //error_log('singlepagesummaryimage - '.print_r($coursesettings, true));
+            if ($coursesettings['singlepagesummaryimage'] > 1) { // I.e. not 'off'.
+                $data = new \stdClass;
+                switch($coursesettings['singlepagesummaryimage']) {
+                    case 2:
+                        $data->left = true;
+                        break;
+                    case 3:
+                        $data->centre = true;
+                        break;
+                    case 4:
+                        $data->right = true;
+                        break;
+                    default:
+                        $data->left = true;
+                }
 
-            $courseid = $this->thesection->course;
-            $sectionid = $this->thesection->id;
-            $coursesectionimage = $DB->get_record('format_grid_image', array('courseid' => $courseid, 'sectionid' => $sectionid));
-            if (!empty($coursesectionimage)) {
-                $fs = get_file_storage();
-                $coursecontext = \context_course::instance($courseid);
-                if (empty($coursesectionimage->displayedimagestate)) {
-                    $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
-                    $toolbox = \format_grid\toolbox::get_instance();
-                    if ($lock = $lockfactory->get_lock('sectionid'.$sectionid, 5)) {
-                        $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
-                        foreach ($files as $file) {
-                            if (!$file->is_directory()) {
-                                try {
-                                    $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $courseid, $coursesectionimage->sectionid, $this->format);
-                                } catch (\Exception $e) {
-                                    $lock->release();
-                                    throw $e;
+                $courseid = $this->thesection->course;
+                $sectionid = $this->thesection->id;
+                $coursesectionimage = $DB->get_record('format_grid_image', array('courseid' => $courseid, 'sectionid' => $sectionid));
+                if (!empty($coursesectionimage)) {
+                    $fs = get_file_storage();
+                    $coursecontext = \context_course::instance($courseid);
+                    if (empty($coursesectionimage->displayedimagestate)) {
+                        $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
+                        $toolbox = \format_grid\toolbox::get_instance();
+                        if ($lock = $lockfactory->get_lock('sectionid'.$sectionid, 5)) {
+                            $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
+                            foreach ($files as $file) {
+                                if (!$file->is_directory()) {
+                                    try {
+                                        $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $courseid, $coursesectionimage->sectionid, $this->format);
+                                    } catch (\Exception $e) {
+                                        $lock->release();
+                                        throw $e;
+                                    }
                                 }
                             }
+                            $lock->release();
+                        } else {
+                            throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
+                                get_string('cannotgetmanagesectionimagelock', 'format_grid'));
                         }
-                        $lock->release();
-                    } else {
-                        throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
-                            get_string('cannotgetmanagesectionimagelock', 'format_grid'));
                     }
-                }
-                if ($coursesectionimage->displayedimagestate >= 1) {
-                    // Yes.
-                    $filename = $coursesectionimage->image;
-                    $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
+                    if ($coursesectionimage->displayedimagestate >= 1) {
+                        // Yes.
+                        $filename = $coursesectionimage->image;
+                        $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
 
-                    if ($iswebp) {
-                        $filename = $filename.'.webp';
+                        if ($iswebp) {
+                            $filename = $filename.'.webp';
+                        }
+                        $image = \moodle_url::make_pluginfile_url(
+                            $coursecontext->id, 'format_grid', 'displayedsectionimage', $sectionid, '/'.$coursesectionimage->displayedimagestate.'/', $filename
+                        );
+                        $data->imageuri = $image->out();
+                        $sectionformatoptions = $this->format->get_format_options($this->thesection);
+                        $data->alttext = $sectionformatoptions['sectionimagealttext'];
+
+                        $data->summary = $summary;
+
+                        $o = $output->render_from_template('format_grid/singlepagesummaryimage', $data);
                     }
-                    $image = \moodle_url::make_pluginfile_url(
-                        $coursecontext->id, 'format_grid', 'displayedsectionimage', $sectionid, '/'.$coursesectionimage->displayedimagestate.'/', $filename
-                    );
-                    $o .= $image->out();
                 }
+                //error_log('singlepagesummaryimage - '.print_r($coursesectionimage, true));
             }
-            error_log('singlepagesummaryimage - '.print_r($coursesectionimage, true));
         }
 
         return $o;
