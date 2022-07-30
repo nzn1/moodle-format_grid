@@ -164,6 +164,9 @@
         {{> format_grid/coursestyles }}
         {{> format_grid/grid }}
     {{/hasgridsections}}
+    {{#hasnavigation}}
+    <a href="{{{maincoursepage}}}"><p class="text-right">{{#str}}maincoursepage{{/str}}</p></a>
+    {{/hasnavigation}}
     {{{completionhelp}}}
     <ul class="{{format}}" data-for="course_sectionlist">
         {{#initialsection}}

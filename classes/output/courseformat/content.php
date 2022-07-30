@@ -81,18 +81,20 @@ class content extends content_base {
             $data->sections = $sections;
         }
 
+        $course = $format->get_course();
         // The single section format has extra navigation.
         if ($singlesection) {
             // if (!$PAGE->theme->usescourseindex) {
-                $sectionnavigation = new $this->sectionnavigationclass($format, $singlesection);
-                $data->sectionnavigation = $sectionnavigation->export_for_template($output);
+            $sectionnavigation = new $this->sectionnavigationclass($format, $singlesection);
+            $data->sectionnavigation = $sectionnavigation->export_for_template($output);
 
-                $sectionselector = new $this->sectionselectorclass($format, $sectionnavigation);
-                $data->sectionselector = $sectionselector->export_for_template($output);
+            $sectionselector = new $this->sectionselectorclass($format, $sectionnavigation);
+            $data->sectionselector = $sectionselector->export_for_template($output);
             // }
             $data->hasnavigation = true;
             $data->singlesection = array_shift($data->sections);
             $data->sectionreturn = $singlesection;
+            $data->maincoursepage = new \moodle_url('/course/view.php', array('id' => $course->id));
         } else if (!$editing) {
             // error_log(print_r($sections, true));
             /* error_log(print_r($format->get_format_options(), true));
@@ -102,10 +104,9 @@ class content extends content_base {
                 error_log($section->id.print_r($format->get_format_options($sectionclass), true));
             }*/
 
-            $course = $format->get_course();
             $toolbox = \format_grid\toolbox::get_instance();
             $coursesectionimages = $DB->get_records('format_grid_image', array('courseid' => $course->id));
-            //error_log($course->id.print_r($coursesectionimages, true));
+            // error_log($course->id.print_r($coursesectionimages, true));
             if (!empty($coursesectionimages)) {
                 $fs = get_file_storage();
                 $coursecontext = \context_course::instance($course->id);
@@ -118,7 +119,9 @@ class content extends content_base {
                                 if (!$file->is_directory()) {
                                     // error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
                                     try {
-                                        $coursesectionimages[$coursesectionimage->id] = $toolbox->setup_displayed_image($coursesectionimage, $file, $course->id, $coursesectionimage->sectionid, $format);
+                                        $coursesectionimages[$coursesectionimage->id] =
+                                            $toolbox->setup_displayed_image($coursesectionimage, $file, $course->id,
+                                                $coursesectionimage->sectionid, $format);
                                     } catch (\Exception $e) {
                                         $lock->release();
                                         throw $e;
@@ -220,7 +223,7 @@ class content extends content_base {
         $sections = [];
         $numsections = $format->get_last_section_number();
         $sectioninfos = $modinfo->get_section_info_all();
-        //error_log('SI1 '.print_r($sectioninfos, true));
+        // error_log('SI1 '.print_r($sectioninfos, true));
         // Get rid of section 0;
         if (!empty($sectioninfos)) {
             array_shift($sectioninfos);
@@ -247,7 +250,7 @@ class content extends content_base {
             $section->name = get_section_name($course, $thissection);
             $sections[] = $section;
         }
-        //error_log('SI3 '.print_r($sections, true));
+        // error_log('SI3 '.print_r($sections, true));
 
         return $sections;
     }

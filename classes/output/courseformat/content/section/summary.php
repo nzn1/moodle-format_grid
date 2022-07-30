@@ -83,7 +83,7 @@ class summary extends summary_base {
      * Generate html for a section summary image
      * @param string $summary The summary text if any.
      * @param object $output The output renderer.
-     * 
+     *
      * @return string HTML to output.
      */
     protected function singlepagesummaryimage($summary, $output): string {
@@ -93,7 +93,7 @@ class summary extends summary_base {
         if (!empty($summary)) {
             $o = $summary;
             $coursesettings = $this->format->get_settings();
-            //error_log('singlepagesummaryimage - '.print_r($coursesettings, true));
+            // error_log('singlepagesummaryimage - '.print_r($coursesettings, true));
             if ($coursesettings['singlepagesummaryimage'] > 1) { // I.e. not 'off'.
                 $data = new \stdClass;
                 switch($coursesettings['singlepagesummaryimage']) {
@@ -157,7 +157,7 @@ class summary extends summary_base {
                         $o = $output->render_from_template('format_grid/singlepagesummaryimage', $data);
                     }
                 }
-                //error_log('singlepagesummaryimage - '.print_r($coursesectionimage, true));
+                // error_log('singlepagesummaryimage - '.print_r($coursesectionimage, true));
             }
         }
 

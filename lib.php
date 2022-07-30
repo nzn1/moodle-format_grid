@@ -462,9 +462,9 @@ class format_grid extends core_courseformat\base {
 
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
-        //error_log('create_edit_form_elements - '.print_r($mform, true));
-        //$sectionbreakheading = $mform->getElement('sectionbreakheading');
-        //$sectionbreakheading->setValue('Me');
+        // error_log('create_edit_form_elements - '.print_r($mform, true));
+        // $sectionbreakheading = $mform->getElement('sectionbreakheading');
+        // $sectionbreakheading->setValue('Me');
 
         /* Increase the number of sections combo box values if the user has increased the number of sections
            using the icon on the course page beyond course 'maxsections' or course 'maxsections' has been
@@ -639,11 +639,11 @@ class format_grid extends core_courseformat\base {
                     'element_type' => 'editor'
                 )/*,
                 'sectionbreakheading' => array(
-                    'label' => 0, 
+                    'label' => 0,
                     'element_type' => 'hidden'
                 ),
                 'sectionbreakheadingformat' => array(
-                    'label' => 0, 
+                    'label' => 0,
                     'element_type' => 'hidden'
                 )*/
             );
@@ -726,10 +726,10 @@ class format_grid extends core_courseformat\base {
             \format_grid\toolbox::delete_displayed_image($contextid, $sectionimage, $gridimagepath, $fs);
         }*/
 
-        //$data['sectionbreakheadingtext'] = $data['sectionbreakheading']['text'];
-        //unset($data['sectionbreakheading']);
+        // $data['sectionbreakheadingtext'] = $data['sectionbreakheading']['text'];
+        // unset($data['sectionbreakheading']);
 
-        //error_log('update_section_format_options - '.print_r($data, true));
+        // error_log('update_section_format_options - '.print_r($data, true));
 
         return parent::update_section_format_options($data);
     }
