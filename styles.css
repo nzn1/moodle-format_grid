@@ -29,5 +29,13 @@
 .format-grid .thegrid .grid-image {
     background-size: contain;
     height: 140px;
+    position: relative;
     width: 210px;
+}
+
+.format-grid .thegrid .grid-image img {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%,-50%);
 }

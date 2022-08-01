@@ -529,6 +529,7 @@ class toolbox {
         }
         if (!empty($coursesectionimages)) {
             $fs = get_file_storage();
+            $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
             $toolbox = self::get_instance();
             $courseid = -1;
             foreach ($coursesectionimages as $coursesectionimage) {
@@ -537,9 +538,23 @@ class toolbox {
                     $format = course_get_format($courseid);
                 }
                 $coursecontext = \context_course::instance($courseid);
-                $coursesectionimage->displayedimagestate = 0; // Force update.
-                $toolbox->check_displayed_image($coursesectionimage, $courseid, $coursecontext->id, $coursesectionimage->sectionid,
-                    $format, $fs);
+                if ($lock = $lockfactory->get_lock('sectionid'.$coursesectionimage->sectionid, 5)) {
+                    $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
+                    foreach ($files as $file) {
+                        if (!$file->is_directory()) {
+                            try {
+                                $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $courseid, $coursesectionimage->sectionid, $format);
+                            } catch (\Exception $e) {
+                                $lock->release();
+                                throw $e;
+                            }
+                        }
+                    }
+                    $lock->release();
+                } else {
+                    throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
+                        get_string('cannotgetmanagesectionimagelock', 'format_grid'));
+                }
             }
         }
     }
