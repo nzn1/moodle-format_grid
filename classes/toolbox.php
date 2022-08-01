@@ -97,6 +97,43 @@ class toolbox {
     }
 
     /**
+     * Check the displayed image.
+     * @param array $sectionimage Section information from its row in the 'format_grid_image' table.
+     * @param stored_file $sectionfile Section file.
+     * @param int $courseid The course id to which the image relates.
+     * @param int $coursecontextid The course context id to which the image relates.
+     * @param int $sectionid The section id to which the image relates.
+     * @param stdClass $format The course format image that the image belongs to.
+     * @param stdClass $fs File storage.
+     * @return array|bool The updated $sectionimage data or false if not.
+     */
+    public function check_displayed_image($sectionimage, $courseid, $coursecontextid, $sectionid, $format, $fs) {
+        $newsectionimage = false;
+
+        if (empty($sectionimage->displayedimagestate)) {
+            $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
+            if ($lock = $lockfactory->get_lock('sectionid'.$sectionimage->sectionid, 5)) {
+                $files = $fs->get_area_files($coursecontextid, 'format_grid', 'sectionimage', $sectionimage->sectionid);
+                foreach ($files as $file) {
+                    if (!$file->is_directory()) {
+                        try {
+                            $newsectionimage = $this->setup_displayed_image($sectionimage, $file, $courseid, $sectionid, $format);
+                        } catch (\Exception $e) {
+                            $lock->release();
+                            throw $e;
+                        }
+                    }
+                }
+                $lock->release();
+            } else {
+                throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
+                    get_string('cannotgetmanagesectionimagelock', 'format_grid'));
+            }
+        }
+        return $newsectionimage;
+    }
+
+    /**
      * Set up the displayed image.
      * @param array $sectionimage Section information from its row in the 'format_grid_image' table.
      * @param stored_file $sectionfile Section file.
@@ -112,11 +149,6 @@ class toolbox {
 
         // Get the settings!
         $settings = $format->get_settings();
-        /*static $settings = array(
-            'imagecontainerwidth' => 210,
-            'imagecontainerratio' => 1,
-            'imageresizemethod' => 2
-        );*/
 
         if (!empty($sectionfile)) {
             $fs = get_file_storage();
@@ -127,7 +159,6 @@ class toolbox {
             $tmpfilepath = $tmproot . '/' . $sectionfile->get_contenthash();
             $sectionfile->copy_content_to($tmpfilepath);
 
-            // $crop = ($settings['imageresizemethod'] == 1) ? false : true;
             $crop = (get_config('format_grid', 'defaultimageresizemethod') == 1) ? false : true;
             $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
             if ($iswebp) { // WebP.
@@ -496,10 +527,8 @@ class toolbox {
         } else {
             $coursesectionimages = $DB->get_records('format_grid_image');
         }
-        // error_log('update_displayed_images_callback - '.print_r($coursesectionimages, true));
         if (!empty($coursesectionimages)) {
             $fs = get_file_storage();
-            $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
             $toolbox = self::get_instance();
             $courseid = -1;
             foreach ($coursesectionimages as $coursesectionimage) {
@@ -508,24 +537,9 @@ class toolbox {
                     $format = course_get_format($courseid);
                 }
                 $coursecontext = \context_course::instance($courseid);
-                if ($lock = $lockfactory->get_lock('sectionid'.$coursesectionimage->sectionid, 5)) {
-                    $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
-                    foreach ($files as $file) {
-                        if (!$file->is_directory()) {
-                            // error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
-                            try {
-                                $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $courseid, $coursesectionimage->sectionid, $format);
-                            } catch (\Exception $e) {
-                                $lock->release();
-                                throw $e;
-                            }
-                        }
-                    }
-                    $lock->release();
-                } else {
-                    throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
-                        get_string('cannotgetmanagesectionimagelock', 'format_grid'));
-                }
+                $coursesectionimage->displayedimagestate = 0; // Force update.
+                $toolbox->check_displayed_image($coursesectionimage, $courseid, $coursecontext->id, $coursesectionimage->sectionid,
+                    $format, $fs);
             }
         }
     }

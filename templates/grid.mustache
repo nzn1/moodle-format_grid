@@ -35,9 +35,15 @@
     <div class="card m-2">
         <a href="{{sectionurl}}">
             <div class="card-header">{{sectionname}}</div>
+            {{#imageuri}}
             <div class="grid-image card-img-bottom text-center">
                 <img class="h-100 img-responsive" src="{{imageuri}}" alt="{{alttext}}">
             </div>
+            {{/imageuri}}
+            {{#generatedimageuri}}
+            <div class="grid-image card-img-bottom text-center" style="background-image: url('{{generatedimageuri}}');">
+            </div>
+            {{/generatedimageuri}}
         </a>
     </div>
     {{/gridsections}}

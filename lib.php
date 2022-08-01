@@ -137,8 +137,7 @@ class format_grid extends core_courseformat\base {
             // Return the general section.
             return get_string('section0name', 'format_grid');
         } else {
-            // Use course_format::get_default_section_name implementation which
-            // will display the section name in "Topic n" format.
+            // Use course_format::get_default_section_name implementation which will display the section name in "Topic n" format.
             return parent::get_default_section_name($section);
         }
     }
@@ -335,7 +334,6 @@ class format_grid extends core_courseformat\base {
             );
         }
         if ($foreditform && !isset($courseformatoptions['coursedisplay']['label'])) {
-            $context = context_course::instance($this->courseid);
             if (is_null($courseconfig)) {
                 $courseconfig = get_config('moodlecourse');
             }
@@ -462,10 +460,6 @@ class format_grid extends core_courseformat\base {
 
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
-        // error_log('create_edit_form_elements - '.print_r($mform, true));
-        // $sectionbreakheading = $mform->getElement('sectionbreakheading');
-        // $sectionbreakheading->setValue('Me');
-
         /* Increase the number of sections combo box values if the user has increased the number of sections
            using the icon on the course page beyond course 'maxsections' or course 'maxsections' has been
            reduced below the number of sections already set for the course on the site administration course
@@ -576,22 +570,10 @@ class format_grid extends core_courseformat\base {
                     'default' => 1, // No.
                     'type' => PARAM_INT
                 ),
-                /*'sectionbreakheading_editor' => array(
-                    'default' => '',
-                    'type' => PARAM_RAW
-                ), */
                 'sectionbreakheading' => array(
                     'default' => '',
                     'type' => PARAM_RAW
-                ),
-                /*'sectionbreakheading_editor' => array(
-                    'default' => '',
-                    'type' => PARAM_CLEANHTML
-                )/*,
-                'sectionbreakheadingformat' => array(
-                    'default' => FORMAT_HTML,
-                    'type' => PARAM_INT
-                )*/
+                )
             );
         }
         if ($foreditform && !isset($sectionformatoptions['sectionimage_filemanager']['label'])) {
@@ -631,21 +613,7 @@ class format_grid extends core_courseformat\base {
                     'help' => 'sectionbreakheading',
                     'help_component' => 'format_grid',
                     'element_type' => 'textarea'
-                ),
-                /*'sectionbreakheading_editor' => array(
-                    'label' => new lang_string('sectionbreakheading', 'format_grid'),
-                    'help' => 'sectionbreakheading',
-                    'help_component' => 'format_grid',
-                    'element_type' => 'editor'
-                )/*,
-                'sectionbreakheading' => array(
-                    'label' => 0,
-                    'element_type' => 'hidden'
-                ),
-                'sectionbreakheadingformat' => array(
-                    'label' => 0,
-                    'element_type' => 'hidden'
-                )*/
+                )
             );
             $sectionformatoptions = array_merge_recursive($sectionformatoptions, $sectionformatoptionsedit);
         }
@@ -697,41 +665,6 @@ class format_grid extends core_courseformat\base {
      */
     public function can_delete_section($section) {
         return true;
-    }
-
-    /**
-     * Updates format options for a section
-     *
-     * Section id is expected in $data->id (or $data['id'])
-     * If $data does not contain property with the option name, the option will not be updated
-     *
-     * @param stdClass|array $data return value from {@link moodleform::get_data()} or array with data
-     *
-     * @return bool whether there were any changes to the options values
-     */
-    public function update_section_format_options($data) {
-        $data = (array) $data;
-
-        /* Resets the displayed image because changing the section name / details deletes the file.
-           See CONTRIB-4784. */
-        /*$sectionimage = \format_grid\toolbox::get_image($this->courseid, $data['id']);
-        if ($sectionimage) {
-            // Set up our table to get the displayed image back.  The 'auto repair' on page reload will do the rest.
-            global $DB;
-            $DB->set_field('format_grid_icon', 'displayedimageindex', 0, array('sectionid' => $sectionimage->sectionid));
-            // We know the file is normally deleted, but just in case...
-            $contextid = self::get_contextid($this);
-            $fs = get_file_storage();
-            $gridimagepath = \format_grid\toolbox::get_image_path();
-            \format_grid\toolbox::delete_displayed_image($contextid, $sectionimage, $gridimagepath, $fs);
-        }*/
-
-        // $data['sectionbreakheadingtext'] = $data['sectionbreakheading']['text'];
-        // unset($data['sectionbreakheading']);
-
-        // error_log('update_section_format_options - '.print_r($data, true));
-
-        return parent::update_section_format_options($data);
     }
 
     /**
@@ -828,7 +761,6 @@ class format_grid extends core_courseformat\base {
      * Class instance update images callback.
      */
     public static function update_displayed_images_callback() {
-        // error_log('format_grid:update_displayed_images_callback');
         \format_grid\toolbox::update_displayed_images_callback();
     }
 }
@@ -866,22 +798,12 @@ function format_grid_pluginfile($course, $birecordorcm, $context, $filearea, $ar
 
     $fs = get_file_storage();
 
-    // $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-
-    // error_log('format_grid_pluginfile - '.$filepath.' - '.print_r($args, true));
-
-    /*$filename = array_pop($args);
-    $displayedimagestate = array_pop($args);
-    $sectionid = array_pop($args); */
     $filename = $args[2];
     $sectionid = $args[0];
-    // error_log('format_grid_pluginfile fn- '.$filename.' sid- '.$sectionid.' - '.print_r($args, true));
 
     if (!$file = $fs->get_file($context->id, 'format_grid', 'displayedsectionimage', $sectionid, '/', $filename) or $file->is_directory()) {
         send_file_not_found();
     }
-
-    // $forcedownload = true;
 
     // NOTE:
     // It would be nice to have file revisions here, for now rely on standard file lifetime,

@@ -93,7 +93,6 @@ class summary extends summary_base {
         if (!empty($summary)) {
             $o = $summary;
             $coursesettings = $this->format->get_settings();
-            // error_log('singlepagesummaryimage - '.print_r($coursesettings, true));
             if ($coursesettings['singlepagesummaryimage'] > 1) { // I.e. not 'off'.
                 $data = new \stdClass;
                 switch($coursesettings['singlepagesummaryimage']) {
@@ -116,27 +115,13 @@ class summary extends summary_base {
                 if (!empty($coursesectionimage)) {
                     $fs = get_file_storage();
                     $coursecontext = \context_course::instance($courseid);
-                    if (empty($coursesectionimage->displayedimagestate)) {
-                        $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
-                        $toolbox = \format_grid\toolbox::get_instance();
-                        if ($lock = $lockfactory->get_lock('sectionid'.$sectionid, 5)) {
-                            $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
-                            foreach ($files as $file) {
-                                if (!$file->is_directory()) {
-                                    try {
-                                        $coursesectionimage = $toolbox->setup_displayed_image($coursesectionimage, $file, $courseid, $coursesectionimage->sectionid, $this->format);
-                                    } catch (\Exception $e) {
-                                        $lock->release();
-                                        throw $e;
-                                    }
-                                }
-                            }
-                            $lock->release();
-                        } else {
-                            throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
-                                get_string('cannotgetmanagesectionimagelock', 'format_grid'));
-                        }
+                    $toolbox = \format_grid\toolbox::get_instance();
+                    $replacement = $toolbox->check_displayed_image($coursesectionimage, $courseid, $coursecontext->id, $sectionid,
+                        $this->format, $fs);
+                    if (!empty($replacement)) {
+                        $coursesectionimage = $replacement;
                     }
+
                     if ($coursesectionimage->displayedimagestate >= 1) {
                         // Yes.
                         $filename = $coursesectionimage->image;
@@ -157,7 +142,6 @@ class summary extends summary_base {
                         $o = $output->render_from_template('format_grid/singlepagesummaryimage', $data);
                     }
                 }
-                // error_log('singlepagesummaryimage - '.print_r($coursesectionimage, true));
             }
         }
 

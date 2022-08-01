@@ -53,7 +53,7 @@ class content extends content_base {
      * Export this data so it can be used as the context for a mustache template (core/inplace_editable).
      *
      * @param renderer_base $output typically, the renderer that's calling this function
-     * @return stdClass data context for a Mmustache template
+     * @return stdClass data context for a Mustache template
      */
     public function export_for_template(\renderer_base $output) {
         global $DB, $PAGE;
@@ -84,55 +84,26 @@ class content extends content_base {
         $course = $format->get_course();
         // The single section format has extra navigation.
         if ($singlesection) {
-            // if (!$PAGE->theme->usescourseindex) {
             $sectionnavigation = new $this->sectionnavigationclass($format, $singlesection);
             $data->sectionnavigation = $sectionnavigation->export_for_template($output);
 
             $sectionselector = new $this->sectionselectorclass($format, $sectionnavigation);
             $data->sectionselector = $sectionselector->export_for_template($output);
-            // }
             $data->hasnavigation = true;
             $data->singlesection = array_shift($data->sections);
             $data->sectionreturn = $singlesection;
             $data->maincoursepage = new \moodle_url('/course/view.php', array('id' => $course->id));
         } else if (!$editing) {
-            // error_log(print_r($sections, true));
-            /* error_log(print_r($format->get_format_options(), true));
-            foreach ($sections as $section) {
-                $sectionclass = new \stdClass();
-                $sectionclass->id = $section->id;
-                error_log($section->id.print_r($format->get_format_options($sectionclass), true));
-            }*/
-
             $toolbox = \format_grid\toolbox::get_instance();
             $coursesectionimages = $DB->get_records('format_grid_image', array('courseid' => $course->id));
-            // error_log($course->id.print_r($coursesectionimages, true));
             if (!empty($coursesectionimages)) {
                 $fs = get_file_storage();
                 $coursecontext = \context_course::instance($course->id);
                 foreach ($coursesectionimages as $coursesectionimage) {
-                    if (empty($coursesectionimage->displayedimagestate)) {
-                        $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
-                        if ($lock = $lockfactory->get_lock('sectionid'.$coursesectionimage->sectionid, 5)) {
-                            $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
-                            foreach ($files as $file) {
-                                if (!$file->is_directory()) {
-                                    // error_log('f '.$coursesectionimage->sectionid.' - '.print_r($file->get_filename(), true));
-                                    try {
-                                        $coursesectionimages[$coursesectionimage->id] =
-                                            $toolbox->setup_displayed_image($coursesectionimage, $file, $course->id,
-                                                $coursesectionimage->sectionid, $format);
-                                    } catch (\Exception $e) {
-                                        $lock->release();
-                                        throw $e;
-                                    }
-                                }
-                            }
-                            $lock->release();
-                        } else {
-                            throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
-                                get_string('cannotgetmanagesectionimagelock', 'format_grid'));
-                        }
+                    $replacement = $toolbox->check_displayed_image($coursesectionimage, $course->id, $coursecontext->id,
+                        $coursesectionimage->sectionid, $format, $fs);
+                    if (!empty($replacement)) {
+                        $coursesectionimages[$coursesectionimage->id] = $replacement;
                     }
                 }
             }
@@ -162,7 +133,7 @@ class content extends content_base {
                 } else {
                     // No.
                     $sectionimages[$section->id] = new stdClass;
-                    $sectionimages[$section->id]->imageuri = $output->get_generated_image_for_id($section->id);
+                    $sectionimages[$section->id]->generatedimageuri = $output->get_generated_image_for_id($section->id);
                 }
                 // Alt text.
                 $sectionformatoptions = $format->get_format_options($section);
@@ -193,10 +164,6 @@ class content extends content_base {
 
                 $data->coursestyles = $displayedimageinfo;
             }
-            // error_log('SI '.print_r($sectionimages, true));
-            // $data->gridsections = $sectionimages;
-            // error_log('GSID '.print_r($data->gridsections, true));
-            // error_log('S '.print_r($sectionsforgrid, true));
         }
 
         if ($this->hasaddsection) {
@@ -223,15 +190,12 @@ class content extends content_base {
         $sections = [];
         $numsections = $format->get_last_section_number();
         $sectioninfos = $modinfo->get_section_info_all();
-        // error_log('SI1 '.print_r($sectioninfos, true));
         // Get rid of section 0;
         if (!empty($sectioninfos)) {
             array_shift($sectioninfos);
         }
-        //error_log('SI2 '.print_r($sectioninfos, true));
         foreach ($sectioninfos as $thissection) {
-            // The course/view.php check the section existence but the output can be called
-            // from other parts so we need to check it.
+            // The course/view.php check the section existence but the output can be called from other parts so we need to check it.
             if (!$thissection) {
                 print_error('unknowncoursesection', 'error', course_get_url($course), format_string($course->fullname));
             }
@@ -250,7 +214,6 @@ class content extends content_base {
             $section->name = get_section_name($course, $thissection);
             $sections[] = $section;
         }
-        // error_log('SI3 '.print_r($sections, true));
 
         return $sections;
     }
