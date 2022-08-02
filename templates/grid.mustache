@@ -32,7 +32,7 @@
     {{/sectionbreakheading}}
     <div class="thegrid d-flex flex-wrap justify-content-between">
     {{/sectionbreak}}
-    <div class="card m-2">
+    <div id="grid-section-{{number}}" class="grid-section card m-2">
         <a href="{{sectionurl}}">
             <div class="card-header">{{sectionname}}</div>
             {{#imageuri}}
@@ -41,7 +41,7 @@
             </div>
             {{/imageuri}}
             {{#generatedimageuri}}
-            <div class="grid-image card-img-bottom text-center" style="background-image: url('{{generatedimageuri}}');">
+            <div class="grid-generatedimage card-img-bottom text-center" style="background-image: url('{{generatedimageuri}}');">
             </div>
             {{/generatedimageuri}}
         </a>

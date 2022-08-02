@@ -135,6 +135,9 @@ class content extends content_base {
                     $sectionimages[$section->id] = new stdClass;
                     $sectionimages[$section->id]->generatedimageuri = $output->get_generated_image_for_id($section->id);
                 }
+                // Number.
+                $sectionimages[$section->id]->number = $section->num;
+
                 // Alt text.
                 $sectionformatoptions = $format->get_format_options($section);
                 $sectionimages[$section->id]->alttext = $sectionformatoptions['sectionimagealttext'];
