@@ -93,7 +93,7 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
             $lock = true;
             if (!defined('BEHAT_SITE_RUNNING')) {
                 $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
-                $lock = $lockfactory->get_lock('sectionid'.$sectionid, 5);        
+                $lock = $lockfactory->get_lock('sectionid'.$sectionid, 5);
             }
             if ($lock) {
                 $fs = get_file_storage();
