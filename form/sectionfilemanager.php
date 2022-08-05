@@ -90,8 +90,12 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
             $sectionid = $this->getAttribute('sectionid');
 
             // Only allow this code to be executed once at the same time for the given section id (the id is unique).
-            $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
-            if ($lock = $lockfactory->get_lock('sectionid'.$sectionid, 5)) {
+            $lock = true;
+            if (!defined('BEHAT_SITE_RUNNING')) {
+                $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
+                $lock = $lockfactory->get_lock('sectionid'.$sectionid, 5);        
+            }
+            if ($lock) {
                 $fs = get_file_storage();
                 $indata = new stdClass();
                 $indata->sectionimage_filemanager = $value;
@@ -143,7 +147,9 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
                         }
                     }
                 }
-                $lock->release();
+                if (!defined('BEHAT_SITE_RUNNING')) {
+                    $lock->release();
+                }
             } else {
                 throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
                     get_string('cannotgetmanagesectionimagelock', 'format_grid'));

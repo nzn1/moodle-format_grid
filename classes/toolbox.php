@@ -111,8 +111,12 @@ class toolbox {
         $newsectionimage = false;
 
         if (empty($sectionimage->displayedimagestate)) {
-            $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
-            if ($lock = $lockfactory->get_lock('sectionid'.$sectionimage->sectionid, 5)) {
+            $lock = true;
+            if (!defined('BEHAT_SITE_RUNNING')) {
+                $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
+                $lock = $lockfactory->get_lock('sectionid'.$sectionid, 5);        
+            }
+            if ($lock) {
                 $files = $fs->get_area_files($coursecontextid, 'format_grid', 'sectionimage', $sectionimage->sectionid);
                 foreach ($files as $file) {
                     if (!$file->is_directory()) {
@@ -124,7 +128,9 @@ class toolbox {
                         }
                     }
                 }
-                $lock->release();
+                if (!defined('BEHAT_SITE_RUNNING')) {
+                    $lock->release();
+                }                
             } else {
                 throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
                     get_string('cannotgetmanagesectionimagelock', 'format_grid'));
@@ -529,7 +535,11 @@ class toolbox {
         }
         if (!empty($coursesectionimages)) {
             $fs = get_file_storage();
-            $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
+            $lockfactory = null;
+            $lock = true;
+            if (!defined('BEHAT_SITE_RUNNING')) {
+                $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
+            }
             $toolbox = self::get_instance();
             $courseid = -1;
             foreach ($coursesectionimages as $coursesectionimage) {
@@ -538,7 +548,10 @@ class toolbox {
                     $format = course_get_format($courseid);
                 }
                 $coursecontext = \context_course::instance($courseid);
-                if ($lock = $lockfactory->get_lock('sectionid'.$coursesectionimage->sectionid, 5)) {
+                if (!defined('BEHAT_SITE_RUNNING')) {
+                    $lock = $lockfactory->get_lock('sectionid'.$coursesectionimage->sectionid, 5);
+                }
+                if ($lock) {
                     $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
                     foreach ($files as $file) {
                         if (!$file->is_directory()) {
@@ -550,7 +563,9 @@ class toolbox {
                             }
                         }
                     }
-                    $lock->release();
+                    if (!defined('BEHAT_SITE_RUNNING')) {
+                        $lock->release();
+                    }
                 } else {
                     throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
                         get_string('cannotgetmanagesectionimagelock', 'format_grid'));
