@@ -87,19 +87,15 @@ class restore_format_grid_plugin extends restore_format_plugin {
 
         $data = (object) $data;
 
+        $courseid = $this->task->get_courseid();
         /* We only process this information if the course we are restoring to
            has 'grid' format (target format can change depending of restore options). */
-        $format = $DB->get_field('course', 'format', array('id' => $this->task->get_courseid()));
-        if ($format != 'grid') {
+        $format = $DB->get_field('course', 'format', array('id' => $courseid));
+        if ($format !== 'grid') {
             return;
         }
 
-        $data->courseid = $this->task->get_courseid();
-
-        /*if (!$DB->insert_record('format_grid_summary', $data)) {
-            throw new moodle_exception('invalidrecordid', 'format_grid', '',
-            'Could not set summary status. Grid format database is not ready. An admin must visit the notifications section.');
-        }*/
+        $data->courseid = $courseid;
 
         if (!($course = $DB->get_record('course', array('id' => $data->courseid)))) {
             print_error('invalidcourseid', 'error');
@@ -116,14 +112,22 @@ class restore_format_grid_plugin extends restore_format_plugin {
      * This method is only executed if course configuration was overridden
      */
     public function after_restore_course() {
-        $backupinfo = $this->step->get_task()->get_info();
+        $task = $this->step->get_task();
+        $backupinfo = $task->get_info();
         if ($backupinfo->original_course_format !== 'grid') {
             // Backup from another course format.
             return;
         }
 
         global $DB;
-        $courseid = $this->task->get_courseid();
+        $courseid = $task->get_courseid();
+
+        /* We only process this information if the course we are restoring to
+           has 'grid' format (target format can change depending of restore options). */
+        $format = $DB->get_field('course', 'format', array('id' => $courseid));
+        if ($format !== 'grid') {
+            return;
+        }
 
         // Sort out the files if old backup.
         $fs = get_file_storage();
