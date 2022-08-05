@@ -21,4 +21,4 @@ Feature: Image upload
     And I upload "course/format/grid/tests/fixtures/Ducking.jpg" file to "Section image" filemanager
     And I press "Save changes"
     And I turn editing mode off
-    Then "//img[contains(@src, 'Ducking.jpg')]" "xpath_element" should exist in the "#grid-section-2 .grid-image img" "css_element"
+    Then "//img[contains(@src, 'Ducking.jpg')]" "xpath_element" should exist in the "#grid-section-2 .grid-image" "css_element"
