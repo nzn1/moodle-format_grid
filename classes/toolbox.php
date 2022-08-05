@@ -130,7 +130,7 @@ class toolbox {
                 }
                 if (!defined('BEHAT_SITE_RUNNING')) {
                     $lock->release();
-                }                
+                }
             } else {
                 throw new \moodle_exception('cannotgetimagelock', 'format_grid', '',
                     get_string('cannotgetmanagesectionimagelock', 'format_grid'));
