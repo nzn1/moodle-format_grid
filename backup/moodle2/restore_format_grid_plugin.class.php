@@ -137,9 +137,8 @@ class restore_format_grid_plugin extends restore_format_plugin {
             if (!$file->is_directory()) {
                 $filename = $file->get_filename();
                 $filesectionid = $file->get_itemid();
-                // TODO - compare filename?
                 $gridimage = $DB->get_record('format_grid_image', array('sectionid' => $filesectionid), 'image');
-                if ($gridimage) {
+                if (($gridimage) && ($gridimage->image == $filename)) { // Ensure the correct file.
                     $filerecord = new stdClass();
                     $filerecord->contextid = $coursecontext->id;
                     $filerecord->component = 'format_grid';
@@ -149,6 +148,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
                     $newfile = $fs->create_file_from_storedfile($filerecord, $file);
                     if ($newfile) {
                         $DB->set_field('format_grid_image', 'contenthash', $newfile->get_contenthash(), array('sectionid' => $filesectionid));
+                        // Don't delete the section file in case used in the summary.
                     }
                 }
             }
