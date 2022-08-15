@@ -115,7 +115,7 @@ class content extends content_base {
             }
             // Now iterate over the sections.
             $data->gridsections = array();
-            $sectionsforgrid = $this->get_grid_sections();
+            $sectionsforgrid = $this->get_grid_sections($output);
             $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
 
             foreach ($sectionsforgrid as $section) {
@@ -183,7 +183,7 @@ class content extends content_base {
      * @param renderer_base $output typically, the renderer that's calling this function
      * @return array data context for a mustache template
      */
-    protected function get_grid_sections(): array {
+    protected function get_grid_sections(\renderer_base $output): array {
 
         $format = $this->format;
         $course = $format->get_course();
@@ -214,7 +214,7 @@ class content extends content_base {
             $section = new stdClass;
             $section->id = $thissection->id;
             $section->num = $thissection->section;
-            $section->name = get_section_name($course, $thissection);
+            $section->name = $output->section_title_without_link($thissection, $course);
             $sections[] = $section;
         }
 
