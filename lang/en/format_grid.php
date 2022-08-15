@@ -102,10 +102,10 @@ $string['off'] = 'Off';
 $string['centre'] = 'Centre';
 $string['left'] = 'Left';
 $string['right'] = 'Right';
-$string['singlepagesummaryimage'] = 'Show the grid image in the section summary on a single page.';
-$string['singlepagesummaryimage_help'] = "Show the grid image for that section in the section summary when there is a summary in the position stated.";
-$string['defaultsinglepagesummaryimage'] = 'Show the grid image in the section summary on a single page.';
-$string['defaultsinglepagesummaryimage_desc'] = "Show the grid image for that section in the section summary when there is a summary in the position stated.";
+$string['singlepagesummaryimage'] = 'Show the grid image in the section summary.';
+$string['singlepagesummaryimage_help'] = "Show the grid image for that section in the section summary when there is a summary in the section.";
+$string['defaultsinglepagesummaryimage'] = 'Show the grid image in the section summary.';
+$string['defaultsinglepagesummaryimage_desc'] = "Show the grid image for that section in the section summary when there is a summary in the section.";
 
 // Other.
 $string['information'] = 'Information';
