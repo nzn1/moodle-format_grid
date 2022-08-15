@@ -60,25 +60,25 @@ class content extends content_base {
         $format = $this->format;
         $editing = $PAGE->user_is_editing();
 
-        $singlesection = $this->format->get_section_number();
-        if (($editing) || ($singlesection)) {
-            // Most formats uses section 0 as a separate section so we remove from the list.
-            $sections = $this->export_sections($output);
-            $initialsection = '';
-            if (!empty($sections)) {
-                $initialsection = array_shift($sections);
-            }
-        }
-
         $data = (object)[
             'title' => $format->page_title(), // This method should be in the course_format class.
             'format' => $format->get_format(),
             'sectionreturn' => 0,
         ];
 
-        if (($editing) || ($singlesection)) {
-            $data->initialsection = $initialsection;
-            $data->sections = $sections;
+        $singlesection = $this->format->get_section_number();
+        $sections = $this->export_sections($output);
+        $initialsection = '';
+
+        if (!empty($sections)) {
+            // Most formats uses section 0 as a separate section so we remove from the list.
+            $initialsection = array_shift($sections);
+            if (!$singlesection) {
+                $data->initialsection = $initialsection;
+            }
+            if (($editing) || ($singlesection)) {
+                $data->sections = $sections;
+            }
         }
 
         $course = $format->get_course();

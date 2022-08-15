@@ -160,10 +160,6 @@
 }}
 <div id="{{uniqid}}-course-format">
     <h2 class="accesshide">{{{title}}}</h2>
-    {{#hasgridsections}}
-        {{> format_grid/coursestyles }}
-        {{> format_grid/grid }}
-    {{/hasgridsections}}
     {{#hasnavigation}}
     <a href="{{{maincoursepage}}}"><p class="text-right">{{#str}}maincoursepage{{/str}}</p></a>
     {{/hasnavigation}}
@@ -180,6 +176,10 @@
             {{/ core_courseformat/local/content/section }}
         {{/sections}}
     </ul>
+    {{#hasgridsections}}
+        {{> format_grid/coursestyles }}
+        {{> format_grid/grid }}
+    {{/hasgridsections}}
     {{#hasnavigation}}
     <div class="single-section">
         {{#sectionnavigation}}
