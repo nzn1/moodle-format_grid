@@ -74,7 +74,6 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
                     }
                 }
 
-error_log('xmldb_format_grid_upgrade - new images '.print_r($newimages, true));
                 $fs = get_file_storage();
                 $currentcourseid = 0;
                 foreach ($oldimages as $oldimage) {
@@ -86,11 +85,9 @@ error_log('xmldb_format_grid_upgrade - new images '.print_r($newimages, true));
                             foreach ($files as $file) {
                                 if (!$file->is_directory()) {
                                     if ($file->get_filepath() == '/gridimage/') {
-error_log('xmldb_format_grid_upgrade - deleting gridimage '.$file->get_filename());
                                         $file->delete();
                                     } else {
                                         $filename = $file->get_filename();
-error_log('xmldb_format_grid_upgrade - processing icon '.$filename);
                                         $filesectionid = $file->get_itemid();
                                         $gridimage = $newimages[$filesectionid];
                                         if (($gridimage) && ($gridimage->image == $filename)) { // Ensure the correct file.
@@ -114,7 +111,11 @@ error_log('xmldb_format_grid_upgrade - processing icon '.$filename);
                     }
                 }
             }
-            // TODO - Delete 'format_grid_icon' table.
+
+            // Delete 'format_grid_icon' and 'format_grid_summary' tables.
+            $dbman->drop_table($oldtable);
+            $oldsummarytable = new xmldb_table('format_grid_summary');
+            $dbman->drop_table($oldsummarytable);
         }
 
         // Grid savepoint reached.
