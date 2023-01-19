@@ -3,6 +3,8 @@ History
 
 Version 400.2.1 - TBR
 ============================
+1. Add Modal back, new implementation from the M3.11 version.  Admin setting 'defaultpopup' and course setting 'popup' added,
+   default of 'No' and '-' respectively.
 
 Version 400.2.0 - 16/10/2022
 ============================

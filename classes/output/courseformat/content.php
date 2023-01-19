@@ -122,11 +122,24 @@ class content extends content_base {
                 }
             }
 
+            // Popup.
+            $settings = $format->get_settings();
+            $data->popup = false;
+            if ((!empty($settings['popup'])) && ($settings['popup'] == 2)) {
+                $data->popup = true;
+                $data->popupsections = array();
+                $potentialpopupsections = array();
+                foreach ($sections as $section) {
+                    $potentialpopupsections[$section->id] = $section;
+                }
+            }
+
             // Suitable array.
             $sectionimages = array();
             foreach ($coursesectionimages as $coursesectionimage) {
                 $sectionimages[$coursesectionimage->sectionid] = $coursesectionimage;
             }
+
             // Now iterate over the sections.
             $data->gridsections = array();
             $sectionsforgrid = $this->get_grid_sections($output);
@@ -178,7 +191,11 @@ class content extends content_base {
 
                 // For the template.
                 $data->gridsections[] = $sectionimages[$section->id];
+                if ($data->popup) {
+                    $data->popupsections[] = $potentialpopupsections[$section->id];
+                }
             }
+
             $data->hasgridsections = (!empty($data->gridsections)) ? true : false;
             if ($data->hasgridsections) {
                 $coursesettings = $format->get_settings();

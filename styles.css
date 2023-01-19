@@ -60,3 +60,12 @@
     top: 50%;
     transform: translate(-50%,-50%);
 }
+
+.format-grid #gridPopup .modal-dialog {
+    max-width: calc(100% - 50px);
+    width: calc(100% - 50px);
+}
+
+.format-grid #gridPopup .modal-dialog .modal-body {
+    min-height: 200px;
+}
