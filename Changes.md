@@ -5,6 +5,10 @@ Version 400.2.1 - TBR
 ============================
 1. Add Modal back, new implementation from the M3.11 version.  Admin setting 'defaultpopup' and course setting 'popup' added,
    default of 'No' and '-' respectively.
+2. Add completion indication.  Admin setting 'showcompletiondefault' and course setting 'showcompletion' added, default of 'No'
+   and '-' respectively.  Note:  When 'defaultpopup' is being used with this and the popup is closed, the page will refresh.
+   This is to allow the incidication to be updated.  This solution is not perfect but works and may in future be replaced with
+   a far more complicated AJAX one.  However, please do not raise bug issues about it.
 
 Version 400.2.0 - 16/10/2022
 ============================

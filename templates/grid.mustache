@@ -21,6 +21,7 @@
 
     Context variables required for this template:
     * gridsections - The array of sections.
+    * showcompletion - If completion is on for on and shown.
     * sectionbreak - There is a section break for this section.
     * sectionbreakheading - Section break heading.
     * number - Section number.
@@ -30,6 +31,7 @@
     * imageuri - Image URI.
     * alttext - Image alternative text.
     * generatedimageuri - Generated image URI.
+    * sectioncompletionmarkup - Section completion markup if any.
 
     Example context (json):
     {
@@ -41,7 +43,8 @@
                 "sectionurl": "https://mymoodle/course/view.php?id=4&section=1",
                 "sectionname": "The first section",
                 "imageuri": false,
-                "generatedimageuri": "Base64 encoded svg"
+                "generatedimageuri": "Base64 encoded svg",
+                "sectioncompletionmarkup": ""
             },
             {
                 "sectionbreak": true,
@@ -52,9 +55,11 @@
                 "sectionname": "The second section",
                 "imageuri": "https://mymoodle/pluginfile.php/358/format_grid/displayedsectionimage/42/1/ducking.jpg.webp",
                 "alttext": "Duckling",
-                "generatedimageuri": false
+                "generatedimageuri": false,
+                "sectioncompletionmarkup": ""
             }
-        ]
+        ],
+        "showcompletion": true
     }
 }}
 <div class="thegrid d-flex flex-wrap justify-content-between mt-2">
@@ -77,10 +82,12 @@
             {{#imageuri}}
             <div class="grid-image card-img-bottom text-center">
                 <img src="{{imageuri}}" alt="{{alttext}}">
+                {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
             </div>
             {{/imageuri}}
             {{#generatedimageuri}}
             <div class="grid-generatedimage card-img-bottom text-center" style="background-image: url('{{generatedimageuri}}');">
+                {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
             </div>
             {{/generatedimageuri}}
         {{^popup}}
@@ -179,6 +186,9 @@ require(['jquery'], function($) {
     });
     $('#gridPopup').on('hidden.bs.modal', function() {
         $('.gridcarousel-item').removeClass('active');
+        {{#showcompletion}}
+            window.location.reload();
+        {{/showcompletion}}
     });
 });
 {{/js}}
