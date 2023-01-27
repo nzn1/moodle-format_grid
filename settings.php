@@ -115,6 +115,17 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
     $page->add($setting);
 
+    // Completion.
+    $name = 'format_grid/defaultshowcompletion';
+    $title = get_string('defaultshowcompletion', 'format_grid');
+    $description = get_string('defaultshowcompletion_desc', 'format_grid');
+    $default = 1;
+    $choices = array(
+        1 => new lang_string('no'),
+        2 => new lang_string('yes')
+    );
+    $page->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
+
     // Show the grid image in the section summary on a single page.
     $name = 'format_grid/defaultsinglepagesummaryimage';
     $title = get_string('defaultsinglepagesummaryimage', 'format_grid');

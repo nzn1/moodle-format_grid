@@ -339,6 +339,10 @@ class format_grid extends core_courseformat\base {
                     'default' => 0,
                     'type' => PARAM_INT
                 ),
+                'showcompletion' => array(
+                    'default' => 0,
+                    'type' => PARAM_INT
+                ),
                 'singlepagesummaryimage' => array(
                     'default' => 0,
                     'type' => PARAM_INT
@@ -429,6 +433,22 @@ class format_grid extends core_courseformat\base {
                 'help_component' => 'format_grid',
                 'element_type' => 'select',
                 'element_attributes' => array($imageresizemethodvalues)
+            );
+
+            $showcompletionvalues = $this->generate_default_entry(
+                'showcompletion',
+                0,
+                array(
+                    1 => new lang_string('no'),
+                    2 => new lang_string('yes')
+                )
+            );
+            $courseformatoptionsedit['showcompletion'] = array(
+                'label' => new lang_string('showcompletion', 'format_grid'),
+                'help' => 'showcompletion',
+                'help_component' => 'format_grid',
+                'element_type' => 'select',
+                'element_attributes' => array($showcompletionvalues)
             );
 
             $singlepagesummaryimagevalues = $this->generate_default_entry(

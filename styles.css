@@ -69,3 +69,12 @@
 .format-grid #gridPopup .modal-dialog .modal-body {
     min-height: 200px;
 }
+
+.format-grid .grid-completion {
+    border-radius: 90px;
+    border-width: 1px;
+    bottom: 8%;
+    padding: 4px;
+    position: absolute;
+    right: 8%;
+}
