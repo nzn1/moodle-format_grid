@@ -21,17 +21,15 @@
 
     Context variables required for this template:
     * percentagecolour - The colour indicator, low (< 11), medium (between 11 and 89) or high (> 89).
-    * image - Image markup.
-    * left - If true, align the content to the left.
-    * right - If true, align the content to the right.
-    * summary - Summary markup.
+    * percentagequarter - The colour border quarter indicator, 0 (< 1), 1 (between 1 and 25), 2 (between 26 and 50), 3 (between 51 and 75) or 4 (> 75).
 
     Example context (json):
     {
         "percentagecolour": "medium",
+        "percentagequarter": 2,
         "percentagevalue": 42
     }
 }}
-<div class="grid-completion grid-completion-colour-{{percentagecolour}}">
-    <span class="grid-percentage grid-percentagevalue-{{percentagevalue}}">{{percentagevalue}}%</span>
+<div class="grid-completion grid-completion-colour-{{percentagecolour}} grid-completion-percentagequarter-{{percentagequarter}}">
+    <span class="grid-percentage grid-percentagevalue-{{percentagevalue}}" title="{{percentagevalue}}%">{{percentagevalue}}%</span>
 </div>

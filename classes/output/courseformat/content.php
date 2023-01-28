@@ -332,10 +332,21 @@ class content extends content_base {
                 $data->percentagevalue = $this->sectioncompletionpercentage[$section->section];
                 if ($data->percentagevalue < 11) {
                     $data->percentagecolour = 'low';
-                } else if (($data->percentagevalue > 10) || ($data->percentagevalue < 90)) {
+                } else if ($data->percentagevalue < 90) {
                     $data->percentagecolour = 'middle';
                 } else {
                     $data->percentagecolour = 'high';
+                }
+                if ($data->percentagevalue < 1) {
+                    $data->percentagequarter = 0;
+                } else if ($data->percentagevalue < 26) {
+                    $data->percentagequarter = 1;
+                } else if ($data->percentagevalue < 51) {
+                    $data->percentagequarter = 2;
+                } else if ($data->percentagevalue < 76) {
+                    $data->percentagequarter = 3;
+                } else {
+                    $data->percentagequarter = 4;
                 }
                 $this->sectioncompletionmarkup[$section->section] = $output->render_from_template('format_grid/grid_completion', $data);
             }
