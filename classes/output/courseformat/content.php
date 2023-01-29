@@ -127,9 +127,9 @@ class content extends content_base {
             }
 
             // Popup.
-            $settings = $format->get_settings();
+            $coursesettings = $format->get_settings();
             $data->popup = false;
-            if ((!empty($settings['popup'])) && ($settings['popup'] == 2)) {
+            if ((!empty($coursesettings['popup'])) && ($coursesettings['popup'] == 2)) {
                 $data->popup = true;
                 $data->popupsections = array();
                 $potentialpopupsections = array();
@@ -146,7 +146,7 @@ class content extends content_base {
 
             // Now iterate over the sections.
             $data->gridsections = array();
-            $sectionsforgrid = $this->get_grid_sections($output, $settings);
+            $sectionsforgrid = $this->get_grid_sections($output, $coursesettings);
             $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
 
             foreach ($sectionsforgrid as $section) {
@@ -207,10 +207,10 @@ class content extends content_base {
 
             $data->hasgridsections = (!empty($data->gridsections)) ? true : false;
             if ($data->hasgridsections) {
-                $coursesettings = $format->get_settings();
-                $displayedimageinfo = $toolbox->get_displayed_image_container_properties($coursesettings);
-
-                $data->coursestyles = $displayedimageinfo;
+                $data->coursestyles = $toolbox->get_displayed_image_container_properties($coursesettings);
+                if ((!empty($coursesettings['showcompletion'])) && ($coursesettings['showcompletion'] == 2)) {
+                    $data->showcompletion = true;
+                }
             }
         }
 
