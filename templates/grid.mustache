@@ -21,7 +21,7 @@
 
     Context variables required for this template:
     * gridsections - The array of sections.
-    * showcompletion - If completion is on for on and shown.
+    * showcompletion - If completion is on and shown.
     * sectionbreak - There is a section break for this section.
     * sectionbreakheading - Section break heading.
     * number - Section number.
@@ -167,29 +167,8 @@
     </div>
 </div>
 {{#js}}
-require(['jquery'], function($) {
-    $('#gridPopup').on('show.bs.modal', function(event) {
-        var trigger = $(event.relatedTarget);
-        var section = trigger.data('section');
-
-        var gml = $('#gridPopupLabel');
-        var triggersectionname = $('#gridpopupsection-' + section).data('sectiontitle');
-        gml.text(triggersectionname);
-
-        var modal = $(this);
-        modal.find('#gridpopupsection-' + section).addClass('active');
-
-        $('#gridPopupCarousel').on('slid.bs.carousel', function() {
-            var sno = $('.gridcarousel-item.active').data('sectiontitle');
-            gml.text(sno);
-        });
-    });
-    $('#gridPopup').on('hidden.bs.modal', function() {
-        $('.gridcarousel-item').removeClass('active');
-        {{#showcompletion}}
-            window.location.reload();
-        {{/showcompletion}}
-    });
+require(['format_grid/popup'], function(popuphandler) {
+    popuphandler.init({{#showcompletion}}true{{/showcompletion}}{{^showcompletion}}false{{/showcompletion}});
 });
 {{/js}}
 {{/popup}}
