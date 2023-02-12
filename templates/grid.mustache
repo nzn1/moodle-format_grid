@@ -167,7 +167,7 @@
     </div>
 </div>
 {{#js}}
-require(['jquery'], function($) {
+/*require(['jquery', 'theme_boost/index'], function($, bootstrap) {
     $('#gridPopup').on('show.bs.modal', function(event) {
         var trigger = $(event.relatedTarget);
         var section = trigger.data('section');
@@ -190,6 +190,12 @@ require(['jquery'], function($) {
             window.location.reload();
         {{/showcompletion}}
     });
+
+    const myModalAlternative = new bootstrap.Modal(document.getElementById('gridPopup'), {});
+    //myModalAlternative.show();
+});*/
+require(['format_grid/popup'], function(popuphandler) {
+    popuphandler.init({{#showcompletion}}true{{/showcompletion}}{{^showcompletion}}false{{/showcompletion}});
 });
 {{/js}}
 {{/popup}}

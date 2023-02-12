@@ -212,7 +212,9 @@
     {{/coursesettings}}
 </div>
 {{#js}}
-require(['core_courseformat/local/content'], function(component) {
+//require(['core_courseformat/local/content'], function(component) {
+require(['format_grid/local/content'], function(component) {
     component.init('{{uniqid}}-course-format', {}, {{sectionreturn}});
+console.log("GFPU " + {{popup}} {{#showcompletion}} + " CON"{{/showcompletion}});
 });
 {{/js}}
