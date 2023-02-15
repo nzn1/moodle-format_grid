@@ -149,6 +149,7 @@ class content extends content_base {
             $sectionsforgrid = $this->get_grid_sections($output, $coursesettings);
             $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
 
+            $completionshown = false;
             foreach ($sectionsforgrid as $section) {
                 // Do we have an image?
                 if ((array_key_exists($section->id, $sectionimages)) && ($sectionimages[$section->id]->displayedimagestate >= 1)) {
@@ -196,6 +197,7 @@ class content extends content_base {
                 // Completion?
                 if (!empty($section->sectioncompletionmarkup)) {
                     $sectionimages[$section->id]->sectioncompletionmarkup = $section->sectioncompletionmarkup;
+                    $completionshown = true;
                 }
 
                 // For the template.
@@ -208,7 +210,7 @@ class content extends content_base {
             $data->hasgridsections = (!empty($data->gridsections)) ? true : false;
             if ($data->hasgridsections) {
                 $data->coursestyles = $toolbox->get_displayed_image_container_properties($coursesettings);
-                if ((!empty($coursesettings['showcompletion'])) && ($coursesettings['showcompletion'] == 2)) {
+                if ((!empty($coursesettings['showcompletion'])) && ($coursesettings['showcompletion'] == 2) && ($completionshown)) {
                     $data->showcompletion = true;
                 }
             }

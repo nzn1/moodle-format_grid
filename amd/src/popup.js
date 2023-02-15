@@ -22,7 +22,7 @@
  */
 
 import * as CourseEvents from 'core_course/events';
-import $ from 'jquery';
+import jQuery from 'jquery';
 //import bootstrap from 'theme_boost/index';
 import Log from 'core/log';
 
@@ -38,7 +38,7 @@ let registered = false;
  *
  * @type {boolean}
  */
-let fired = false;
+let mctFired = false;
 
 /**
  * Function to intialise and register event listeners for this module.
@@ -49,42 +49,35 @@ export const init = (showcompletion) => {
     if (registered) {
         return;
     }
-    Log.debug("GFPU Handler Init - " + showcompletion + " fired " + fired);
+    Log.debug("GFPU Handler Init - " + showcompletion);
     // Listen for toggled manual completion states of activities.
     document.addEventListener(CourseEvents.manualCompletionToggled, () => {
-        Log.debug("GFPU Handler MCS");
-        fired = true;
-        /*const withAvailability = parseInt(e.detail.withAvailability);
-        if (withAvailability) {
-            // Reload the page when the toggled manual completion button has availability conditions linked to it.
-            window.location.reload();
-        }*/
+        Log.debug("GFPU Handler MCT");
+        mctFired = true;
     });
     registered = true;
 
-    $('#gridPopup').on('show.bs.modal', function(event) {
-        var trigger = $(event.relatedTarget);
+    jQuery('#gridPopup').on('show.bs.modal', function(event) {
+        var trigger = jQuery(event.relatedTarget);
         var section = trigger.data('section');
 
-        var gml = $('#gridPopupLabel');
-        var triggersectionname = $('#gridpopupsection-' + section).data('sectiontitle');
+        var gml = jQuery('#gridPopupLabel');
+        var triggersectionname = jQuery('#gridpopupsection-' + section).data('sectiontitle');
         gml.text(triggersectionname);
 
-        var modal = $(this);
+        var modal = jQuery(this);
         modal.find('#gridpopupsection-' + section).addClass('active');
 
-        $('#gridPopupCarousel').on('slid.bs.carousel', function() {
-            var sno = $('.gridcarousel-item.active').data('sectiontitle');
+        jQuery('#gridPopupCarousel').on('slid.bs.carousel', function() {
+            var sno = jQuery('.gridcarousel-item.active').data('sectiontitle');
             gml.text(sno);
         });
     });
-    $('#gridPopup').on('hidden.bs.modal', function() {
-        $('.gridcarousel-item').removeClass('active');
-        if (showcompletion && fired) {
-            fired = false;
+    jQuery('#gridPopup').on('hidden.bs.modal', function() {
+        jQuery('.gridcarousel-item').removeClass('active');
+        if (showcompletion && mctFired) {
+            mctFired = false;
             window.location.reload();
         }
     });
-
-    //const myModalAlternative = new bootstrap.Modal(document.getElementById('gridPopup'), {});
 };
