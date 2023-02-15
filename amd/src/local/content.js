@@ -31,7 +31,6 @@ import CmItem from 'core_courseformat/local/content/section/cmitem';
 import courseActions from 'core_course/actions';
 import DispatchActions from 'core_courseformat/local/content/actions';
 import * as CourseEvents from 'core_course/events';
-import Log from 'core/log';
 
 export default class Component extends BaseComponent {
 
@@ -176,7 +175,6 @@ export default class Component extends BaseComponent {
         if (detail === undefined) {
             return;
         }
-        Log.debug("GFC: " + JSON.stringify(detail));
         this.reactive.dispatch('cmCompletion', [detail.cmid], detail.completed);
     }
 

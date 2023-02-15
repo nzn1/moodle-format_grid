@@ -23,8 +23,6 @@
 
 import * as CourseEvents from 'core_course/events';
 import jQuery from 'jquery';
-//import bootstrap from 'theme_boost/index';
-import Log from 'core/log';
 
 /**
  * Whether the event listener has already been registered for this module.
@@ -49,10 +47,8 @@ export const init = (showcompletion) => {
     if (registered) {
         return;
     }
-    Log.debug("GFPU Handler Init - " + showcompletion);
     // Listen for toggled manual completion states of activities.
     document.addEventListener(CourseEvents.manualCompletionToggled, () => {
-        Log.debug("GFPU Handler MCT");
         mctFired = true;
     });
     registered = true;

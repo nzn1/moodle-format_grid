@@ -167,33 +167,6 @@
     </div>
 </div>
 {{#js}}
-/*require(['jquery', 'theme_boost/index'], function($, bootstrap) {
-    $('#gridPopup').on('show.bs.modal', function(event) {
-        var trigger = $(event.relatedTarget);
-        var section = trigger.data('section');
-
-        var gml = $('#gridPopupLabel');
-        var triggersectionname = $('#gridpopupsection-' + section).data('sectiontitle');
-        gml.text(triggersectionname);
-
-        var modal = $(this);
-        modal.find('#gridpopupsection-' + section).addClass('active');
-
-        $('#gridPopupCarousel').on('slid.bs.carousel', function() {
-            var sno = $('.gridcarousel-item.active').data('sectiontitle');
-            gml.text(sno);
-        });
-    });
-    $('#gridPopup').on('hidden.bs.modal', function() {
-        $('.gridcarousel-item').removeClass('active');
-        {{#showcompletion}}
-            window.location.reload();
-        {{/showcompletion}}
-    });
-
-    const myModalAlternative = new bootstrap.Modal(document.getElementById('gridPopup'), {});
-    //myModalAlternative.show();
-});*/
 require(['format_grid/popup'], function(popuphandler) {
     popuphandler.init({{#showcompletion}}true{{/showcompletion}}{{^showcompletion}}false{{/showcompletion}});
 });
