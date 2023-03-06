@@ -2,7 +2,7 @@ Grid course format
 ============================
 A topics based format that uses a grid of user selectable images to select a section.
 
-Required release  of Moodle
+Required release of Moodle
 ==========================
 This release works with Moodle 4.0 version 2022041900.00 (Build: 20220419) and above within the MOODLE_400_STABLE branch until the
 next release.
