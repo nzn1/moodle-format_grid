@@ -54,12 +54,14 @@
     height: 140px;
 }
 
+/*rtl:begin:ignore*/
 .format-grid .thegrid .grid-image img {
     left: 50%;
     position: absolute;
     top: 50%;
     transform: translate(-50%,-50%);
 }
+/*rtl:end:ignore*/
 
 .format-grid #gridPopup .modal-dialog {
     max-width: 100%;
