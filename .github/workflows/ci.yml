@@ -80,7 +80,7 @@ jobs:
         env:
           DB: ${{ matrix.database }}
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
-          CODECHECKER_IGNORE_PATHS: 'form/sectionfilemanager.php'
+          IGNORE_NAMES: 'sectionfilemanager.php'
           MUSTACHE_IGNORE_NAMES: 'content.mustache'
 
       - name: PHP Lint
