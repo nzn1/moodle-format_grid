@@ -153,6 +153,12 @@ class content extends content_base {
 
             $completionshown = false;
             $headerimages = false;
+            if ($editing) {
+                $datasectionmap = array();
+                foreach ($data->sections as $datasectionkey => $datasection) {
+                    $datasectionmap[$datasection->id] = $datasectionkey;
+                }
+            }
             foreach ($sectionsforgrid as $section) {
                 // Do we have an image?
                 if ((array_key_exists($section->id, $sectionimages)) && ($sectionimages[$section->id]->displayedimagestate >= 1)) {
@@ -168,7 +174,7 @@ class content extends content_base {
 
                 // Alt text.
                 $sectionformatoptions = $format->get_format_options($section);
-                $sectionimages[$section->id]->alttext = $sectionformatoptions['sectionimagealttext'];
+                $sectionimages[$section->id]->imagealttext = $sectionformatoptions['sectionimagealttext'];
 
                 // Current section?
                 if ((!empty($currentsectionid)) && ($currentsectionid == $section->id)) {
@@ -176,9 +182,9 @@ class content extends content_base {
                 }
 
                 if ($editing) {
-                    if (!empty($data->sections[$section->num]->header)) {
-                        // Add the image to the header.
-                        $data->sections[$section->num]->header->gridimage = $sectionimages[$section->id];
+                    if (!empty($data->sections[$section->num])) {
+                        // Add the image to the section content.
+                        $data->sections[$datasectionmap[$section->id]]->gridimage = $sectionimages[$section->id];
                         $headerimages = true;
                     }
                 } else {
