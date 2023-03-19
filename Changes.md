@@ -6,6 +6,7 @@ Version 400.2.2 - TBR
 1. Improve popup CSS.
 2. Better content handler.
 3. Fix 'Out of frame pictures in RTL language courses' - #173.
+4. Show the section image under the section title when editing.
 
 Version 400.2.1 - 03/02/2023
 ============================
