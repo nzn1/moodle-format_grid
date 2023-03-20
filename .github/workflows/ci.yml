@@ -74,8 +74,8 @@ jobs:
         env:
           DB: ${{ matrix.database }}
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
-          IGNORE_NAMES: 'sectionfilemanager.php,section.mustache'
-          MUSTACHE_IGNORE_NAMES: 'content.mustache'
+          IGNORE_NAMES: 'sectionfilemanager.php'
+          MUSTACHE_IGNORE_NAMES: 'content.mustache,section.mustache'
 
       - name: PHP Lint
         if: ${{ always() }}
