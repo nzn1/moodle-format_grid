@@ -234,6 +234,7 @@ class content extends content_base {
 
             if ($headerimages) {
                 $data->hasheaderimages = true;
+                $coursesettings['imagecontainerwidth'] = 120;
                 $data->coursestyles = $toolbox->get_displayed_image_container_properties($coursesettings);
             }
         }

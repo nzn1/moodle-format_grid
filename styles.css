@@ -131,3 +131,8 @@
 .format-grid .grid-completion .grid-percentage {
     font-size: 0.75em;
 }
+
+.format-grid .grid-image-preview {
+    max-height: 100%;
+    max-width: 100%;
+}
