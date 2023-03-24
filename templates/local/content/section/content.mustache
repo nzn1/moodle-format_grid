@@ -127,19 +127,17 @@
 {{#gridimage}}
 <div class="thegrid d-flex justify-content-center">
     <div class="grid-section card{{#currentsection}} currentgridsection{{/currentsection}}">
-        <div>
-            {{#imageuri}}
-            <div class="grid-image card-img text-center">
-                <img class="grid-image-preview" src="{{imageuri}}" alt="{{imagealttext}}">
-            </div>
-            {{/imageuri}}
-            {{#generatedimageuri}}
-            <div class="grid-generatedimage card-img text-center" style="background-image: url('{{generatedimageuri}}');">
-            </div>
-            {{/generatedimageuri}}
+        {{#imageuri}}
+        <div class="grid-image card-img text-center">
+            <img class="grid-image-preview" src="{{imageuri}}" alt="{{imagealttext}}">
         </div>
+        {{/imageuri}}
+        {{#generatedimageuri}}
+        <div class="grid-generatedimage card-img text-center" style="background-image: url('{{generatedimageuri}}');">
+        </div>
+        {{/generatedimageuri}}
         {{#image}}
-        <div class="card-footer text-center">
+        <div class="grid-image-name card-footer">
             {{image}}
         </div>
         {{/image}}

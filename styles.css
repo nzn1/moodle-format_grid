@@ -136,3 +136,8 @@
     max-height: 100%;
     max-width: 100%;
 }
+
+.format-grid .grid-image-name {
+    font-size: 0.75rem;
+    text-align: center;
+}
