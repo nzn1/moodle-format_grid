@@ -48,6 +48,10 @@ if ($ADMIN->fulltree) {
 
     // Support.md.
     $page->add(new admin_setting_markdown('format_grid/formatsupport', '', '', 'Support.md'));
+
+    // Changes.md.
+    $page->add(new admin_setting_markdown('format_grid/formatchanges',
+        get_string('informationchanges', 'format_grid'), '', 'Changes.md'));
 }
 $ADMIN->add('format_grid', $page);
 
