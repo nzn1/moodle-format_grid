@@ -146,6 +146,11 @@ History
 =============
 Please see Changes.md
 
-Author
-------
-G J Barnard - Moodle profile: moodle.org/user/profile.php?id=442195 - Web profile: about.me/gjbarnard
+Developed and maintained by
+===========================
+G J Barnard MSc. BSc(Hons)(Sndw). MBCS. CEng. CITP. PGCE.
+
+- Moodle profile | [Moodle.org](https://moodle.org/user/profile.php?id=442195)
+- @gjbarnard     | [Twitter](https://twitter.com/gjbarnard)
+- Web profile    | [About.me](https://about.me/gjbarnard)
+- Website        | [Website](https://gjbarnard.co.uk)
