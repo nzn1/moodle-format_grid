@@ -9,6 +9,7 @@ Version 400.2.2 - TBR
 4. Show the section image under the section title when editing.
 5. Fix 'Better way to calculate completion progress' - #180.
 6. Fix 'Better scrolling experience using popup Modal' - #179.
+7. Improve single section navigation appearance.
 
 Version 400.2.1 - 03/02/2023
 ============================
