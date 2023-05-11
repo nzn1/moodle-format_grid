@@ -1,6 +1,6 @@
 History
 =============
-Version 401.1.1 - TBR
+Version 401.1.1 - 11/05/2023
 ----------------------------
 1. Fix 'Better way to calculate completion progress' - #180.
 2. Fix 'Better scrolling experience using popup Modal' - #179.
