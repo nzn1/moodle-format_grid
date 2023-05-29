@@ -3,6 +3,7 @@ History
 
 Version 400.3.0 - TBR
 ----------------------------
+1. Fix 'Previous/Next section arrows are incorrect for RTL languages' - #183.
 
 Version 400.2.2 - 11/05/2023
 ----------------------------
