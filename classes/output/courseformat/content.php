@@ -78,7 +78,7 @@ class content extends content_base {
         $currentsectionid = 0;
 
         if ($editing) {
-            $data->coursesettings = new \moodle_url('/course/edit.php', array('id' => $course->id));
+            //$data->coursesettings = new \moodle_url('/course/edit.php', array('id' => $course->id));
         }
 
         if (!empty($sections)) {
