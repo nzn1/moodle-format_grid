@@ -152,8 +152,11 @@ class restore_format_grid_plugin extends restore_format_plugin {
 
             $maxsection = $DB->get_field_sql('SELECT max(section) FROM {course_sections} WHERE course = ?', [$courseid]);
 
-            $courseformat->restore_numsections($maxsection);
+            $courseformat->restore_gnumsections($maxsection);
             return;
+        } else {
+            // The backup file contains 'numsections' so we need to set 'gnumsections' to this value.
+            $courseformat->restore_gnumsections($settings['numsections']);
         }
 
         foreach ($backupinfo->sections as $key => $section) {
