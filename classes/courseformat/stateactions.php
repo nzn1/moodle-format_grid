@@ -55,7 +55,7 @@ class stateactions extends stateactions_base {
         $format->section_added();
     }
 
-        /**
+    /**
      * Delete course sections.
      *
      * This method follows the same logic as editsection.php.
