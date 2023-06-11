@@ -182,7 +182,7 @@ class content extends content_base {
                 }
 
                 if ($editing) {
-                    if (!empty($data->sections[$section->num])) {
+                    if (!empty($data->sections[$datasectionmap[$section->id]])) {
                         // Add the image to the section content.
                         $data->sections[$datasectionmap[$section->id]]->gridimage = $sectionimages[$section->id];
                         $headerimages = true;
