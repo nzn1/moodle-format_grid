@@ -39,6 +39,7 @@ $string['page-course-view-grid'] = 'Any course main page in the grid format';
 $string['page-course-view-grid-x'] = 'Any course page in the grid format';
 
 $string['addsection'] = 'Add section';
+$string['addsections'] = 'Add section';
 $string['hidefromothers'] = 'Hide section'; // No longer used kept for legacy versions.
 $string['showfromothers'] = 'Show section'; // No longer used kept for legacy versions.
 $string['currentsection'] = 'This section'; // No longer used kept for legacy versions.
@@ -124,7 +125,6 @@ $string['information'] = 'Information';
 $string['informationsettings'] = 'Information settings';
 $string['informationsettingsdesc'] = 'Grid format information';
 $string['informationchanges'] = 'Changes';
-$string['sectionchangecoursesettings'] = 'Change the number of sections in the course settings';
 $string['settings'] = 'Settings';
 $string['settingssettings'] = 'Settings settings';
 $string['settingssettingsdesc'] = 'Grid format settings';

@@ -315,7 +315,7 @@ class format_grid extends core_courseformat\base {
                     WHERE course = ?', array($courseid));
             }
             $courseformatoptions = array(
-                'numsections' => array(
+                'gnumsections' => array(
                     'default' => $defaultnumsections,
                     'type' => PARAM_INT,
                 ),
@@ -358,7 +358,7 @@ class format_grid extends core_courseformat\base {
                 $sectionmenu[$i] = "$i";
             }
             $courseformatoptionsedit = array(
-                'numsections' => array(
+                'gnumsections' => array(
                     'label' => new lang_string('numbersections', 'format_grid'),
                     'element_type' => 'select',
                     'element_attributes' => array($sectionmenu),
@@ -515,10 +515,10 @@ class format_grid extends core_courseformat\base {
            activities / resources. */
         if (!$forsection) {
             $maxsections = get_config('moodlecourse', 'maxsections');
-            $numsections = $mform->getElementValue('numsections');
+            $numsections = $mform->getElementValue('gnumsections');
             $numsections = $numsections[0];
             if ($numsections > $maxsections) {
-                $element = $mform->getElement('numsections');
+                $element = $mform->getElement('gnumsections');
                 for ($i = $maxsections + 1; $i <= $numsections; $i++) {
                     $element->addOption("$i", $i);
                 }
@@ -553,14 +553,19 @@ class format_grid extends core_courseformat\base {
                 if (!array_key_exists($key, $data)) {
                     if (array_key_exists($key, $oldcourse)) {
                         $data[$key] = $oldcourse[$key];
-                    } else if ($key === 'numsections') {
-                        /* If previous format does not have the field 'numsections' and $data['numsections'] is not set,
-                           we fill it with the maximum section number from the DB. */
-                        $maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
-                            WHERE course = ?', array($this->courseid));
-                        if ($maxsection) {
-                            // If there are no sections, or just default 0-section, 'numsections' will be set to default.
-                            $data['numsections'] = $maxsection;
+                    } else if ($key === 'gnumsections') {
+                        if (array_key_exists('numsections', $oldcourse)) {
+                            // Transpose numsections to gnumsections.
+                            $data[$key] = $oldcourse['numsections'];
+                        } else {
+                            /* The previous format does not have the field 'numsections' and $data['gnumsections'] is not set,
+                               we fill it with the maximum section number from the DB. */
+                            $maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
+                                WHERE course = ?', array($this->courseid));
+                            if ($maxsection) {
+                                // If there are no sections, or just default 0-section, 'gnumsections' will be set to default.
+                                $data['gnumsections'] = $maxsection;
+                            }
                         }
                     }
                 }
@@ -568,15 +573,21 @@ class format_grid extends core_courseformat\base {
         }
         $changes = $this->update_format_options($data);
 
-        if ($changes && array_key_exists('numsections', $data)) {
-            // If the numsections was decreased, try to completely delete the orphaned sections (unless they are not empty).
-            $numsections = (int)$data['numsections'];
+        if ($changes && array_key_exists('gnumsections', $data)) {
+            $numsections = (int)$data['gnumsections'];
             $maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
                 WHERE course = ?', array($this->courseid));
-            for ($sectionnum = $maxsection; $sectionnum > $numsections; $sectionnum--) {
-                if (!$this->delete_section($sectionnum, false)) {
-                    break;
+            if ($numsections < $maxsection) {
+                // The setting gnumsections has decreased, try to completely delete the orphaned sections (unless they are not empty).
+                for ($sectionnum = $maxsection; $sectionnum > $numsections; $sectionnum--) {
+                    if (!$this->delete_section($sectionnum, false)) {
+                        break;
+                    }
                 }
+            } else if ($numsections > $maxsection) {
+                // The setting gnumsections has increased then create the sections.
+                $course = $this->get_course();
+                course_create_sections_if_missing($course, range(0, $numsections ));
             }
         }
 
@@ -785,12 +796,28 @@ class format_grid extends core_courseformat\base {
     }
 
     /**
-     * Restores the numsections if was not in the backup.
+     * Restores the numsections if was not in the backup or if it was then transposes to gnumsections.
      * @param int $numsections The number of sections.
      */
-    public function restore_numsections($numsections) {
-        $data = array('numsections' => $numsections);
+    public function restore_gnumsections($numsections) {
+        $data = array('gnumsections' => $numsections);
         $this->update_course_format_options($data);
+    }
+
+    /**
+     * A section has been added.  Should only be called from the state actions instance.
+     */
+    public function section_added() {
+        $data = array('gnumsections' => $this->settings['gnumsections'] + 1);
+        $this->update_format_options($data);
+    }
+
+    /**
+     * A section has been deleted.  Should only be called from the state actions instance.
+     */
+    public function section_deleted() {
+        $data = array('gnumsections' => $this->settings['gnumsections'] - 1);
+        $this->update_format_options($data);
     }
 
     /**
