@@ -7,6 +7,7 @@ Version 401.2.0 - TBR
 3. Convert 'numsections' to 'gnumsections' to facilitate both a course setting and flexible section management when editing.
 4. Fix 'Undefined property' - #186.
 5. Fix 'No sections showing when creating a course with the default number of sections'.
+6. Fix 'Images are missing in the grid boxes when restoring a course' - #172.
 
 Version 401.1.1 - 11/05/2023
 ----------------------------
