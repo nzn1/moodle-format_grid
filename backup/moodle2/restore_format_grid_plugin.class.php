@@ -43,12 +43,13 @@ class restore_format_grid_plugin extends restore_format_plugin {
     protected function define_course_plugin_structure() {
         /* Since this method is executed before the restore we can do some pre-checks here.
            In case of merging backup into existing course find the current number of sections. */
-        $target = $this->step->get_task()->get_target();
+        $task = $this->step->get_task();
+        $target = $task->get_target();
         if (($target == backup::TARGET_CURRENT_ADDING || $target == backup::TARGET_EXISTING_ADDING)) {
             global $DB;
             $maxsection = $DB->get_field_sql(
                 'SELECT max(section) FROM {course_sections} WHERE course = ?',
-                [$this->step->get_task()->get_courseid()]);
+                [$task->get_courseid()]);
             $this->originalnumsections = (int)$maxsection;
         }
 
@@ -93,6 +94,15 @@ class restore_format_grid_plugin extends restore_format_plugin {
     }
 
     protected function after_execute_structure() {
+        error_log("after_execute_structure");
+    }
+
+    protected function after_execute_course() {
+        error_log("after_execute_course");
+    }
+
+    protected function after_restore_structure() {
+        error_log("after_restore_structure");
     }
 
     /**
@@ -206,10 +216,10 @@ class restore_format_grid_plugin extends restore_format_plugin {
             $courseid = $this->task->get_courseid();
             $newsectionid = $this->task->get_sectionid();
 
-            if ($target == backup::TARGET_EXISTING_DELETING) {
+            /*if ($target == backup::TARGET_EXISTING_DELETING) {
                 // Delete any images associated with the target course.
                 \format_grid\toolbox::delete_images($courseid);
-            }
+            }*/
 
             if (empty($data->contenthash)) {
                 // Less than M4.0 backup file.
