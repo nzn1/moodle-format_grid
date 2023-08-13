@@ -168,26 +168,16 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
     }
 
     if ($oldversion < 2022112605) {
-        // Has the upgrade already happened?  Thus in previous versions for Moodle 4.2.
         $records = $DB->get_records('course_format_options',
             array(
                 'format' => 'grid',
-                'name' => 'gnumsections'
+                'name' => 'numsections'
             ), '', 'id'
         );
 
-        if (empty($records)) {
-            $records = $DB->get_records('course_format_options',
-                array(
-                    'format' => 'grid',
-                    'name' => 'numsections'
-                ), '', 'id'
-            );
-
-            $records = array_keys($records);
-            foreach ($records as $id) {
-                $DB->set_field('course_format_options', 'name', 'gnumsections', array('id' => $id));
-            }
+        $records = array_keys($records);
+        foreach ($records as $id) {
+            $DB->set_field('course_format_options', 'name', 'gnumsections', array('id' => $id));
         }
 
         // Grid savepoint reached.
