@@ -239,5 +239,39 @@ class restore_format_grid_plugin extends restore_format_plugin {
                 $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);
             }
         }
+        if (($target == backup::TARGET_CURRENT_ADDING) ||
+            ($target == backup::TARGET_EXISTING_ADDING)) {
+            if (empty($data->contenthash)) {
+                // Less than M4.0 backup file.
+                if (!empty($data->imagepath)) {
+                    $data->image = $data->imagepath;
+                    unset($data->imagepath);
+                } else if (empty($data->image)) {
+                    $data->image = null;
+                }
+            }
+            if (!empty($data->image)) {
+                $newsectionid = $this->task->get_sectionid();
+                $gridimage = $DB->get_record('format_grid_image', array('sectionid' => $newsectionid), 'image');
+                if (!$gridimage) {
+                    // No image, so add the one from the backup file.
+                    $courseid = $this->task->get_courseid();
+
+                    $newimagecontainer = new \stdClass();
+                    $newimagecontainer->sectionid = $newsectionid;
+                    $newimagecontainer->courseid = $courseid;
+                    $newimagecontainer->image = $data->image;
+                    $newimagecontainer->displayedimagestate = 0;
+                    if (!empty($data->contenthash)) {
+                        $oldsectionid = $data->sectionid;
+                        $this->set_mapping('gridimage', $oldsectionid, $newsectionid, true);
+                        $this->add_related_files('format_grid', 'sectionimage', 'gridimage');
+                        $newimagecontainer->contenthash = $data->contenthash;
+                    }
+                    $newid = $DB->insert_record('format_grid_image', $newimagecontainer, true);
+                }
+            }
+        }
+
     }
 }
