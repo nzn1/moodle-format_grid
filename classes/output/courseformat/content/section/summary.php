@@ -125,9 +125,9 @@ class summary extends summary_base {
 
                     if ($coursesectionimage->displayedimagestate >= 1) {
                         // Yes.
-                        $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
+                        $displayediswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
                         $data->imageuri = $toolbox->get_displayed_image_uri(
-                            $coursesectionimage, $coursecontext->id, $sectionid, $iswebp);
+                            $coursesectionimage, $coursecontext->id, $sectionid, $displayediswebp);
                         $sectionformatoptions = $this->format->get_format_options($this->thesection);
                         $data->alttext = $sectionformatoptions['sectionimagealttext'];
 

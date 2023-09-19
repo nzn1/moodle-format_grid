@@ -145,7 +145,7 @@ class content extends content_base {
             // Now iterate over the sections.
             $data->gridsections = array();
             $sectionsforgrid = $this->get_grid_sections($output, $coursesettings);
-            $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
+            $displayediswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
 
             $completionshown = false;
             $headerimages = false;
@@ -159,7 +159,7 @@ class content extends content_base {
                 // Do we have an image?
                 if ((array_key_exists($section->id, $sectionimages)) && ($sectionimages[$section->id]->displayedimagestate >= 1)) {
                     $sectionimages[$section->id]->imageuri = $toolbox->get_displayed_image_uri(
-                        $sectionimages[$section->id], $coursecontext->id, $section->id, $iswebp);
+                        $sectionimages[$section->id], $coursecontext->id, $section->id, $displayediswebp);
                 } else {
                     // No.
                     $sectionimages[$section->id] = new stdClass;
