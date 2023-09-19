@@ -101,15 +101,22 @@ class toolbox {
      * @param stdClass $coursesectionimage Section information from its row in the 'format_grid_image' table.
      * @param int $coursecontextid Course context id.
      * @param int $sectionid Section id.
-     * @param bool $iswebp global defaultdisplayedimagefiletype setting is 'WEBP'.
+     * @param bool $displayediswebp The displayed image is in webp format.
      *
      * @return string Image URI.
      */
-    public function get_displayed_image_uri($coursesectionimage, $coursecontextid, $sectionid, $iswebp) {
+    public function get_displayed_image_uri($coursesectionimage, $coursecontextid, $sectionid, $displayediswebp) {
         $filename = $coursesectionimage->image;
 
-        if ($iswebp) {
-            $filename .= '.webp';
+        if ($displayediswebp) {
+            $filetype = strtolower(pathinfo($filename ?? '', PATHINFO_EXTENSION));
+            if (!empty($filetype)) {
+                if ($filetype != 'webp') {
+                    $filename .= '.webp';
+                }
+            } else {
+                $filename .= '.webp';
+            }
         }
         $image = \moodle_url::make_pluginfile_url(
             $coursecontextid,
@@ -184,6 +191,19 @@ class toolbox {
         if (!empty($sectionfile)) {
             $fs = get_file_storage();
             $mime = $sectionfile->get_mimetype();
+            $filename = $sectionfile->get_filename();
+
+            // Core does not natively support webp.
+            if ($mime == 'document/unknown') {
+                $filetype = strtolower(pathinfo($filename ?? '', PATHINFO_EXTENSION));
+                if ((!empty($filetype)) && ($filetype == 'webp')) {
+                    $mime = 'image/webp';
+                    $updatedrecord = new \stdClass;
+                    $updatedrecord->id = $sectionfile->get_id();
+                    $updatedrecord->mimetype = $mime;
+                    $DB->update_record('files', $updatedrecord);
+                }
+            }
 
             $displayedimageinfo = $this->get_displayed_image_container_properties($settings);
             $tmproot = make_temp_directory('gridformatdisplayedimagecontainer');
@@ -191,15 +211,18 @@ class toolbox {
             $sectionfile->copy_content_to($tmpfilepath);
 
             $crop = (get_config('format_grid', 'defaultimageresizemethod') == 1) ? false : true;
-            $iswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
-            if ($iswebp) { // WebP.
-                $newmime = 'image/webp';
-            } else {
-                $newmime = $mime;
+
+            $newmime = $mime;
+            $isdisplayedwebponly = false;
+            if ($mime != 'image/webp') {
+                $isdisplayedwebponly = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
+                if ($isdisplayedwebponly) { // WebP.
+                    $newmime = 'image/webp';
+                }
             }
 
-            $filename = $sectionfile->get_filename();
             $debugdata = array(
+                'id' => $sectionfile->get_id(),
                 'itemid' => $sectionfile->get_itemid(),
                 'filename' => $filename,
                 'sectionid' => $sectionid
@@ -233,7 +256,7 @@ class toolbox {
                     'timemodified' => $created,
                     'mimetype' => $mime);
 
-                if ($iswebp) { // WebP.
+                if ($isdisplayedwebponly) { // Displayed WebP image from non-WebP original.
                     // Displayed image is a webp image from the original, so change a few things.
                     $displayedimagefilerecord['filename'] = $displayedimagefilerecord['filename'].'.webp';
                     $displayedimagefilerecord['mimetype'] = $newmime;
@@ -410,7 +433,7 @@ class toolbox {
                 }
                 break;
             /* Moodle does not yet natively support webp as a mime type, but have here for us on the displayed image and
-               not yet as a source image. */
+               the source image. */
             case 'image/webp':
                 if (function_exists('imagewebp')) {
                     $imagefnc = 'imagewebp';
