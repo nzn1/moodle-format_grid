@@ -53,9 +53,15 @@ export const init = (showcompletion) => {
     });
     registered = true;
 
+    // To pass the current section when using keyboard control.
+    var currentsection = null;
+
     jQuery('#gridPopup').on('show.bs.modal', function(event) {
-        var trigger = jQuery(event.relatedTarget);
-        var section = trigger.data('section');
+        var section = currentsection;
+        if (section === null) {
+            var trigger = jQuery(event.relatedTarget);
+            section = trigger.data('section');
+        }
 
         var gml = jQuery('#gridPopupLabel');
         var triggersectionname = jQuery('#gridpopupsection-' + section).data('sectiontitle');
@@ -69,11 +75,24 @@ export const init = (showcompletion) => {
             gml.text(sno);
         });
     });
+
     jQuery('#gridPopup').on('hidden.bs.modal', function() {
+        if (currentsection !== null) {
+            currentsection = null;
+        }
         jQuery('.gridcarousel-item').removeClass('active');
         if (showcompletion && mctFired) {
             mctFired = false;
             window.location.reload();
+        }
+    });
+
+    jQuery(".grid-section .grid-modal").keypress(function (event) {
+        if (event.which == 13) {
+            event.preventDefault();
+            var trigger = jQuery(event.currentTarget);
+            currentsection = trigger.data('section');
+            jQuery('#gridPopup').modal('show');
         }
     });
 };
