@@ -235,6 +235,11 @@ class content extends content_base {
                 if ((!empty($coursesettings['showcompletion'])) && ($coursesettings['showcompletion'] == 2) && ($completionshown)) {
                     $data->showcompletion = true;
                 }
+                $gridsectionnums = [];
+                foreach ($data->gridsections as $gridsection) {
+                    $gridsectionnums[] = $gridsection->number;
+                }
+                $data->gridsectionnumbers = implode(',', $gridsectionnums);
             }
 
             if ($headerimages) {

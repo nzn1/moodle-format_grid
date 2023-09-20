@@ -9,6 +9,11 @@ Version 401.2.1 - TBR
 5. Make 'Main content page' link on single section page more accessible.
 6. Fix 'Mouseover for shortened titles' - #187.
 7. Fix 'Grid completion calculated on user hidden modules' ('Available but not shown on course page' are still counted).
+8. Add keyboard control of the sections in the grid, left / right arrows.  When the arrows are used the current selected
+   section will show using an inner border to avoid conflict with accessibility, then use Esc to open the modal.  Accessibility
+   keys of Tab / Shift Tab and Enter will function to navigate with the focussed item and when a grid section is selected,
+   the Enter key will open the modal.  On the modal itself, the same keys will navigate the slider controls and the two
+   close buttons, as well as the modules within the section. #191.
 
 Version 401.2.0 - 16/08/2023
 ----------------------------
