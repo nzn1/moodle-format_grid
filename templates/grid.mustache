@@ -73,12 +73,18 @@
     {{/sectionbreak}}
     <div id="section-{{number}}" class="grid-section card{{#currentsection}} currentgridsection{{/currentsection}}">
         {{^popup}}
-        <a href="{{sectionurl}}">
+        {{^notavailable}}<a href="{{sectionurl}}">{{/notavailable}}{{#notavailable}}<div>{{/notavailable}}
         {{/popup}}
         {{#popup}}
         <div data-toggle="modal" data-target="#gridPopup" data-section="{{number}}">
         {{/popup}}
-            <div class="card-header text-truncate">{{{sectionname}}}</div>
+            <div class="card-header text-truncate">{{{sectionname}}}{{#notavailable}}
+                <div data-region="sectionbadges" class="sectionbadges d-flex">
+                    {{$ core_courseformat/local/content/section/badges }}
+                        {{> core_courseformat/local/content/section/badges }}
+                    {{/ core_courseformat/local/content/section/badges }}
+                </div>
+            {{/notavailable}}</div>
             {{#imageuri}}
             <div class="grid-image card-img-bottom text-center">
                 <img src="{{imageuri}}" alt="{{imagealttext}}">
@@ -91,7 +97,7 @@
             </div>
             {{/generatedimageuri}}
         {{^popup}}
-        </a>
+        {{^notavailable}}</a>{{/notavailable}}{{#notavailable}}</div>{{/notavailable}}
         {{/popup}}
         {{#popup}}
         </div>

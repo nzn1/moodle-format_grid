@@ -194,6 +194,12 @@ class content extends content_base {
                     // Section name.
                     $sectionimages[$section->id]->sectionname = $section->name;
 
+                    /* User visible.  For more info, see: $format->is_section_visible($thissection) method in relation
+                       to 'hiddensections' course format setting. */
+                    if (!$section->uservisible) {
+                        $sectionimages[$section->id]->notavailable = true;
+                    }
+
                     // Section break.
                     if ($sectionformatoptions['sectionbreak'] == 2) { // Yes.
                         $sectionimages[$section->id]->sectionbreak = true;
@@ -292,6 +298,7 @@ class content extends content_base {
                     $section->sectioncompletionmarkup = $this->sectioncompletionmarkup[$thissection->section];
                 }
             }
+            $section->uservisible = $thissection->uservisible;
             $sections[] = $section;
         }
 
