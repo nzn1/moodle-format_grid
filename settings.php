@@ -73,6 +73,21 @@ if ($ADMIN->fulltree) {
     ];
     $page->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
+    // Justification.
+    $name = 'format_grid/defaultgridjustification';
+    $title = get_string('defaultgridjustification', 'format_grid');
+    $description = get_string('defaultgridjustification_desc', 'format_grid');
+    $default = 'space-between';
+    $choices = [
+        'start' => new lang_string('start', 'format_grid'),
+        'center' => new lang_string('centre', 'format_grid'),
+        'end' => new lang_string('end', 'format_grid'),
+        'space-around' => new lang_string('spacearound', 'format_grid'),
+        'space-between' => new lang_string('spacebetween', 'format_grid'),
+        'space-evenly' => new lang_string('spaceevenly', 'format_grid'),
+    ];
+    $page->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
+
     // Icon width.
     $name = 'format_grid/defaultimagecontainerwidth';
     $title = get_string('defaultimagecontainerwidth', 'format_grid');

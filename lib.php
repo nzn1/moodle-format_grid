@@ -327,6 +327,10 @@ class format_grid extends core_courseformat\base {
                     'default' => 0,
                     'type' => PARAM_INT,
                 ],
+                'gridjustification' => [
+                    'default' => '-',
+                    'type' => PARAM_ALPHAEXT,
+                ],
                 'imagecontainerwidth' => [
                     'default' => 0,
                     'type' => PARAM_INT,
@@ -393,7 +397,25 @@ class format_grid extends core_courseformat\base {
                 'element_type' => 'select',
                 'element_attributes' => [$popupvalues],
             ];
-
+            $gridjustificationvalues = $this->generate_default_entry(
+                'gridjustification',
+                '-',
+                [
+                    'start' => new lang_string('start', 'format_grid'),
+                    'center' => new lang_string('centre', 'format_grid'),
+                    'end' => new lang_string('end', 'format_grid'),
+                    'space-around' => new lang_string('spacearound', 'format_grid'),
+                    'space-between' => new lang_string('spacebetween', 'format_grid'),
+                    'space-evenly' => new lang_string('spaceevenly', 'format_grid'),
+                ],
+            );
+            $courseformatoptionsedit['gridjustification'] = [
+                'label' => new lang_string('gridjustification', 'format_grid'),
+                'help' => 'gridjustification',
+                'help_component' => 'format_grid',
+                'element_type' => 'select',
+                'element_attributes' => [$gridjustificationvalues],
+            ];
             $imagecontainerwidthvalues = $this->generate_default_entry(
                 'imagecontainerwidth',
                 0,

@@ -4,6 +4,7 @@ Version 401.2.1 - TBR
 ----------------------------
 1. Fix 'Webp image causes an error and makes course unaccessible' - #190.
 2. Fix "Hidden sections are shown as not available" doesn't seem to work. - #192.
+3. Add 'Flex containers' justify-content property options' - #191.
 
 Version 401.2.0 - 16/08/2023
 ----------------------------

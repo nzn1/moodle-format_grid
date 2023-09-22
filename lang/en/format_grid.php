@@ -72,6 +72,18 @@ $string['sectionbreak_help'] = 'Break in the grid at this section.';
 $string['sectionbreakheading'] = 'Section break heading';
 $string['sectionbreakheading_help'] = 'Show this heading at the point this section breaks in the grid.  HTML can be used.';
 
+// Grid justification.
+$string['gridjustification'] = 'Set the justification of the grid';
+$string['gridjustification_help'] = 'Set the justification to one of: Start, Centre, End, Space around, Space between or Space evenly.';
+$string['defaultgridjustification'] = 'Default justification of the grid';
+$string['defaultgridjustification_desc'] = 'The default justification of the grid, one of: Start, Centre, End, Space around, Space between or Space evenly.';
+$string['start'] = 'Start';
+$string['centre'] = 'Centre';
+$string['end'] = 'End';
+$string['spacearound'] = 'Space around';
+$string['spacebetween'] = 'Space between';
+$string['spaceevenly'] = 'Space evenly';
+
 // Image container width.
 $string['imagecontainerwidth'] = 'Set the image container width';
 $string['imagecontainerwidth_help'] = 'Set the image container width to one of: 128, 192, 210, 256, 320, 384, 448, 512, 576, 640, 704 or 768';

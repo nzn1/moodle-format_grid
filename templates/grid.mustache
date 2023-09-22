@@ -20,6 +20,7 @@
     Displays the grid.
 
     Context variables required for this template:
+    * gridjustify - The justification for the grid.
     * gridsections - The array of sections.
     * showcompletion - If completion is on and shown.
     * sectionbreak - There is a section break for this section.
@@ -35,6 +36,7 @@
 
     Example context (json):
     {
+        "gridjustification" : "space-between",
         "gridsections": [
             {
                 "sectionbreak": false,
@@ -62,14 +64,14 @@
         "showcompletion": true
     }
 }}
-<div class="thegrid d-flex flex-wrap justify-content-between mt-2">
+<div class="thegrid d-flex flex-wrap grid-justify-{{gridjustification}} mt-2">
     {{#gridsections}}
     {{#sectionbreak}}
     </div>
     {{#sectionbreakheading}}
     <div id="gridsectionbreak-{{number}}" class="gridsectionbreakheading mb-1 mt-1">{{{sectionbreakheading}}}</div>
     {{/sectionbreakheading}}
-    <div class="thegrid d-flex flex-wrap justify-content-between">
+    <div class="thegrid d-flex flex-wrap grid-justify-{{gridjustification}}">
     {{/sectionbreak}}
     <div id="section-{{number}}" class="grid-section card{{#currentsection}} currentgridsection{{/currentsection}}">
         {{^popup}}

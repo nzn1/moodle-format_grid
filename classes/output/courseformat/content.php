@@ -123,6 +123,9 @@ class content extends content_base {
                 }
             }
 
+            // Justification.
+            $data->gridjustification = $coursesettings['gridjustification'];
+
             // Popup.
             if (!$editing) {
                 $data->popup = false;
