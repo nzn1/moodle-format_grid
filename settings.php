@@ -67,10 +67,10 @@ if ($ADMIN->fulltree) {
     $title = get_string('defaultpopup', 'format_grid');
     $description = get_string('defaultpopup_desc', 'format_grid');
     $default = 1;
-    $choices = array(
+    $choices = [
         1 => new lang_string('no'),
-        2 => new lang_string('yes')
-    );
+        2 => new lang_string('yes'),
+    ];
     $page->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
     // Icon width.
@@ -98,10 +98,10 @@ if ($ADMIN->fulltree) {
     $title = get_string('defaultimageresizemethod', 'format_grid');
     $description = get_string('defaultimageresizemethod_desc', 'format_grid');
     $default = 1; // Scale.
-    $choices = array(
+    $choices = [
         1 => new lang_string('scale', 'format_grid'),
-        2 => new lang_string('crop', 'format_grid')
-    );
+        2 => new lang_string('crop', 'format_grid'),
+    ];
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
     $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
     $page->add($setting);
@@ -111,10 +111,10 @@ if ($ADMIN->fulltree) {
     $title = get_string('defaultdisplayedimagefiletype', 'format_grid');
     $description = get_string('defaultdisplayedimagefiletype_desc', 'format_grid');
     $default = 1; // Original.
-    $choices = array(
+    $choices = [
         1 => new lang_string('original', 'format_grid'),
-        2 => new lang_string('webp', 'format_grid')
-    );
+        2 => new lang_string('webp', 'format_grid'),
+    ];
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
     $setting->set_updatedcallback('format_grid::update_displayed_images_callback');
     $page->add($setting);
@@ -124,10 +124,10 @@ if ($ADMIN->fulltree) {
     $title = get_string('defaultshowcompletion', 'format_grid');
     $description = get_string('defaultshowcompletion_desc', 'format_grid');
     $default = 1;
-    $choices = array(
+    $choices = [
         1 => new lang_string('no'),
-        2 => new lang_string('yes')
-    );
+        2 => new lang_string('yes'),
+    ];
     $page->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 
     // Show the grid image in the section summary on a single page.
@@ -135,12 +135,12 @@ if ($ADMIN->fulltree) {
     $title = get_string('defaultsinglepagesummaryimage', 'format_grid');
     $description = get_string('defaultsinglepagesummaryimage_desc', 'format_grid');
     $default = 1;
-    $choices = array(
+    $choices = [
         1 => new lang_string('off', 'format_grid'),
         2 => new lang_string('left', 'format_grid'),
         3 => new lang_string('centre', 'format_grid'),
-        4 => new lang_string('right', 'format_grid')
-    );
+        4 => new lang_string('right', 'format_grid'),
+    ];
     $page->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 }
 $ADMIN->add('format_grid', $page);

@@ -169,7 +169,7 @@ class format_grid extends core_courseformat\base {
      *     'sr' (int) used by multipage formats to specify to which section to return
      * @return null|moodle_url
      */
-    public function get_view_url($section, $options = array()) {
+    public function get_view_url($section, $options = []) {
         global $CFG;
         $course = $this->get_course();
         $url = new moodle_url('/course/view.php', ['id' => $course->id]);
@@ -312,162 +312,162 @@ class format_grid extends core_courseformat\base {
             } else { // Existing course that may not have 'numsections' - see get_last_section().
                 global $DB;
                 $defaultnumsections = $DB->get_field_sql('SELECT max(section) from {course_sections}
-                    WHERE course = ?', array($courseid));
+                    WHERE course = ?', [$courseid]);
             }
-            $courseformatoptions = array(
-                'gnumsections' => array(
+            $courseformatoptions = [
+                'gnumsections' => [
                     'default' => $defaultnumsections,
                     'type' => PARAM_INT,
-                ),
-                'hiddensections' => array(
+                ],
+                'hiddensections' => [
                     'default' => $courseconfig->hiddensections,
-                    'type' => PARAM_INT
-                ),
-                'popup' => array(
+                    'type' => PARAM_INT,
+                ],
+                'popup' => [
                     'default' => 0,
-                    'type' => PARAM_INT
-                ),
-                'imagecontainerwidth' => array(
+                    'type' => PARAM_INT,
+                ],
+                'imagecontainerwidth' => [
                     'default' => 0,
-                    'type' => PARAM_INT
-                ),
-                'imagecontainerratio' => array(
+                    'type' => PARAM_INT,
+                ],
+                'imagecontainerratio' => [
                     'default' => '-',
-                    'type' => PARAM_ALPHANUMEXT
-                ),
-                'imageresizemethod' => array(
+                    'type' => PARAM_ALPHANUMEXT,
+                ],
+                'imageresizemethod' => [
                     'default' => 0,
-                    'type' => PARAM_INT
-                ),
-                'showcompletion' => array(
+                    'type' => PARAM_INT,
+                ],
+                'showcompletion' => [
                     'default' => 0,
-                    'type' => PARAM_INT
-                ),
-                'singlepagesummaryimage' => array(
+                    'type' => PARAM_INT,
+                ],
+                'singlepagesummaryimage' => [
                     'default' => 0,
-                    'type' => PARAM_INT
-                )
-            );
+                    'type' => PARAM_INT,
+                ],
+            ];
         }
         if ($foreditform && !isset($courseformatoptions['gnumsections']['label'])) {
             if (is_null($courseconfig)) {
                 $courseconfig = get_config('moodlecourse');
             }
-            $sectionmenu = array();
+            $sectionmenu = [];
             for ($i = 0; $i <= $courseconfig->maxsections; $i++) {
                 $sectionmenu[$i] = "$i";
             }
-            $courseformatoptionsedit = array(
-                'gnumsections' => array(
+            $courseformatoptionsedit = [
+                'gnumsections' => [
                     'label' => new lang_string('numbersections', 'format_grid'),
                     'element_type' => 'select',
-                    'element_attributes' => array($sectionmenu),
-                ),
-                'hiddensections' => array(
+                    'element_attributes' => [$sectionmenu],
+                ],
+                'hiddensections' => [
                     'label' => new lang_string('hiddensections'),
                     'help' => 'hiddensections',
                     'help_component' => 'moodle',
                     'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
+                    'element_attributes' => [
+                        [
                             0 => new lang_string('hiddensectionscollapsed'),
-                            1 => new lang_string('hiddensectionsinvisible')
-                        )
-                    ),
-                )
-            );
+                            1 => new lang_string('hiddensectionsinvisible'),
+                        ],
+                    ],
+                ],
+            ];
 
             // TODO - Use capabilities?
             $popupvalues = $this->generate_default_entry(
                 'popup',
                 0,
-                array(
+                [
                     1 => new lang_string('no'),
-                    2 => new lang_string('yes')
-                )
+                    2 => new lang_string('yes'),
+                ],
             );
-            $courseformatoptionsedit['popup'] = array(
+            $courseformatoptionsedit['popup'] = [
                 'label' => new lang_string('popup', 'format_grid'),
                 'help' => 'popup',
                 'help_component' => 'format_grid',
                 'element_type' => 'select',
-                'element_attributes' => array($popupvalues)
-            );
+                'element_attributes' => [$popupvalues],
+            ];
 
             $imagecontainerwidthvalues = $this->generate_default_entry(
                 'imagecontainerwidth',
                 0,
                 \format_grid\toolbox::get_image_container_widths()
             );
-            $courseformatoptionsedit['imagecontainerwidth'] = array(
+            $courseformatoptionsedit['imagecontainerwidth'] = [
                 'label' => new lang_string('imagecontainerwidth', 'format_grid'),
                 'help' => 'imagecontainerwidth',
                 'help_component' => 'format_grid',
                 'element_type' => 'select',
-                'element_attributes' => array($imagecontainerwidthvalues)
-            );
+                'element_attributes' => [$imagecontainerwidthvalues],
+            ];
             $imagecontainerratiovalues = $this->generate_default_entry(
                 'imagecontainerratio',
                 '-',
                 \format_grid\toolbox::get_image_container_ratios()
             );
-            $courseformatoptionsedit['imagecontainerratio'] = array(
+            $courseformatoptionsedit['imagecontainerratio'] = [
                 'label' => new lang_string('imagecontainerratio', 'format_grid'),
                 'help' => 'imagecontainerratio',
                 'help_component' => 'format_grid',
                 'element_type' => 'select',
-                'element_attributes' => array($imagecontainerratiovalues)
-            );
+                'element_attributes' => [$imagecontainerratiovalues],
+            ];
 
             $imageresizemethodvalues = $this->generate_default_entry(
                 'imageresizemethod',
                 0,
-                array(
+                [
                     1 => new lang_string('scale', 'format_grid'), // Scale.
-                    2 => new lang_string('crop', 'format_grid')   // Crop.
-                )
+                    2 => new lang_string('crop', 'format_grid'),  // Crop.
+                ],
             );
-            $courseformatoptionsedit['imageresizemethod'] = array(
+            $courseformatoptionsedit['imageresizemethod'] = [
                 'label' => new lang_string('imageresizemethod', 'format_grid'),
                 'help' => 'imageresizemethod',
                 'help_component' => 'format_grid',
                 'element_type' => 'select',
-                'element_attributes' => array($imageresizemethodvalues)
-            );
+                'element_attributes' => [$imageresizemethodvalues],
+            ];
 
             $showcompletionvalues = $this->generate_default_entry(
                 'showcompletion',
                 0,
-                array(
+                [
                     1 => new lang_string('no'),
-                    2 => new lang_string('yes')
-                )
+                    2 => new lang_string('yes'),
+                ],
             );
-            $courseformatoptionsedit['showcompletion'] = array(
+            $courseformatoptionsedit['showcompletion'] = [
                 'label' => new lang_string('showcompletion', 'format_grid'),
                 'help' => 'showcompletion',
                 'help_component' => 'format_grid',
                 'element_type' => 'select',
-                'element_attributes' => array($showcompletionvalues)
-            );
+                'element_attributes' => [$showcompletionvalues],
+            ];
 
             $singlepagesummaryimagevalues = $this->generate_default_entry(
                 'singlepagesummaryimage',
                 0,
-                array(
+                [
                     1 => new lang_string('off', 'format_grid'),
                     2 => new lang_string('left', 'format_grid'),
                     3 => new lang_string('centre', 'format_grid'),
-                    4 => new lang_string('right', 'format_grid')
-                )
+                    4 => new lang_string('right', 'format_grid'),
+                ],
             );
-            $courseformatoptionsedit['singlepagesummaryimage'] = array(
+            $courseformatoptionsedit['singlepagesummaryimage'] = [
                 'label' => new lang_string('singlepagesummaryimage', 'format_grid'),
                 'element_type' => 'select',
-                'element_attributes' => array($singlepagesummaryimagevalues),
+                'element_attributes' => [$singlepagesummaryimagevalues],
                 'help' => 'singlepagesummaryimage',
-                'help_component' => 'format_grid'
-            );
+                'help_component' => 'format_grid',
+            ];
 
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }
@@ -485,7 +485,7 @@ class format_grid extends core_courseformat\base {
      */
     private function generate_default_entry($settingname, $defaultindex, $values) {
         $defaultvalue = get_config('format_grid', 'default'.$settingname);
-        $defarray = array($defaultindex => new lang_string('default', 'format_grid', $values[$defaultvalue]));
+        $defarray = [$defaultindex => new lang_string('default', 'format_grid', $values[$defaultvalue])];
 
         return array_replace($defarray, $values);
     }
@@ -561,7 +561,7 @@ class format_grid extends core_courseformat\base {
                             /* The previous format does not have the field 'numsections' and $data['gnumsections'] is not set,
                                we fill it with the maximum section number from the DB. */
                             $maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
-                                WHERE course = ?', array($this->courseid));
+                                WHERE course = ?', [$this->courseid]);
                             if ($maxsection) {
                                 // If there are no sections, or just default 0-section, 'gnumsections' will be set to default.
                                 $data['gnumsections'] = $maxsection;
@@ -576,7 +576,7 @@ class format_grid extends core_courseformat\base {
         if ($changes && array_key_exists('gnumsections', $data)) {
             $numsections = (int)$data['gnumsections'];
             $maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
-                WHERE course = ?', array($this->courseid));
+                WHERE course = ?', [$this->courseid]);
             if ($numsections < $maxsection) {
                 // The setting gnumsections has decreased, try to completely delete the orphaned sections (unless they are not empty).
                 for ($sectionnum = $maxsection; $sectionnum > $numsections; $sectionnum--) {
@@ -616,64 +616,64 @@ class format_grid extends core_courseformat\base {
     public function section_format_options($foreditform = false) {
         static $sectionformatoptions = false;
         if ($sectionformatoptions === false) {
-            $sectionformatoptions = array(
-                'sectionimage_filemanager' => array(
+            $sectionformatoptions = [
+                'sectionimage_filemanager' => [
                     'default' => '',
-                    'type' => PARAM_RAW
-                ),
-                'sectionimagealttext' => array(
+                    'type' => PARAM_RAW,
+                ],
+                'sectionimagealttext' => [
                     'default' => '',
-                    'type' => PARAM_TEXT
-                ),
-                'sectionbreak' => array(
+                    'type' => PARAM_TEXT,
+                ],
+                'sectionbreak' => [
                     'default' => 1, // No.
-                    'type' => PARAM_INT
-                ),
-                'sectionbreakheading' => array(
+                    'type' => PARAM_INT,
+                ],
+                'sectionbreakheading' => [
                     'default' => '',
-                    'type' => PARAM_RAW
-                )
-            );
+                    'type' => PARAM_RAW,
+                ],
+            ];
         }
         if ($foreditform && !isset($sectionformatoptions['sectionimage_filemanager']['label'])) {
-            $sectionformatoptionsedit = array(
-                'sectionimage_filemanager' => array(
+            $sectionformatoptionsedit = [
+                'sectionimage_filemanager' => [
                     'label' => new lang_string('sectionimage', 'format_grid'),
                     'help' => 'sectionimage',
                     'help_component' => 'format_grid',
                     'element_type' => 'sectionfilemanager',
-                    'element_attributes' => array(
-                        array(
+                    'element_attributes' => [
+                        [
                             'course' => $this->course,
-                            'sectionid' => optional_param('id', 0, PARAM_INT)
-                        )
-                    )
-                ),
-                'sectionimagealttext' => array(
+                            'sectionid' => optional_param('id', 0, PARAM_INT),
+                        ],
+                    ],
+                ],
+                'sectionimagealttext' => [
                     'label' => new lang_string('sectionimagealttext', 'format_grid'),
                     'help' => 'sectionimagealttext',
                     'help_component' => 'format_grid',
-                    'element_type' => 'text'
-                ),
-                'sectionbreak' => array(
+                    'element_type' => 'text',
+                ],
+                'sectionbreak' => [
                     'label' => new lang_string('sectionbreak', 'format_grid'),
                     'help' => 'sectionbreak',
                     'help_component' => 'format_grid',
                     'element_type' => 'select',
-                    'element_attributes' => array(
-                        array(
+                    'element_attributes' => [
+                        [
                             1 => new lang_string('no'),
-                            2 => new lang_string('yes')
-                        )
-                    ),
-                ),
-                'sectionbreakheading' => array(
+                            2 => new lang_string('yes'),
+                        ],
+                    ],
+                ],
+                'sectionbreakheading' => [
                     'label' => new lang_string('sectionbreakheading', 'format_grid'),
                     'help' => 'sectionbreakheading',
                     'help_component' => 'format_grid',
-                    'element_type' => 'textarea'
-                )
-            );
+                    'element_type' => 'textarea',
+                ],
+            ];
             $sectionformatoptions = array_merge_recursive($sectionformatoptions, $sectionformatoptionsedit);
         }
 
@@ -696,7 +696,7 @@ class format_grid extends core_courseformat\base {
         }
         if (!is_object($section)) {
             global $DB;
-            $section = $DB->get_record('course_sections', array('course' => $this->get_courseid(), 'section' => $section),
+            $section = $DB->get_record('course_sections', ['course' => $this->get_courseid(), 'section' => $section],
                 'id,section,sequence,summary');
         }
         if (!$section || !$section->section) {
@@ -800,7 +800,7 @@ class format_grid extends core_courseformat\base {
      * @param int $numsections The number of sections.
      */
     public function restore_gnumsections($numsections) {
-        $data = array('gnumsections' => $numsections);
+        $data = ['gnumsections' => $numsections];
         $this->update_course_format_options($data);
     }
 
@@ -808,7 +808,7 @@ class format_grid extends core_courseformat\base {
      * A section has been added.  Should only be called from the state actions instance.
      */
     public function section_added() {
-        $data = array('gnumsections' => $this->settings['gnumsections'] + 1);
+        $data = ['gnumsections' => $this->settings['gnumsections'] + 1];
         $this->update_format_options($data);
     }
 
@@ -816,7 +816,7 @@ class format_grid extends core_courseformat\base {
      * A section has been deleted.  Should only be called from the state actions instance.
      */
     public function section_deleted() {
-        $data = array('gnumsections' => $this->settings['gnumsections'] - 1);
+        $data = ['gnumsections' => $this->settings['gnumsections'] - 1];
         $this->update_format_options($data);
     }
 
@@ -856,7 +856,7 @@ class format_grid extends core_courseformat\base {
  * @param array $options additional options affecting the file serving
  * @return bool
  */
-function format_grid_pluginfile($course, $birecordorcm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function format_grid_pluginfile($course, $birecordorcm, $context, $filearea, $args, $forcedownload, array $options=[]) {
     if ($context->contextlevel != CONTEXT_COURSE) {
         send_file_not_found();
     }

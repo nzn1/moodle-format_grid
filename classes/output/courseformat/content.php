@@ -39,9 +39,9 @@ use stdClass;
  */
 class content extends content_base {
 
-    private $sectioncompletionpercentage = array();
-    private $sectioncompletionmarkup = array();
-    private $sectioncompletioncalculated = array();
+    private $sectioncompletionpercentage = [];
+    private $sectioncompletionmarkup = [];
+    private $sectioncompletioncalculated = [];
 
     /**
      * @var bool Grid format does not add section after each topic.
@@ -106,11 +106,11 @@ class content extends content_base {
             $data->hasnavigation = true;
             $data->singlesection = array_shift($data->sections);
             $data->sectionreturn = $singlesection;
-            $data->maincoursepage = new \moodle_url('/course/view.php', array('id' => $course->id));
+            $data->maincoursepage = new \moodle_url('/course/view.php', ['id' => $course->id]);
         } else {
             $coursesettings = $format->get_settings();
             $toolbox = \format_grid\toolbox::get_instance();
-            $coursesectionimages = $DB->get_records('format_grid_image', array('courseid' => $course->id));
+            $coursesectionimages = $DB->get_records('format_grid_image', ['courseid' => $course->id]);
             if (!empty($coursesectionimages)) {
                 $fs = get_file_storage();
                 $coursecontext = \context_course::instance($course->id);
@@ -128,8 +128,8 @@ class content extends content_base {
                 $data->popup = false;
                 if ((!empty($coursesettings['popup'])) && ($coursesettings['popup'] == 2)) {
                     $data->popup = true;
-                    $data->popupsections = array();
-                    $potentialpopupsections = array();
+                    $data->popupsections = [];
+                    $potentialpopupsections = [];
                     foreach ($sections as $section) {
                         $potentialpopupsections[$section->id] = $section;
                     }
@@ -137,20 +137,20 @@ class content extends content_base {
             }
 
             // Suitable array.
-            $sectionimages = array();
+            $sectionimages = [];
             foreach ($coursesectionimages as $coursesectionimage) {
                 $sectionimages[$coursesectionimage->sectionid] = $coursesectionimage;
             }
 
             // Now iterate over the sections.
-            $data->gridsections = array();
+            $data->gridsections = [];
             $sectionsforgrid = $this->get_grid_sections($output, $coursesettings);
             $displayediswebp = (get_config('format_grid', 'defaultdisplayedimagefiletype') == 2);
 
             $completionshown = false;
             $headerimages = false;
             if ($editing) {
-                $datasectionmap = array();
+                $datasectionmap = [];
                 foreach ($data->sections as $datasectionkey => $datasection) {
                     $datasectionmap[$datasection->id] = $datasectionkey;
                 }
@@ -187,7 +187,7 @@ class content extends content_base {
                     // Section link.
                     $sectionimages[$section->id]->sectionurl = new \moodle_url(
                         '/course/view.php',
-                        array('id' => $course->id, 'section' => $section->num)
+                        ['id' => $course->id, 'section' => $section->num]
                     );
                     $sectionimages[$section->id]->sectionurl = $sectionimages[$section->id]->sectionurl->out(false);
 

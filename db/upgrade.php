@@ -72,7 +72,7 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
                     // Upgrade from old images.
                     $oldimages = $DB->get_records('format_grid_icon');
                     if (!empty($oldimages)) {
-                        $newimages = array();
+                        $newimages = [];
                         foreach ($oldimages as $oldimage) {
                             if (!empty($oldimage->image)) {
                                 try {
@@ -90,7 +90,7 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
                                 // Contenthash later!
                                 $DB->insert_record('format_grid_image', $newimagecontainer, true);
                                 if (!array_key_exists($newimagecontainer->courseid, $newimages)) {
-                                    $newimages[$newimagecontainer->courseid] = array();
+                                    $newimages[$newimagecontainer->courseid] = [];
                                 }
                                 $newimages[$newimagecontainer->courseid][$newimagecontainer->sectionid] = $newimagecontainer;
                             }
@@ -133,7 +133,7 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
                                                 }
                                                 if ($thefile !== false) {
                                                     $DB->set_field('format_grid_image', 'contenthash',
-                                                        $thefile->get_contenthash(), array('sectionid' => $filesectionid));
+                                                        $thefile->get_contenthash(), ['sectionid' => $filesectionid]);
                                                     // Don't delete the section file in case used in the summary.
                                                 }
                                             }
@@ -169,15 +169,15 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
 
     if ($oldversion < 2022112605) {
         $records = $DB->get_records('course_format_options',
-            array(
+            [
                 'format' => 'grid',
-                'name' => 'numsections'
-            ), '', 'id'
+                'name' => 'numsections',
+            ], '', 'id'
         );
 
         $records = array_keys($records);
         foreach ($records as $id) {
-            $DB->set_field('course_format_options', 'name', 'gnumsections', array('id' => $id));
+            $DB->set_field('course_format_options', 'name', 'gnumsections', ['id' => $id]);
         }
 
         // Grid savepoint reached.

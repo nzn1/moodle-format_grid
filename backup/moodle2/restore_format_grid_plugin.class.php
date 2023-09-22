@@ -54,7 +54,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
             $this->originalnumsections = (int)$maxsection;
         }
 
-        $paths = array();
+        $paths = [];
 
         // Add own format stuff.
         $elename = 'grid'; // This defines the postfix of 'process_*' below.
@@ -80,14 +80,14 @@ class restore_format_grid_plugin extends restore_format_plugin {
         $courseid = $this->task->get_courseid();
         /* We only process this information if the course we are restoring to
            has 'grid' format (target format can change depending of restore options). */
-        $format = $DB->get_field('course', 'format', array('id' => $courseid));
+        $format = $DB->get_field('course', 'format', ['id' => $courseid]);
         if ($format !== 'grid') {
             return;
         }
 
         $data->courseid = $courseid;
 
-        if (!($course = $DB->get_record('course', array('id' => $data->courseid)))) {
+        if (!($course = $DB->get_record('course', ['id' => $data->courseid]))) {
             throw new \moodle_exception('invalidcourseid', 'format_grid', '',
                 get_string('invalidcourseid', 'error'));
         } // From /course/view.php.
@@ -107,7 +107,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
 
         /* We only process this information if the course we are restoring to
            has 'grid' format (target format can change depending of restore options). */
-        $format = $DB->get_field('course', 'format', array('id' => $courseid));
+        $format = $DB->get_field('course', 'format', ['id' => $courseid]);
         if ($format !== 'grid') {
             return;
         }
@@ -123,7 +123,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
                 if (!$file->is_directory()) {
                     $filename = $file->get_filename();
                     $filesectionid = $file->get_itemid();
-                    $gridimage = $DB->get_record('format_grid_image', array('sectionid' => $filesectionid), 'image');
+                    $gridimage = $DB->get_record('format_grid_image', ['sectionid' => $filesectionid], 'image');
                     if (($gridimage) && ($gridimage->image == $filename)) { // Ensure the correct file.
                         $filerecord = new stdClass();
                         $filerecord->contextid = $coursecontext->id;
@@ -134,7 +134,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
                         $newfile = $fs->create_file_from_storedfile($filerecord, $file);
                         if ($newfile) {
                             $DB->set_field('format_grid_image', 'contenthash', $newfile->get_contenthash(),
-                                array('sectionid' => $filesectionid));
+                                ['sectionid' => $filesectionid]);
                         }
                     }
                 }
@@ -179,7 +179,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
      */
     protected function define_section_plugin_structure() {
 
-        $paths = array();
+        $paths = [];
 
         // Add own format stuff.
         $elepath = $this->get_pathfor('/');  // Note: $this->get_recommended_name() gets! -> section/the name.
@@ -220,7 +220,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
                 $existinggridimage = false;
                 if (($target == backup::TARGET_CURRENT_ADDING) ||
                     ($target == backup::TARGET_EXISTING_ADDING)) {
-                    $existinggridimage = $DB->get_record('format_grid_image', array('sectionid' => $newsectionid), 'image');
+                    $existinggridimage = $DB->get_record('format_grid_image', ['sectionid' => $newsectionid], 'image');
                 }
                 if (!$existinggridimage) {
                     // No image, so add the one from the backup file.
