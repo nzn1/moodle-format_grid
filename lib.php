@@ -46,17 +46,18 @@ class format_grid extends core_courseformat\base {
      * @return format_grid
      */
     protected function __construct($format, $courseid) {
-        parent::__construct($format, $courseid);
         if ($courseid === 0) {
             global $COURSE;
             $courseid = $COURSE->id;  // Save lots of global $COURSE as we will never be the site course.
         }
         parent::__construct($format, $courseid);
 
-        $currentsettings = $this->get_settings();
-        if (!empty($currentsettings['popup'])) {
-            if ($currentsettings['popup'] == 2) {
-                $this->coursedisplay = COURSE_DISPLAY_SINGLEPAGE;
+        if ($courseid != 1) {
+            $currentsettings = $this->get_settings();
+            if (!empty($currentsettings['popup'])) {
+                if ($currentsettings['popup'] == 2) {
+                    $this->coursedisplay = COURSE_DISPLAY_SINGLEPAGE;
+                }
             }
         }
     }
@@ -309,7 +310,7 @@ class format_grid extends core_courseformat\base {
             $courseid = $this->get_courseid();
             if ($courseid == 1) { // New course.
                 $defaultnumsections = $courseconfig->numsections;
-            } else { // Existing course that may not have 'numsections' - see get_last_section().
+            } else { // Existing course that may not have '(g)numsections' - see get_last_section().
                 global $DB;
                 $defaultnumsections = $DB->get_field_sql('SELECT max(section) from {course_sections}
                     WHERE course = ?', [$courseid]);
