@@ -54,7 +54,8 @@ if (($marker >= 0) && has_capability('moodle/course:setcurrentsection', $context
     course_set_marker($course->id, $marker);
 }
 
-if ($courseformatoptions['gnumsectionsnewcourse'] == 1) {
+//if ($courseformatoptions['gnumsectionsnewcourse'] == 1) {
+/*if (!array_key_exists())
     // A new course that may have sections but does not know how many.
     global $DB;
     $numsections = $DB->get_field_sql('SELECT max(section) from {course_sections}
@@ -62,12 +63,12 @@ if ($courseformatoptions['gnumsectionsnewcourse'] == 1) {
     if (empty($numsections)) {
         /* Sections not created, so we need to use the default course setting,
            which could be zero but this will still work. */
-        $numsections = get_config('moodlecourse', 'numsections');
+    /*    $numsections = get_config('moodlecourse', 'numsections');
     }
     $format->set_gnumsections($numsections);
     $courseformatoptions['gnumsections'] = $numsections;
     $courseformatoptions['gnumsectionsnewcourse'] = 0;
-}
+}*/
 
 // Make sure all sections are created.
 course_create_sections_if_missing($course, range(0, $courseformatoptions['gnumsections']));
