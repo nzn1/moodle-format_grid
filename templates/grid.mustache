@@ -180,3 +180,9 @@ require(['format_grid/popup'], function(popuphandler) {
 });
 {{/js}}
 {{/popup}}
+{{#js}}
+require(['format_grid/thegrid'], function(gridhandler) {
+    var sectionnumbers = [{{gridsectionnumbers}}];
+    gridhandler.init(sectionnumbers);
+});
+{{/js}}

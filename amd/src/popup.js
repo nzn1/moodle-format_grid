@@ -95,19 +95,20 @@ export const init = (showcompletion) => {
             event.preventDefault();
             var trigger = jQuery(event.currentTarget);
             currentsection = trigger.data('section');
-            jQuery('#gridPopup').modal('show');
+            //jQuery('#gridPopup').modal('show');
         }
     });
 
     jQuery("#gridPopup").on('keydown', function(event) {
-        if (event.which == 39) {
-            event.preventDefault();
-            jQuery('#gridPopupCarouselRight').trigger('click');
-        }
-
-        else if (event.which == 37) {
+        if (event.which == 37) {
+            // Left.
             event.preventDefault();
             jQuery('#gridPopupCarouselLeft').trigger('click');
+        }
+        else if (event.which == 39) {
+            // Right.
+            event.preventDefault();
+            jQuery('#gridPopupCarouselRight').trigger('click');
         }
     });
 };

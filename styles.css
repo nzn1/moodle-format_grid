@@ -68,6 +68,10 @@
     border: 2px solid var(--primary);
 }
 
+.format-grid .thegrid .grid-current-section {
+    border: 5px solid #fab;
+}
+
 .format-grid .thegrid .grid-image {
     height: 140px;
     position: relative;
