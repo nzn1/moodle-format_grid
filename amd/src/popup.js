@@ -23,6 +23,7 @@
 
 import * as CourseEvents from 'core_course/events';
 import jQuery from 'jquery';
+import log from 'core/log';
 
 /**
  * Whether the event listener has already been registered for this module.
@@ -44,7 +45,9 @@ let mctFired = false;
  * @param {boolean} showcompletion Show completion is on.
  */
 export const init = (showcompletion) => {
+    log.debug('Grid popup JS init');
     if (registered) {
+        log.debug('Grid popup JS init already registered');
         return;
     }
     // Listen for toggled manual completion states of activities.
@@ -87,12 +90,24 @@ export const init = (showcompletion) => {
         }
     });
 
-    jQuery(".grid-section .grid-modal").keypress(function (event) {
-        if (event.which == 13) {
+    jQuery(".grid-section .grid-modal").on('keydown', function (event) {
+        if ((event.which == 13) || (event.which == 27)) {
             event.preventDefault();
             var trigger = jQuery(event.currentTarget);
             currentsection = trigger.data('section');
             jQuery('#gridPopup').modal('show');
+        }
+    });
+
+    jQuery("#gridPopup").on('keydown', function(event) {
+        if (event.which == 39) {
+            event.preventDefault();
+            jQuery('#gridPopupCarouselRight').trigger('click');
+        }
+
+        else if (event.which == 37) {
+            event.preventDefault();
+            jQuery('#gridPopupCarouselLeft').trigger('click');
         }
     });
 };
