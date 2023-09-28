@@ -68,8 +68,9 @@
     border: 2px solid var(--primary);
 }
 
-.format-grid .thegrid .grid-current-section {
+.format-grid .thegrid .grid-current-section .grid-section-inner {
     border: 5px solid #fab;
+    border-radius: .5rem;
 }
 
 .format-grid .thegrid .grid-image {

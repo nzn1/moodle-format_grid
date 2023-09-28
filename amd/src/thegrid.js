@@ -44,9 +44,10 @@ let mctFired = false;
  * Function to intialise and register event listeners for this module.
  *
  * @param {array} sectionnumbers Show completion is on.
+ * @param {boolean} ispopup Popup is used.
  * @param {boolean} showcompletion Show completion is on.
  */
-export const init = (sectionnumbers, showcompletion) => {
+export const init = (sectionnumbers, ispopup, showcompletion) => {
     log.debug('Grid thegrid JS init');
     if (registered) {
         log.debug('Grid thegrid JS init already registered');
@@ -64,105 +65,112 @@ export const init = (sectionnumbers, showcompletion) => {
     var currentsection = -1;
     var endsection = sectionnumbers.length - 1;
 
+    var sectionchange = function (direction) {
+        if (currentsection == -1) {
+            if (direction < 0) {
+                // Left.
+                currentsection = endsection;
+            } else {
+                // Right.
+                currentsection = 0;
+            }
+            jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
+        } else {
+            jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
+            currentsection = currentsection + direction;
+            if (currentsection < 0) {
+                currentsection = endsection;
+            } else if (currentsection > endsection) {
+                currentsection = 0;
+            }
+            jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
+        }
+        if (direction < 0) {
+            log.debug("Left: " + sectionnumbers[currentsection]);
+            if (modalshown) {
+                jQuery('#gridPopupCarouselLeft').trigger('click');
+            }
+        } else if (direction > 0) {
+            log.debug("Right: " + sectionnumbers[currentsection]);
+            if (modalshown) {
+                jQuery('#gridPopupCarouselRight').trigger('click');
+            }
+        } else {
+            jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
+        }
+    };
+
     // Modal.
     var currentmodalsection = null;
     var modalshown = false;
+    var popup = ispopup;
 
-    jQuery('#gridPopup').on('show.bs.modal', function(event) {
-        var section = currentmodalsection;
-        if (section === null) {
-            var trigger = jQuery(event.relatedTarget);
-            section = trigger.data('section');
-        }
-        currentsection = section - 1;
-
-        var gml = jQuery('#gridPopupLabel');
-        var triggersectionname = jQuery('#gridpopupsection-' + section).data('sectiontitle');
-        gml.text(triggersectionname);
-
-        var modal = jQuery(this);
-        modal.find('#gridpopupsection-' + section).addClass('active');
-
-        jQuery('#gridPopupCarousel').on('slid.bs.carousel', function() {
-            var sno = jQuery('.gridcarousel-item.active').data('sectiontitle');
-            gml.text(sno);
-        });
-    });
-
-    jQuery('#gridPopup').on('hidden.bs.modal', function() {
-        if (currentmodalsection !== null) {
-            currentmodalsection = null;
-        }
-        jQuery('.gridcarousel-item').removeClass('active');
-        if (showcompletion && mctFired) {
-            mctFired = false;
-            window.location.reload();
-        }
-        modalshown = false;
-    });
-
-    jQuery(".grid-section .grid-modal").on('keydown', function (event) {
-        if ((event.which == 13) || (event.which == 27)) {
-            event.preventDefault();
-            var trigger = jQuery(event.currentTarget);
-            currentmodalsection = trigger.data('section');
+    if (popup) {
+        jQuery('#gridPopup').on('show.bs.modal', function (event) {
             modalshown = true;
-            jQuery('#gridPopup').modal('show');
-        }
-    });
+            var section = currentmodalsection;
+            if (section === null) {
+                var trigger = jQuery(event.relatedTarget);
+                section = trigger.data('section');
+            }
+            if (currentsection != -1) {
+                jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
+            }
+            currentsection = section - 1;
+            sectionchange(0);
 
-    jQuery("#gridPopup").on('keydown', function(event) {
-        if (event.which == 37) {
-            // Left.
-            event.preventDefault();
-            jQuery('#gridPopupCarouselLeft').trigger('click');
-        }
-        else if (event.which == 39) {
-            // Right.
-            event.preventDefault();
-            jQuery('#gridPopupCarouselRight').trigger('click');
-        }
-    });
+            var gml = jQuery('#gridPopupLabel');
+            var triggersectionname = jQuery('#gridpopupsection-' + section).data('sectiontitle');
+            gml.text(triggersectionname);
+
+            var modal = jQuery(this);
+            modal.find('#gridpopupsection-' + section).addClass('active');
+
+            jQuery('#gridPopupCarousel').on('slid.bs.carousel', function () {
+                var sno = jQuery('.gridcarousel-item.active').data('sectiontitle');
+                gml.text(sno);
+            });
+        });
+
+        jQuery('#gridPopup').on('hidden.bs.modal', function () {
+            if (currentmodalsection !== null) {
+                currentmodalsection = null;
+            }
+            jQuery('.gridcarousel-item').removeClass('active');
+            if (showcompletion && mctFired) {
+                mctFired = false;
+                window.location.reload();
+            }
+            modalshown = false;
+        });
+
+        jQuery(".grid-section .grid-modal").on('keydown', function (event) {
+            if ((event.which == 13) || (event.which == 27)) {
+                event.preventDefault();
+                var trigger = jQuery(event.currentTarget);
+                currentmodalsection = trigger.data('section');
+                jQuery('#gridPopup').modal('show');
+            }
+        });
+    }
 
     jQuery(document).on('keydown', function (event) {
         if (event.which == 37) {
             // Left.
             event.preventDefault();
-            if ((currentsection == -1) || (currentsection == 0)) {
-                if (currentsection == 0) {
-                    jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
-                }
-                currentsection = endsection;
-                jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
-            } else {
-                jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
-                currentsection = currentsection - 1;
-                jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
-            }
-            log.debug("Left: " + sectionnumbers[currentsection]);
+            sectionchange(-1);
         } else if (event.which == 39) {
             // Right.
             event.preventDefault();
-            if ((currentsection == -1) || (currentsection == endsection)) {
-                if (currentsection == endsection) {
-                    jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
-                }
-                currentsection = 0;
-                jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
-            } else {
-                jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
-                currentsection = currentsection + 1;
-                jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
-            }
-            log.debug("Right: " + sectionnumbers[currentsection]);
+            sectionchange(1);
         } else if ((event.which == 13) || (event.which == 27)) {
             event.preventDefault();
-            //var trigger = jQuery(event.currentTarget);
-            if ((currentsection !== -1) && (!modalshown)) {
-                currentmodalsection = sectionnumbers[currentsection];
+            if ((popup) && (!modalshown)) {
+                if ((currentsection !== -1) && (currentmodalsection === null)) {
+                    currentmodalsection = sectionnumbers[currentsection];
+                }
+                jQuery('#gridPopup').modal('show');
             }
-            modalshown = true;
-            jQuery('#gridPopup').modal('show');
         }
     });
 };
