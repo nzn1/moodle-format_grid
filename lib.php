@@ -308,59 +308,59 @@ class format_grid extends core_courseformat\base {
         if ($courseformatoptions === false) {
             $courseconfig = get_config('moodlecourse');
             $courseid = $this->get_courseid();
-            //if ($courseid == 1) { // New course.
-            //    $defaultnumsections = $courseconfig->numsections;
-            //    $defaultgnumsectionsnewcourse = 1;
-            //} else { // Existing course that may not have '(g)numsections' - see get_last_section().
-            $courseformatoptions = [];
-            if ($courseid != 1) { // Not new course.
+            if ($courseid == 1) { // New course.
+                $defaultnumsections = $courseconfig->numsections;
+                $defaultgnumsectionsnewcourse = 1;
+            } else { // Existing course that may not have '(g)numsections' - see get_last_section().
                 global $DB;
                 $defaultnumsections = $DB->get_field_sql('SELECT max(section) from {course_sections}
                     WHERE course = ?', [$courseid]);
-                $courseformatoptions['gnumsections'] = [
+                $defaultgnumsectionsnewcourse = 0;
+            }
+            $courseformatoptions = [
+                'gnumsections' => [
                     'default' => $defaultnumsections,
                     'type' => PARAM_INT,
-                ];
-            }
-                //'gnumsectionsnewcourse' => [
-                //    'default' => $defaultgnumsectionsnewcourse,
-                //    'type' => PARAM_INT,
-                //],
-            $courseformatoptions['hiddensections'] = [
-                'default' => $courseconfig->hiddensections,
-                'type' => PARAM_INT,
-            ];
-            $courseformatoptions['popup'] = [
+                ],
+                'gnumsectionsnewcourse' => [
+                    'default' => $defaultgnumsectionsnewcourse,
+                    'type' => PARAM_INT,
+                ],
+                'hiddensections' => [
+                    'default' => $courseconfig->hiddensections,
+                    'type' => PARAM_INT,
+                ],
+                'popup' => [
                     'default' => 0,
                     'type' => PARAM_INT,
-            ];
-            $courseformatoptions['gridjustification'] = [
+                ],
+                'gridjustification' => [
                     'default' => '-',
                     'type' => PARAM_ALPHAEXT,
-            ];
-            $courseformatoptions['imagecontainerwidth'] = [
+                ],
+                'imagecontainerwidth' => [
                     'default' => 0,
                     'type' => PARAM_INT,
-            ];
-                $courseformatoptions['imagecontainerratio'] = [
+                ],
+                'imagecontainerratio' => [
                     'default' => '-',
                     'type' => PARAM_ALPHANUMEXT,
-                ];
-                $courseformatoptions['imageresizemethod'] = [
+                ],
+                'imageresizemethod' => [
                     'default' => 0,
                     'type' => PARAM_INT,
-                ];
-                $courseformatoptions['showcompletion'] = [
+                ],
+                'showcompletion' => [
                     'default' => 0,
                     'type' => PARAM_INT,
-                ];
-                $courseformatoptions['singlepagesummaryimage'] = [
+                ],
+                'singlepagesummaryimage' => [
                     'default' => 0,
                     'type' => PARAM_INT,
-                ];
-            //];
+                ],
+            ];
         }
-        if ($foreditform && !isset($courseformatoptions['hiddensections']['label'])) {
+        if ($foreditform && !isset($courseformatoptions['gnumsections']['label'])) {
             if (is_null($courseconfig)) {
                 $courseconfig = get_config('moodlecourse');
             }
@@ -368,20 +368,17 @@ class format_grid extends core_courseformat\base {
             for ($i = 0; $i <= $courseconfig->maxsections; $i++) {
                 $sectionmenu[$i] = "$i";
             }
-            $courseformatoptionsedit = [];
-            if ($courseid != 1) { // Not new course.
-                $courseformatoptionsedit['gnumsections'] = [
+            $courseformatoptionsedit = [
+                'gnumsections' => [
                     'label' => new lang_string('numbersections', 'format_grid'),
                     'element_type' => 'select',
                     'element_attributes' => [$sectionmenu],
-                ];
-            }
-
-                //'gnumsectionsnewcourse' => [
-                    //'label' => 0,
-                    //'element_type' => 'hidden',
-                //],
-            $courseformatoptionsedit['hiddensections'] = [
+                ],
+                'gnumsectionsnewcourse' => [
+                    'label' => 0,
+                    'element_type' => 'hidden',
+                ],
+                'hiddensections' => [
                     'label' => new lang_string('hiddensections'),
                     'help' => 'hiddensections',
                     'help_component' => 'moodle',
@@ -392,6 +389,7 @@ class format_grid extends core_courseformat\base {
                             1 => new lang_string('hiddensectionsinvisible'),
                         ],
                     ],
+                ],
             ];
 
             // TODO - Use capabilities?
@@ -541,6 +539,14 @@ class format_grid extends core_courseformat\base {
             "$CFG->dirroot/course/format/grid/form/sectionfilemanager.php",
             'MoodleQuickForm_sectionfilemanager');
 
+        if (!$forsection) {
+            // The course edit form is displayed, so user intent rather than from backup / course upload.
+            $data = [
+                'gnumsectionsnewcourse' => 0,
+            ];
+            $this->update_course_format_options($data);
+        }
+
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
         /* Increase the number of sections combo box values if the user has increased the number of sections
@@ -549,16 +555,13 @@ class format_grid extends core_courseformat\base {
            defaults page.  This is so that the number of sections is not reduced leaving unintended orphaned
            activities / resources. */
         if (!$forsection) {
-            $courseid = $this->get_courseid();
-            if ($courseid != 1) { // Not new course.
-                $maxsections = get_config('moodlecourse', 'maxsections');
-                $numsections = $mform->getElementValue('gnumsections');
-                $numsections = $numsections[0];
-                if ($numsections > $maxsections) {
-                    $element = $mform->getElement('gnumsections');
-                    for ($i = $maxsections + 1; $i <= $numsections; $i++) {
-                        $element->addOption("$i", $i);
-                    }
+            $maxsections = get_config('moodlecourse', 'maxsections');
+            $numsections = $mform->getElementValue('gnumsections');
+            $numsections = $numsections[0];
+            if ($numsections > $maxsections) {
+                $element = $mform->getElement('gnumsections');
+                for ($i = $maxsections + 1; $i <= $numsections; $i++) {
+                    $element->addOption("$i", $i);
                 }
             }
         }
