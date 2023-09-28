@@ -539,14 +539,6 @@ class format_grid extends core_courseformat\base {
             "$CFG->dirroot/course/format/grid/form/sectionfilemanager.php",
             'MoodleQuickForm_sectionfilemanager');
 
-        if (!$forsection) {
-            // The course edit form is displayed, so user intent rather than from backup / course upload.
-            $data = [
-                'gnumsectionsnewcourse' => 0,
-            ];
-            $this->update_course_format_options($data);
-        }
-
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
         /* Increase the number of sections combo box values if the user has increased the number of sections

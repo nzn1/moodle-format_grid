@@ -59,13 +59,11 @@ if ($courseformatoptions['gnumsectionsnewcourse'] == 1) {
     global $DB;
     $numsections = $DB->get_field_sql('SELECT max(section) from {course_sections}
         WHERE course = ?', [$course->id]);
-    if (empty($numsections)) {
-        /* Sections not created, so we need to use the default course setting,
-           which could be zero but this will still work. */
-        $numsections = get_config('moodlecourse', 'numsections');
-    }
-    $format->set_gnumsections($numsections);
-    $courseformatoptions['gnumsections'] = $numsections;
+    if (!empty($numsections)) {
+        // Sections created, so we need set gnumsections to this.
+        $courseformatoptions['gnumsections'] = $numsections;
+    } // Else remain the same.
+    $format->set_gnumsections($courseformatoptions['gnumsections']);
     $courseformatoptions['gnumsectionsnewcourse'] = 0;
 }
 
