@@ -197,10 +197,25 @@ class restore_format_grid_plugin extends restore_format_plugin {
 
         $data = (object) $data;
 
+        $target = $this->step->get_task()->get_target();
+        if (($target == backup::TARGET_NEW_COURSE) ||
+            ($target == backup::TARGET_CURRENT_ADDING) ||
+            ($target == backup::TARGET_CURRENT_DELETING) ||
+            ($target == backup::TARGET_EXISTING_DELETING)) {
+            /* This ensures that when a course is created from an uploaded CSV file that the number of sections is correct.
+               Thus when an existing course or course file is used but the course restore code is not called.
+               Because the backup file / course being restored from has the correct 'sections', i.e. that will be in the
+               'course_sections' table. */
+            $courseid = $this->task->get_courseid();
+            static $gnumsections = 0;
+            $gnumsections++;
+            // We don't know how many more sections there is and also don't know if this is the last.
+            $courseformat = course_get_format($courseid);
+            $courseformat->restore_gnumsections($gnumsections);
+        }
         /* Allow this to process even if not in the grid format so that our event observer on 'course_restored'
            can perform a clean up of restored grid image files after all the data is in place in the database
            for this to happen properly. */
-        $target = $this->step->get_task()->get_target();
         if (($target == backup::TARGET_NEW_COURSE) ||
             ($target == backup::TARGET_CURRENT_DELETING) ||
             ($target == backup::TARGET_EXISTING_DELETING) ||
