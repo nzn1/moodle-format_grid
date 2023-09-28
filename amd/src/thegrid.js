@@ -164,8 +164,8 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
             event.preventDefault();
             sectionchange(1);
         } else if ((event.which == 13) || (event.which == 27)) {
-            event.preventDefault();
             if ((popup) && (!modalshown)) {
+                event.preventDefault();
                 if ((currentsection !== -1) && (currentmodalsection === null)) {
                     currentmodalsection = sectionnumbers[currentsection];
                 }
