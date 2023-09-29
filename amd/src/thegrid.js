@@ -61,21 +61,32 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
     });
     registered = true;
 
+    // Modal.
+    var currentmodalsection = null;
+    var modalshown = false;
+    var popup = ispopup;
+
     // Grid current section.
     var currentsection = -1;
     var endsection = sectionnumbers.length - 1;
 
+    /**
+     * Change the current selected section, arrow keys only.
+     * If the modal is shown then will also move the carousel.
+     * @param {int} direction -1 = left and 1 = right.
+     */
     var sectionchange = function (direction) {
         if (currentsection == -1) {
-            if (direction < 0) {
-                // Left.
+            if (modalshown) {
+                currentsection = currentmodalsection - 1;
+            } else if (direction < 0) {
                 currentsection = endsection;
             } else {
-                // Right.
                 currentsection = 0;
             }
             jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
-        } else {
+        }
+        if (currentsection != -1) {
             jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
             currentsection = currentsection + direction;
             if (currentsection < 0) {
@@ -95,40 +106,34 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
             if (modalshown) {
                 jQuery('#gridPopupCarouselRight').trigger('click');
             }
-        } else {
-            jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
         }
     };
-
-    // Modal.
-    var currentmodalsection = null;
-    var modalshown = false;
-    var popup = ispopup;
 
     if (popup) {
         jQuery('#gridPopup').on('show.bs.modal', function (event) {
             modalshown = true;
-            var section = currentmodalsection;
-            if (section === null) {
+            if (currentmodalsection === null) {
                 var trigger = jQuery(event.relatedTarget);
-                section = trigger.data('section');
+                currentmodalsection = trigger.data('section');
             }
             if (currentsection != -1) {
+                // Section highlighting is been used (arrow keys) and possibly a different section has been selected.
                 jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
+                currentsection = currentmodalsection - 1;
+                jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
             }
-            currentsection = section - 1;
-            sectionchange(0);
 
             var gml = jQuery('#gridPopupLabel');
-            var triggersectionname = jQuery('#gridpopupsection-' + section).data('sectiontitle');
+            var triggersectionname = jQuery('#gridpopupsection-' + currentmodalsection).data('sectiontitle');
             gml.text(triggersectionname);
 
             var modal = jQuery(this);
-            modal.find('#gridpopupsection-' + section).addClass('active');
+            modal.find('#gridpopupsection-' + currentmodalsection).addClass('active');
 
-            jQuery('#gridPopupCarousel').on('slid.bs.carousel', function () {
+            jQuery('#gridPopupCarousel').on('slid.bs.carousel', function (event) {
                 var sno = jQuery('.gridcarousel-item.active').data('sectiontitle');
                 gml.text(sno);
+                log.debug("Carousel direction: " + event.direction);
             });
         });
 
@@ -145,6 +150,7 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
         });
 
         jQuery(".grid-section .grid-modal").on('keydown', function (event) {
+            // Clicked within the modal
             if ((event.which == 13) || (event.which == 27)) {
                 event.preventDefault();
                 var trigger = jQuery(event.currentTarget);
@@ -164,6 +170,7 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
             event.preventDefault();
             sectionchange(1);
         } else if ((event.which == 13) || (event.which == 27)) {
+            // Enter (13) and ESC keys (27).
             if ((popup) && (!modalshown)) {
                 event.preventDefault();
                 if ((currentsection !== -1) && (currentmodalsection === null)) {
