@@ -67,7 +67,7 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
     var popup = ispopup;
 
     // Grid current section.
-    var currentsection = -1;
+    var currentsection = null;
     var currentsectionshown = false;
     var endsection = sectionnumbers.length - 1;
 
@@ -77,14 +77,14 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
      * @param {int} direction -1 = left and 1 = right.
      */
     var sectionchange = function (direction) {
-        if (currentsection == -1) {
+        if (currentsection === null) {
             if (direction < 0) {
                 currentsection = endsection;
             } else {
                 currentsection = 0;
             }
         }
-        if (currentsection != -1) {
+        if (currentsection !== null) {
             jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
             currentsection = currentsection + direction;
             if (currentsection < 0) {
@@ -103,10 +103,12 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
                 var trigger = jQuery(event.relatedTarget);
                 currentmodalsection = trigger.data('section');
             }
+            // Section highlighting is been used (arrow keys) and possibly a different section has been selected.
             if (currentsectionshown) {
-                // Section highlighting is been used (arrow keys) and possibly a different section has been selected.
                 jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
-                currentsection = currentmodalsection - 1;
+            }
+            currentsection = currentmodalsection - 1;
+            if (currentsectionshown) {
                 jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
             }
 
@@ -136,7 +138,14 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
         });
 
         jQuery('#gridPopup').on('hidden.bs.modal', function () {
+            // Section highlighting is been used (arrow keys) and possibly a different section has been selected.
+            if (currentsectionshown) {
+                jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
+            }
             currentsection = currentmodalsection - 1;
+            if (currentsectionshown) {
+                jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
+            }
             if (currentmodalsection !== null) {
                 currentmodalsection = null;
             }
@@ -151,12 +160,10 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
         jQuery(".grid-section .grid-modal").on('keydown', function (event) {
             // Clicked within the modal
             if ((event.which == 13) || (event.which == 27)) {
-                if (!currentsectionshown) {
-                    event.preventDefault();
-                    var trigger = jQuery(event.currentTarget);
-                    currentmodalsection = trigger.data('section');
-                    jQuery('#gridPopup').modal('show');
-                }
+                event.preventDefault();
+                var trigger = jQuery(event.currentTarget);
+                currentmodalsection = trigger.data('section');
+                jQuery('#gridPopup').modal('show');
             }
         });
     }
@@ -183,11 +190,12 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
         } else if ((event.which == 13) || (event.which == 27)) {
             // Enter (13) and ESC keys (27).
             if ((popup) && (!modalshown)) {
-                event.preventDefault();
-                if ((currentsectionshown) && (currentmodalsection === null)) {
-                    currentmodalsection = sectionnumbers[currentsection];
+                if (currentsectionshown) {
+                    if (currentmodalsection === null) {
+                        currentmodalsection = sectionnumbers[currentsection];
+                    }
+                    jQuery('#gridPopup').modal('show');
                 }
-                jQuery('#gridPopup').modal('show');
             }
         }
     });
