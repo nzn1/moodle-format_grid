@@ -68,6 +68,7 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
 
     // Grid current section.
     var currentsection = -1;
+    var currentsectionshown = false;
     var endsection = sectionnumbers.length - 1;
 
     /**
@@ -77,14 +78,11 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
      */
     var sectionchange = function (direction) {
         if (currentsection == -1) {
-            if (modalshown) {
-                currentsection = currentmodalsection - 1;
-            } else if (direction < 0) {
+            if (direction < 0) {
                 currentsection = endsection;
             } else {
                 currentsection = 0;
             }
-            jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
         }
         if (currentsection != -1) {
             jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
@@ -96,17 +94,6 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
             }
             jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
         }
-        if (direction < 0) {
-            log.debug("Left: " + sectionnumbers[currentsection]);
-            if (modalshown) {
-                jQuery('#gridPopupCarouselLeft').trigger('click');
-            }
-        } else if (direction > 0) {
-            log.debug("Right: " + sectionnumbers[currentsection]);
-            if (modalshown) {
-                jQuery('#gridPopupCarouselRight').trigger('click');
-            }
-        }
     };
 
     if (popup) {
@@ -116,7 +103,7 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
                 var trigger = jQuery(event.relatedTarget);
                 currentmodalsection = trigger.data('section');
             }
-            if (currentsection != -1) {
+            if (currentsectionshown) {
                 // Section highlighting is been used (arrow keys) and possibly a different section has been selected.
                 jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
                 currentsection = currentmodalsection - 1;
@@ -131,13 +118,25 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
             modal.find('#gridpopupsection-' + currentmodalsection).addClass('active');
 
             jQuery('#gridPopupCarousel').on('slid.bs.carousel', function (event) {
-                var sno = jQuery('.gridcarousel-item.active').data('sectiontitle');
-                gml.text(sno);
-                log.debug("Carousel direction: " + event.direction);
+                var item = jQuery('.gridcarousel-item.active');
+                var st = item.data('sectiontitle');
+                gml.text(st);
+                if (currentsectionshown) {
+                    log.debug("Carousel direction: " + event.direction);
+                    if (event.direction == 'left') {
+                        // Right.
+                        sectionchange(1);
+                    } else {
+                        // Left.
+                        sectionchange(-1);
+                    }
+                }
+                currentmodalsection = item.data('section');
             });
         });
 
         jQuery('#gridPopup').on('hidden.bs.modal', function () {
+            currentsection = currentmodalsection - 1;
             if (currentmodalsection !== null) {
                 currentmodalsection = null;
             }
@@ -152,10 +151,12 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
         jQuery(".grid-section .grid-modal").on('keydown', function (event) {
             // Clicked within the modal
             if ((event.which == 13) || (event.which == 27)) {
-                event.preventDefault();
-                var trigger = jQuery(event.currentTarget);
-                currentmodalsection = trigger.data('section');
-                jQuery('#gridPopup').modal('show');
+                if (!currentsectionshown) {
+                    event.preventDefault();
+                    var trigger = jQuery(event.currentTarget);
+                    currentmodalsection = trigger.data('section');
+                    jQuery('#gridPopup').modal('show');
+                }
             }
         });
     }
@@ -164,16 +165,26 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
         if (event.which == 37) {
             // Left.
             event.preventDefault();
+            currentsectionshown = true;
             sectionchange(-1);
+            log.debug("Left: " + sectionnumbers[currentsection]);
+            if (modalshown) {
+                jQuery('#gridPopupCarouselLeft').trigger('click');
+            }
         } else if (event.which == 39) {
             // Right.
             event.preventDefault();
+            currentsectionshown = true;
             sectionchange(1);
+            log.debug("Right: " + sectionnumbers[currentsection]);
+            if (modalshown) {
+                jQuery('#gridPopupCarouselRight').trigger('click');
+            }
         } else if ((event.which == 13) || (event.which == 27)) {
             // Enter (13) and ESC keys (27).
             if ((popup) && (!modalshown)) {
                 event.preventDefault();
-                if ((currentsection !== -1) && (currentmodalsection === null)) {
+                if ((currentsectionshown) && (currentmodalsection === null)) {
                     currentmodalsection = sectionnumbers[currentsection];
                 }
                 jQuery('#gridPopup').modal('show');
