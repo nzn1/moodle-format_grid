@@ -44,10 +44,10 @@ let mctFired = false;
  * Function to intialise and register event listeners for this module.
  *
  * @param {array} sectionnumbers Show completion is on.
- * @param {boolean} ispopup Popup is used.
+ * @param {boolean} popup Popup is used.
  * @param {boolean} showcompletion Show completion is on.
  */
-export const init = (sectionnumbers, ispopup, showcompletion) => {
+export const init = (sectionnumbers, popup, showcompletion) => {
     log.debug('Grid thegrid JS init');
     if (registered) {
         log.debug('Grid thegrid JS init already registered');
@@ -64,7 +64,6 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
     // Modal.
     var currentmodalsection = null;
     var modalshown = false;
-    var popup = ispopup;
 
     // Grid current section.
     var currentsection = null;
@@ -97,13 +96,7 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
     };
 
     if (popup) {
-        jQuery('#gridPopup').on('show.bs.modal', function (event) {
-            modalshown = true;
-            if (currentmodalsection === null) {
-                var trigger = jQuery(event.relatedTarget);
-                currentmodalsection = trigger.data('section');
-            }
-            // Section highlighting is been used (arrow keys) and possibly a different section has been selected.
+        var updatecurrentsection = function () {
             if (currentsectionshown) {
                 jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
             }
@@ -111,6 +104,16 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
             if (currentsectionshown) {
                 jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
             }
+        };
+
+        jQuery('#gridPopup').on('show.bs.modal', function (event) {
+            modalshown = true;
+            if (currentmodalsection === null) {
+                var trigger = jQuery(event.relatedTarget);
+                currentmodalsection = trigger.data('section');
+            }
+
+            updatecurrentsection();
 
             var gml = jQuery('#gridPopupLabel');
             var triggersectionname = jQuery('#gridpopupsection-' + currentmodalsection).data('sectiontitle');
@@ -125,25 +128,13 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
                 gml.text(st);
                 log.debug("Carousel direction: " + event.direction);
                 currentmodalsection = item.data('section');
-                if (currentsectionshown) {
-                    jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
-                }
-                currentsection = currentmodalsection - 1;
-                if (currentsectionshown) {
-                    jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
-                }
+                updatecurrentsection();
             });
         });
 
         jQuery('#gridPopup').on('hidden.bs.modal', function () {
-            // Section highlighting is been used (arrow keys) and possibly a different section has been selected.
-            if (currentsectionshown) {
-                jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
-            }
-            currentsection = currentmodalsection - 1;
-            if (currentsectionshown) {
-                jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
-            }
+            updatecurrentsection();
+
             if (currentmodalsection !== null) {
                 currentmodalsection = null;
             }
