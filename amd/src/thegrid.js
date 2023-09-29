@@ -123,17 +123,15 @@ export const init = (sectionnumbers, ispopup, showcompletion) => {
                 var item = jQuery('.gridcarousel-item.active');
                 var st = item.data('sectiontitle');
                 gml.text(st);
-                if (currentsectionshown) {
-                    log.debug("Carousel direction: " + event.direction);
-                    if (event.direction == 'left') {
-                        // Right.
-                        sectionchange(1);
-                    } else {
-                        // Left.
-                        sectionchange(-1);
-                    }
-                }
+                log.debug("Carousel direction: " + event.direction);
                 currentmodalsection = item.data('section');
+                if (currentsectionshown) {
+                    jQuery('#section-' + sectionnumbers[currentsection]).removeClass('grid-current-section');
+                }
+                currentsection = currentmodalsection - 1;
+                if (currentsectionshown) {
+                    jQuery('#section-' + sectionnumbers[currentsection]).addClass('grid-current-section');
+                }
             });
         });
 
