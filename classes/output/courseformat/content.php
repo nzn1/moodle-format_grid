@@ -334,7 +334,7 @@ class content extends content_base {
                 foreach ($modinfo->sections[$section->section] as $cmid) {
                     $thismod = $modinfo->cms[$cmid];
 
-                    if ($thismod->available) {
+                    if ($thismod->uservisible) {
                         $asectionisavailable = true;
                         if ($completioninfo->is_enabled($thismod) != COMPLETION_TRACKING_NONE) {
                             $total++;
