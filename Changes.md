@@ -7,6 +7,7 @@ Version 401.2.1 - TBR
 3. Add 'Flex containers' justify-content property options' - #191.
 4. Fix 'Problems with creating multiple courses from template via CSV in Grid Format' - #189.
 5. Make 'Main content page' link on single section page more accessible.
+6. Fix 'Mouseover for shortened titles' - #187.
 
 Version 401.2.0 - 16/08/2023
 ----------------------------
