@@ -1,6 +1,6 @@
 History
 =============
-Version 401.2.1 - TBR
+Version 401.2.1 - 04/10/2023
 ----------------------------
 1. Fix 'Webp image causes an error and makes course unaccessible' - #190.
 2. Fix "Hidden sections are shown as not available" doesn't seem to work. - #192.
