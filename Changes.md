@@ -1,10 +1,11 @@
 History
 =============
-Version 401.2.1 - 14/10/2023
+
+Version 401.2.1b - 14/10/2023
 ----------------------------
 1. Fix 'Webp image causes an error and makes course unaccessible' - #190.
 2. Fix "Hidden sections are shown as not available" doesn't seem to work. - #192.
-3. Add 'Flex containers' justify-content property options' - #191.
+3. Add 'Flex containers' justify-content property options' - #191.  Sponsored by AAU.
 4. Fix 'Problems with creating multiple courses from template via CSV in Grid Format' - #189.
 5. Make 'Main content page' link on single section page more accessible.
 6. Fix 'Mouseover for shortened titles' - #187.
@@ -13,7 +14,7 @@ Version 401.2.1 - 14/10/2023
    section will show using an inner border to avoid conflict with accessibility, then use Esc to open the modal.  Accessibility
    keys of Tab / Shift Tab and Enter will function to navigate with the focussed item and when a grid section is selected,
    the Enter key will open the modal.  On the modal itself, the same keys will navigate the slider controls and the two
-   close buttons, as well as the modules within the section. #191.
+   close buttons, as well as the modules within the section. #191.  Sponsored by AAU.
 
 Version 401.2.0 - 16/08/2023
 ----------------------------
