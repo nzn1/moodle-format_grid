@@ -601,7 +601,8 @@ class format_grid extends core_courseformat\base {
             $maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
                 WHERE course = ?', [$this->courseid]);
             if ($numsections < $maxsection) {
-                // The setting gnumsections has decreased, try to completely delete the orphaned sections (unless they are not empty).
+                // The setting gnumsections has decreased, try to completely delete the orphaned
+                // sections (unless they are not empty).
                 for ($sectionnum = $maxsection; $sectionnum > $numsections; $sectionnum--) {
                     if (!$this->delete_section($sectionnum, false)) {
                         break;

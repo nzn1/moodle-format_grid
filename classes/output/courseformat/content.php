@@ -384,7 +384,8 @@ class content extends content_base {
                 } else {
                     $data->percentagequarter = 4;
                 }
-                $this->sectioncompletionmarkup[$section->section] = $output->render_from_template('format_grid/grid_completion', $data);
+                $this->sectioncompletionmarkup[$section->section] =
+                    $output->render_from_template('format_grid/grid_completion', $data);
             }
 
             $this->sectioncompletioncalculated[$section->section] = true;

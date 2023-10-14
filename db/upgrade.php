@@ -107,9 +107,11 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
                                     } else {
                                         $filename = $file->get_filename();
                                         $filesectionid = $file->get_itemid();
-                                        if (array_key_exists($filesectionid, $newimagecoursearray)) { // Ensure we know about this section.
+                                        // Ensure we know about this section.
+                                        if (array_key_exists($filesectionid, $newimagecoursearray)) {
                                             $gridimage = $newimagecoursearray[$filesectionid];
-                                            if (($gridimage) && ($gridimage->image == $filename)) { // Ensure the correct file.
+                                            // Ensure the correct file.
+                                            if (($gridimage) && ($gridimage->image == $filename)) {
                                                 $filerecord = new stdClass();
                                                 $filerecord->contextid = $coursecontext->id;
                                                 $filerecord->component = 'format_grid';
