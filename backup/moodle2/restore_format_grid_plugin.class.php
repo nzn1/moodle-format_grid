@@ -219,11 +219,15 @@ class restore_format_grid_plugin extends restore_format_plugin {
                Because the backup file / course being restored from has the correct 'sections', i.e. that will be in the
                'course_sections' table. */
             $courseid = $this->task->get_courseid();
-            static $gnumsections = 0;
-            $gnumsections++;
+
             // We don't know how many more sections there is and also don't know if this is the last.
             $courseformat = course_get_format($courseid);
-            $courseformat->restore_gnumsections($gnumsections);
+
+            if ($courseformat->get_format() == 'grid') {
+                static $gnumsections = 0;
+                $gnumsections++;
+                $courseformat->restore_gnumsections($gnumsections);
+            }
         }
         /* Allow this to process even if not in the grid format so that our event observer on 'course_restored'
            can perform a clean up of restored grid image files after all the data is in place in the database
