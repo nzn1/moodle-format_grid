@@ -678,7 +678,7 @@ class toolbox {
         if (!empty($coursesectionimages)) {
             $fs = get_file_storage();
             $lockfactory = null;
-            $lock = true;
+            $lock = null;
             if (!defined('BEHAT_SITE_RUNNING')) {
                 $lockfactory = \core\lock\lock_config::get_lock_factory('format_grid');
             }
@@ -693,7 +693,7 @@ class toolbox {
                 if (!defined('BEHAT_SITE_RUNNING')) {
                     $lock = $lockfactory->get_lock('sectionid' . $coursesectionimage->sectionid, 5);
                 }
-                if ($lock) {
+                if (($lock instanceof \core\lock\lock) || (defined('BEHAT_SITE_RUNNING'))) {
                     $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
                     foreach ($files as $file) {
                         if (!$file->is_directory()) {
