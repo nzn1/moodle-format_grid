@@ -694,22 +694,24 @@ class toolbox {
                     $lock = $lockfactory->get_lock('sectionid' . $coursesectionimage->sectionid, 5);
                 }
                 if (($lock instanceof \core\lock\lock) || (defined('BEHAT_SITE_RUNNING'))) {
-                    $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
-                    foreach ($files as $file) {
-                        if (!$file->is_directory()) {
-                            try {
-                                $coursesectionimage = $toolbox->setup_displayed_image(
-                                    $coursesectionimage,
-                                    $file,
-                                    $courseid,
-                                    $coursesectionimage->sectionid,
-                                    $format
-                                );
-                            } catch (\Exception $e) {
-                                $lock->release();
-                                throw $e;
+                    try {
+                        $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
+                        foreach ($files as $file) {
+                            if (!$file->is_directory()) {
+                                    $coursesectionimage = $toolbox->setup_displayed_image(
+                                        $coursesectionimage,
+                                        $file,
+                                        $courseid,
+                                        $coursesectionimage->sectionid,
+                                        $format
+                                    );
                             }
                         }
+                    } catch (\Exception $e) {
+                        if (!defined('BEHAT_SITE_RUNNING')) {
+                            $lock->release();
+                        }
+                        throw $e;
                     }
                     if (!defined('BEHAT_SITE_RUNNING')) {
                         $lock->release();
