@@ -72,76 +72,24 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
                     // Upgrade from old images.
                     $oldimages = $DB->get_records('format_grid_icon');
                     if (!empty($oldimages)) {
-                        $newimages = [];
-                        foreach ($oldimages as $oldimage) {
-                            if (!empty($oldimage->image)) {
-                                try {
-                                    context_course::instance($oldimage->courseid);
-                                } catch (\Exception $ex) {
-                                    // Course does not exist for this image, skip.
-                                    continue;
-                                }
-
-                                $newimagecontainer = new \stdClass();
-                                $newimagecontainer->sectionid = $oldimage->sectionid;
-                                $newimagecontainer->courseid = $oldimage->courseid;
-                                $newimagecontainer->image = $oldimage->image;
-                                $newimagecontainer->displayedimagestate = 0;
-                                // Contenthash later!
-                                $DB->insert_record('format_grid_image', $newimagecontainer, true);
-                                if (!array_key_exists($newimagecontainer->courseid, $newimages)) {
-                                    $newimages[$newimagecontainer->courseid] = [];
-                                }
-                                $newimages[$newimagecontainer->courseid][$newimagecontainer->sectionid] = $newimagecontainer;
-                            }
-                        }
-
-                        $fs = get_file_storage();
-                        foreach ($newimages as $currentcourseid => $newimagecoursearray) {
-                            $coursecontext = context_course::instance($currentcourseid);
-                            $files = $fs->get_area_files($coursecontext->id, 'course', 'section');
-                            foreach ($files as $file) {
-                                if (!$file->is_directory()) {
-                                    if ($file->get_filepath() == '/gridimage/') {
-                                        $file->delete();
-                                    } else {
-                                        $filename = $file->get_filename();
-                                        $filesectionid = $file->get_itemid();
-                                        // Ensure we know about this section.
-                                        if (array_key_exists($filesectionid, $newimagecoursearray)) {
-                                            $gridimage = $newimagecoursearray[$filesectionid];
-                                            // Ensure the correct file.
-                                            if (($gridimage) && ($gridimage->image == $filename)) {
-                                                $filerecord = new stdClass();
-                                                $filerecord->contextid = $coursecontext->id;
-                                                $filerecord->component = 'format_grid';
-                                                $filerecord->filearea = 'sectionimage';
-                                                $filerecord->itemid = $filesectionid;
-                                                $filerecord->filepath = '/';
-                                                $filerecord->filename = $filename;
-                                                $thefile = false;
-                                                if ($somethingbroke) {
-                                                    // Check to see if the file is already there.
-                                                    $thefile = $fs->get_file(
-                                                        $filerecord->contextid,
-                                                        $filerecord->component,
-                                                        $filerecord->filearea,
-                                                        $filerecord->itemid,
-                                                        $filerecord->filepath,
-                                                        $filerecord->filename);
-                                                }
-                                                if ($thefile === false) {
-                                                    $thefile = $fs->create_file_from_storedfile($filerecord, $file);
-                                                }
-                                                if ($thefile !== false) {
-                                                    $DB->set_field('format_grid_image', 'contenthash',
-                                                        $thefile->get_contenthash(), ['sectionid' => $filesectionid]);
-                                                    // Don't delete the section file in case used in the summary.
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                        if ($dbman->table_exists($oldtable)) {
+                
+                            //Move images
+                            $DB->execute('
+                            INSERT INTO mdl_format_grid_image (sectionid, courseid, image, displayedimagestate)
+                            SELECT sectionid, courseid, image, 0
+                            FROM mdl_format_grid_icon
+                            WHERE courseid IN ( SELECT id FROM mdl_course )
+                            ');
+            
+                            $courses = $DB->get_records_sql('SELECT DISTINCT courseid FROM {format_grid_image}');
+                            foreach($courses as $course){
+                                $task = new \format_grid\task\upgrade_single_course();
+                                $task->set_custom_data([
+                                    'course_id' => $course->courseid,
+                                ]);
+            
+                                \core\task\manager::queue_adhoc_task($task, true);
                             }
                         }
                     }
