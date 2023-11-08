@@ -73,22 +73,19 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
                     $oldimages = $DB->get_records('format_grid_icon');
                     if (!empty($oldimages)) {
                         if ($dbman->table_exists($oldtable)) {
-                
-                            //Move images
+                            // Move images.
                             $DB->execute('
                             INSERT INTO {format_grid_image} (sectionid, courseid, image, displayedimagestate)
                             SELECT sectionid, courseid, image, 0
                             FROM {format_grid_icon}
                             WHERE courseid IN ( SELECT id FROM {course} )
                             ');
-            
                             $courses = $DB->get_records_sql('SELECT DISTINCT courseid FROM {format_grid_image}');
-                            foreach($courses as $course){
+                            foreach ($courses as $course) {
                                 $task = new \format_grid\task\upgrade_single_course();
                                 $task->set_custom_data([
                                     'course_id' => $course->courseid,
                                 ]);
-            
                                 \core\task\manager::queue_adhoc_task($task, true);
                             }
                         }

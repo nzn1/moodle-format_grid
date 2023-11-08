@@ -25,21 +25,18 @@ namespace format_grid\task;
  */
 class upgrade_single_course extends \core\task\adhoc_task {
 
-    public function get_name(){
+    public function get_name() {
         return "Course Format Grid Image Migration - 3.9 to 4.1";
     }
-    
-    public function execute(){
+
+    public function execute() {
         $params = $this->get_custom_data();
-
         $courseid = $params->courseid;
-
         $this->upgrade_course($courseid);
     }
 
-    private function upgrade_course($currentcourseid){
+    private function upgrade_course($currentcourseid) {
         global $DB;
-    
         $newimagecoursearray = $DB->get_records_sql(
             'SELECT sectionid, courseid, image, displayedimagestate FROM {format_grid_image} WHERE courseid = ?',
             [$currentcourseid]
@@ -83,7 +80,6 @@ class upgrade_single_course extends \core\task\adhoc_task {
                                     $thefile->get_contenthash(), ['sectionid' => $filesectionid]);
                                 // Don't delete the section file in case used in the summary.
                             }
-    
                         }
                     }
                 }
