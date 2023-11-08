@@ -20,7 +20,7 @@ namespace format_grid\task;
  * Class upgrade_single_course
  *
  * @package    format_grid
- * @copyright  2023 YOUR NAME <your@email.com>
+ * @copyright  2023 Jay Oswad <jayoswald@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class upgrade_single_course extends \core\task\adhoc_task {
