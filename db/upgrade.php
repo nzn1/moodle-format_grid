@@ -76,10 +76,10 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
                 
                             //Move images
                             $DB->execute('
-                            INSERT INTO mdl_format_grid_image (sectionid, courseid, image, displayedimagestate)
+                            INSERT INTO {format_grid_image} (sectionid, courseid, image, displayedimagestate)
                             SELECT sectionid, courseid, image, 0
-                            FROM mdl_format_grid_icon
-                            WHERE courseid IN ( SELECT id FROM mdl_course )
+                            FROM {format_grid_icon}
+                            WHERE courseid IN ( SELECT id FROM {course} )
                             ');
             
                             $courses = $DB->get_records_sql('SELECT DISTINCT courseid FROM {format_grid_image}');
