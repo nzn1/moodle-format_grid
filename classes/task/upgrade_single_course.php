@@ -31,7 +31,7 @@ class upgrade_single_course extends \core\task\adhoc_task {
 
     public function execute() {
         $params = $this->get_custom_data();
-        $courseid = $params->courseid;
+        $courseid = (int)$params->course_id;
         $this->upgrade_course($courseid);
     }
 
