@@ -80,7 +80,7 @@ function xmldb_format_grid_upgrade($oldversion = 0) {
                             FROM {format_grid_icon}
                             WHERE courseid IN ( SELECT id FROM {course} )
                             ');
-                            $courses = $DB->get_records_sql('SELECT DISTINCT courseid FROM {format_grid_image}');
+                            $courses = $DB->get_records_sql('SELECT DISTINCT courseid FROM {format_grid_image} ORDER BY courseid DESC');
                             foreach ($courses as $course) {
                                 $task = new \format_grid\task\upgrade_single_course();
                                 $task->set_custom_data([
