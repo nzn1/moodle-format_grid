@@ -100,6 +100,27 @@ class format_grid extends core_courseformat\base {
     }
 
     /**
+     * Method used in the rendered and during backup instead of legacy 'numsections'
+     *
+     * Default renderer will treat sections with sectionnumber greater that the value returned by this
+     * method as "orphaned" and not display them on the course page unless in editing mode.
+     * Backup will store this value as 'numsections'.
+     *
+     * This method ensures that 3rd party course format plugins that still use 'numsections' continue to
+     * work but at the same time we no longer expect formats to have 'numsections' property.
+     *
+     * @return int The last section number, or -1 if sections are entirely missing
+     */
+    public function get_last_section_number() {
+        $course = $this->get_course();
+        if (isset($course->gnumsections)) {
+            return $course->gnumsections;
+        }
+
+        return parent::get_last_section_number();
+    }
+
+    /**
      * Returns true if this course format uses sections.
      *
      * @return bool
