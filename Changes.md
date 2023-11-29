@@ -5,6 +5,7 @@ Version 401.2.2 - TBR
 ----------------------------
 1. Fix 'Import a format_grid course into a format_topics course fails and produces "undefined method"' - #193,
    thanks to @Syxton(Matt Davidson).
+2. Fix 'Sections showing beyond the number set in the settings', related to #196.
 
 Version 401.2.1b - 14/10/2023
 ----------------------------
