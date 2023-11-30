@@ -54,18 +54,56 @@ class restore_format_grid_plugin extends restore_format_plugin {
             $this->originalnumsections = (int)$maxsection;
         }
 
-        $paths = [];
+        $data = $this->connectionpoint->get_data();
+/*        $paths = [];
 
         // Add own format stuff.
         $elename = 'grid'; // This defines the postfix of 'process_*' below.
         /*
          * This is defines the nested tag within 'plugin_format_grid_course' to allow '/course/plugin_format_grid_course' in
          * the path therefore as a path structure representing the levels in section.xml in the backup file.
-         */
+         */ /*
         $elepath = $this->get_pathfor('/');
         $paths[] = new restore_path_element($elename, $elepath);
 
+        $elepath = $this->get_pathfor('../courseformatoptions');
+        $paths[] = new restore_path_element('courseformatoptions', $elepath);
+
+        $paths[] = new restore_path_element('courseformatoption', '/course/courseformatoptions/courseformatoption');
+
         return $paths; // And we return the interesting paths.
+    } */
+        // Dummy path element is needed in order for after_restore_course() to be called.
+        return [new restore_path_element('dummy_course', $this->get_pathfor('/dummycourse'))];
+    }
+
+    /**
+     * Dummy process method.
+     *
+     * @return void
+     */
+    public function process_dummy_course() {
+
+    }
+
+    /**
+     * Process the 'plugin_format_grid_course' element within the 'course' element in the 'course.xml' file in the '/course'
+     * folder of the zipped backup 'mbz' file.
+     */
+    public function process_courseformatoptions($data) {
+        $data = (object) $data;
+        $data = (object) $data;
+
+    }
+
+    /**
+     * Process the 'plugin_format_grid_course' element within the 'course' element in the 'course.xml' file in the '/course'
+     * folder of the zipped backup 'mbz' file.
+     */
+    public function process_courseformatoption($data) {
+        $data = (object) $data;
+        $data = (object) $data;
+
     }
 
     /**
@@ -151,17 +189,18 @@ class restore_format_grid_plugin extends restore_format_plugin {
 
         $courseformat = course_get_format($courseid);
         $settings = $courseformat->get_settings();
+        $data = $this->connectionpoint->get_data();
 
-        if (empty($settings['numsections'])) {
+        if (!empty($settings['numsections'])) {
             /* Backup file does not contain 'numsections' in the course format options so we need to set it from the number of
                sections we can determine the course has.  The 'default' might be wrong, so there could be an entry in the db
                already with this wrong value. */
 
-            $maxsection = $DB->get_field_sql('SELECT max(section) FROM {course_sections} WHERE course = ?', [$courseid]);
+            /*$maxsection = $DB->get_field_sql('SELECT max(section) FROM {course_sections} WHERE course = ?', [$courseid]);
 
             $courseformat->restore_gnumsections($maxsection);
             return;
-        } else {
+        } else {*/
             // The backup file contains 'numsections' so we need to set 'gnumsections' to this value.
             $courseformat->restore_gnumsections($settings['numsections']);
         }
@@ -207,7 +246,9 @@ class restore_format_grid_plugin extends restore_format_plugin {
 
         $data = (object) $data;
 
-        $target = $this->step->get_task()->get_target();
+        $task = $this->step->get_task();
+
+        $target = $task->get_target();
         if (
             ($target == backup::TARGET_NEW_COURSE) ||
             ($target == backup::TARGET_CURRENT_ADDING) ||
@@ -218,15 +259,28 @@ class restore_format_grid_plugin extends restore_format_plugin {
                Thus when an existing course or course file is used but the course restore code is not called.
                Because the backup file / course being restored from has the correct 'sections', i.e. that will be in the
                'course_sections' table. */
-            $courseid = $this->task->get_courseid();
+            $courseid = $task->get_courseid();
 
             // We don't know how many more sections there is and also don't know if this is the last.
             $courseformat = course_get_format($courseid);
+            $settings = $courseformat->get_settings();
 
             if ($courseformat->get_format() == 'grid') {
-                static $gnumsections = 0;
-                $gnumsections++;
-                $courseformat->restore_gnumsections($gnumsections);
+                $record = $DB->get_record('course_format_options', [ 'courseid' => $courseid, 'name' => 'gnumsections',
+                    'format' => 'grid', 'sectionid' => 0 ]);
+
+                static $nognumsections = false;
+                if ($settings['gnumsections'] === false) {
+                    $nognumsections = true;
+                }
+                if ($nognumsections) {
+                    // Then the 'gnumsections' has not been already set in the course format options part of the course.
+                    // Therefore, the section count will be the value to use, unless 'numsections' is there.
+                    // If it has been set, then we need to use that value as there could be deliberate orphaned sections.
+                    static $gnumsections = 0;
+                    $gnumsections++;
+                    $courseformat->restore_gnumsections($gnumsections);
+                }
             }
         }
         /* Allow this to process even if not in the grid format so that our event observer on 'course_restored'
