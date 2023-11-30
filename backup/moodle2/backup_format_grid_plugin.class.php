@@ -38,6 +38,15 @@ class backup_format_grid_plugin extends backup_format_plugin {
         // Define the virtual plugin element with the condition to fulfill.
         $plugin = $this->get_plugin_element(null, '/course/format', 'grid');
 
+        $pluginwrapper = new backup_nested_element($this->get_recommended_name(), null, array('name', 'value'));
+
+        // Connect the visible container ASAP.
+        $plugin->add_child($pluginwrapper);
+
+        // Set source to populate the data.
+        $pluginwrapper->set_source_table('course_format_options', array(
+            'courseid' => backup::VAR_PARENTID));
+
         // Don't need to annotate ids nor files.
         return $plugin;
     }
