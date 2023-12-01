@@ -36,6 +36,9 @@ class restore_format_grid_plugin extends restore_format_plugin {
     /** @var int */
     protected $originalnumsections = 0;
 
+    /** @var int */
+    protected $originalgnumsections = false;
+
     /**
      * Returns the paths to be handled by the plugin at course level.
      * I think this is only called when the course format settings change.
@@ -59,12 +62,14 @@ class restore_format_grid_plugin extends restore_format_plugin {
     }
 
     /**
-     * No operation process method.
+     * Process grid coourse format options method.
      *
      * @return void
      */
     public function process_grid($data) {
-        return $data;
+        if ((!empty($data['name'])) && ($data['name'] == 'gnumsections')) {
+            $this->originalgnumsections = $data['value'];
+        }
     }
 
     /**
@@ -120,20 +125,18 @@ class restore_format_grid_plugin extends restore_format_plugin {
 
         $courseformat = course_get_format($courseid);
         $settings = $courseformat->get_settings();
-        $data = $this->connectionpoint->get_data();
+        $gnumsections = $settings['gnumsections'];
 
         if (!empty($settings['numsections'])) {
-            /* Backup file does not contain 'numsections' in the course format options so we need to set it from the number of
-               sections we can determine the course has.  The 'default' might be wrong, so there could be an entry in the db
-               already with this wrong value. */
-
-            /*$maxsection = $DB->get_field_sql('SELECT max(section) FROM {course_sections} WHERE course = ?', [$courseid]);
-
-            $courseformat->restore_gnumsections($maxsection);
-            return;
-        } else {*/
-            // The backup file contains 'numsections' so we need to set 'gnumsections' to this value.
-            $courseformat->restore_gnumsections($settings['numsections']);
+            if ($settings['numsections'] != $gnumsections) {
+                $courseformat->restore_gnumsections($settings['numsections']);
+                $gnumsections = $settings['numsections'];
+            }
+        } else if ($this->originalgnumsections !== false) {
+            if ($this->originalgnumsections != $gnumsections) {
+                $courseformat->restore_gnumsections($this->originalgnumsections);
+                $gnumsections = $this->originalgnumsections;
+            }
         }
 
         if ($this->originalnumsections) {
@@ -145,7 +148,7 @@ class restore_format_grid_plugin extends restore_format_plugin {
                    in this case we don't modify the visibility. */
                 if ($this->step->get_task()->get_setting_value($key . '_included')) {
                     $sectionnum = (int)$section->title;
-                    if ($sectionnum > $settings['gnumsections'] && $sectionnum > $this->originalnumsections) {
+                    if ($sectionnum > $gnumsections && $sectionnum > $this->originalnumsections) {
                         $DB->execute(
                             "UPDATE {course_sections} SET visible = 0 WHERE course = ? AND section = ?",
                             [$this->step->get_task()->get_courseid(), $sectionnum]
@@ -196,24 +199,10 @@ class restore_format_grid_plugin extends restore_format_plugin {
 
             // We don't know how many more sections there is and also don't know if this is the last.
             $courseformat = course_get_format($courseid);
-            $settings = $courseformat->get_settings();
-
             if ($courseformat->get_format() == 'grid') {
-                $record = $DB->get_record('course_format_options', [ 'courseid' => $courseid, 'name' => 'gnumsections',
-                    'format' => 'grid', 'sectionid' => 0 ]);
-
-                static $nognumsections = false;
-                if ($settings['gnumsections'] === false) {
-                    $nognumsections = true;
-                }
-                if ($nognumsections) {
-                    // Then the 'gnumsections' has not been already set in the course format options part of the course.
-                    // Therefore, the section count will be the value to use, unless 'numsections' is there.
-                    // If it has been set, then we need to use that value as there could be deliberate orphaned sections.
-                    static $gnumsections = 0;
-                    $gnumsections++;
-                    $courseformat->restore_gnumsections($gnumsections);
-                }
+                static $gnumsections = 0;
+                $gnumsections++;
+                $courseformat->restore_gnumsections($gnumsections);
             }
         }
         /* Allow this to process even if not in the grid format so that our event observer on 'course_restored'

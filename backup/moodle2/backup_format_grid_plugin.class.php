@@ -38,6 +38,8 @@ class backup_format_grid_plugin extends backup_format_plugin {
         // Define the virtual plugin element with the condition to fulfill.
         $plugin = $this->get_plugin_element(null, '/course/format', 'grid');
 
+        // This is so that we know the value of 'gnumsections' before its changed by the restore process and lost
+        // before it is needed.
         $pluginwrapper = new backup_nested_element($this->get_recommended_name(), null, array('name', 'value'));
 
         // Connect the visible container ASAP.
