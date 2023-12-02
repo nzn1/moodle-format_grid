@@ -49,6 +49,17 @@ class content extends content_base {
      */
     protected $hasaddsection = false;
 
+    /**
+     * @var int Are there stealth sections with content?
+     */
+    protected $hassteathwithcontent = 0;
+
+    /**
+     * Get the template name.
+     *
+     * @param renderer_base $output typically, the renderer that's calling this method.
+     * @return string Mustache template name.
+     */
     public function get_template_name(\renderer_base $renderer): string {
         return 'format_grid/local/content';
     }
@@ -56,8 +67,8 @@ class content extends content_base {
     /**
      * Export this data so it can be used as the context for a mustache template (core/inplace_editable).
      *
-     * @param renderer_base $output typically, the renderer that's calling this function
-     * @return stdClass data context for a Mustache template
+     * @param renderer_base $output typically, the renderer that's calling this method.
+     * @return stdClass data context for a Mustache template.
      */
     public function export_for_template(\renderer_base $output) {
         global $DB, $PAGE;
@@ -258,6 +269,13 @@ class content extends content_base {
             }
         }
 
+        if ($this->hassteathwithcontent) {
+            $context = \context_course::instance($course->id);
+            if (has_capability('moodle/course:update', $context)) {
+                $data->stealthwarning = get_string('stealthwarning', 'format_grid', $this->hassteathwithcontent);
+            }
+        }
+
         if ($this->hasaddsection) {
             $addsection = new $this->addsectionclass($format);
             $data->numsections = $addsection->export_for_template($output);
@@ -309,6 +327,9 @@ class content extends content_base {
             }
 
             if ($thissection->section > $numsections) {
+                if (!empty($modinfo->sections[$thissection->section])) {
+                    $this->hassteathwithcontent++;
+                }
                 continue;
             }
 
