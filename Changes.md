@@ -7,6 +7,7 @@ Version 401.2.2 - TBR
    thanks to @Syxton(Matt Davidson).
 2. Fix 'Sections showing beyond the number set in the settings', related to #196.
 3. Improved backup and restore logic.
+4. Show warning if there is a stealth section with content, related to #196.
 
 Version 401.2.1b - 14/10/2023
 ----------------------------

@@ -140,6 +140,7 @@ $string['informationchanges'] = 'Changes';
 $string['settings'] = 'Settings';
 $string['settingssettings'] = 'Settings settings';
 $string['settingssettingsdesc'] = 'Grid format settings';
+$string['stealthwarning'] = 'Warning: Course has {$a} orphaned section(s) with content.';
 $string['love'] = 'love';
 $string['versioninfo'] = 'Release {$a->release}, version {$a->version} on Moodle {$a->moodle}.  Made with {$a->love} in Great Britain.';
 $string['versionalpha'] = 'Alpha version - Almost certainly contains bugs.  This is a development version for developers \'only\'!  Don\'t even think of installing on a production server!';
