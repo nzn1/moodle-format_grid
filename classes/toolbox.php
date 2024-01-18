@@ -166,7 +166,7 @@ class toolbox {
                 }
             } else {
                 throw new \moodle_exception(
-                    'cannotgetimagelock',
+                    'imagemanagement',
                     'format_grid',
                     '',
                     get_string('cannotgetmanagesectionimagelock', 'format_grid')
@@ -228,7 +228,10 @@ class toolbox {
                 'id' => $sectionfile->get_id(),
                 'itemid' => $sectionfile->get_itemid(),
                 'filename' => $filename,
+                'filemime' => $sectionfile->get_mimetype(),
+                'filesize' => $sectionfile->get_filesize(),
                 'sectionid' => $sectionid,
+                'userid' => $sectionfile->get_userid(),
             ];
             $data = self::generate_image(
                 $tmpfilepath,
@@ -286,7 +289,7 @@ class toolbox {
             );
             if ($sectionimage->displayedimagestate == -1) {
                 throw new \moodle_exception(
-                    'cannotconvertuploadedimagetodisplayedimage',
+                    'imagemanagement',
                     'format_grid',
                     '',
                     get_string(
@@ -392,7 +395,7 @@ class toolbox {
         if (empty($imageinfo)) {
             unlink($filepath);
             throw new \moodle_exception(
-                'noimageinformation',
+                'imagemanagement',
                 'format_grid',
                 '',
                 get_string(
@@ -409,7 +412,7 @@ class toolbox {
         if (empty($originalheight)) {
             unlink($filepath);
             throw new \moodle_exception(
-                'originalheightempty',
+                'imagemanagement',
                 'format_grid',
                 '',
                 get_string(
@@ -422,7 +425,7 @@ class toolbox {
         if (empty($originalwidth)) {
             unlink($filepath);
             throw new \moodle_exception(
-                'originalwidthempty',
+                'imagemanagement',
                 'format_grid',
                 '',
                 get_string(
@@ -447,7 +450,7 @@ class toolbox {
                 } else {
                     unlink($filepath);
                     throw new \moodle_exception(
-                        'formatnotsupported',
+                        'imagemanagement',
                         'format_grid',
                         '',
                         get_string(
@@ -465,7 +468,7 @@ class toolbox {
                 } else {
                     unlink($filepath);
                     throw new \moodle_exception(
-                        'formatnotsupported',
+                        'imagemanagement',
                         'format_grid',
                         '',
                         get_string(
@@ -485,7 +488,7 @@ class toolbox {
                 } else {
                     unlink($filepath);
                     throw new \moodle_exception(
-                        'formatnotsupported',
+                        'imagemanagement',
                         'format_grid',
                         '',
                         get_string(
@@ -502,7 +505,7 @@ class toolbox {
                 } else {
                     unlink($filepath);
                     throw new \moodle_exception(
-                        'formatnotsupported',
+                        'imagemanagement',
                         'format_grid',
                         '',
                         get_string(
@@ -516,7 +519,7 @@ class toolbox {
             default:
                 unlink($filepath);
                 throw new \moodle_exception(
-                    'mimetypenotsupported',
+                    'imagemanagement',
                     'format_grid',
                     '',
                     get_string(
@@ -618,7 +621,7 @@ class toolbox {
             ob_end_clean();
             unlink($filepath);
             throw new \moodle_exception(
-                'functionfailed',
+                'imagemanagement',
                 'format_grid',
                 '',
                 get_string(
@@ -637,11 +640,14 @@ class toolbox {
     }
 
     private static function debugdata_decode($debugdata) {
-        $o = 'itemid > ' . $debugdata['itemid'];
-        $o .= ', filename > ' . $debugdata['filename'];
-        $o .= ' and sectionid > ' . $debugdata['sectionid'] . '.  ';
+        $o = 'id: ' . $debugdata['item'];
+        $o .= 'itemid: ' . $debugdata['itemid'];
+        $o .= ', filename:  ' . $debugdata['filename'];
+        $o .= ', filemime: ' . $debugdata['filemime'];
+        $o .= ', filesize: ' . $debugdata['filesize'];
+        $o .= ', creator user id: ' . $debugdata['userid'];
+        $o .= ' and sectionid: ' . $debugdata['sectionid'] . '.  ';
         $o .= get_string('reporterror', 'format_grid');
-
         return $o;
     }
 
@@ -718,7 +724,7 @@ class toolbox {
                     }
                 } else {
                     throw new \moodle_exception(
-                        'cannotgetimagelock',
+                        'imagemanagement',
                         'format_grid',
                         '',
                         get_string('cannotgetmanagesectionimagelock', 'format_grid')
@@ -798,7 +804,7 @@ class toolbox {
                 }
             } else {
                 throw new \moodle_exception(
-                    'cannotgetimagelock',
+                    'imagemanagement',
                     'format_grid',
                     '',
                     get_string('cannotgetmanagesectionimagelock', 'format_grid')
