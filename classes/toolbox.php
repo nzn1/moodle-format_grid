@@ -231,7 +231,6 @@ class toolbox {
                 'filemime' => $sectionfile->get_mimetype(),
                 'filesize' => $sectionfile->get_filesize(),
                 'sectionid' => $sectionid,
-                'userid' => $sectionfile->get_userid(),
             ];
             $data = self::generate_image(
                 $tmpfilepath,
@@ -640,12 +639,11 @@ class toolbox {
     }
 
     private static function debugdata_decode($debugdata) {
-        $o = 'id: ' . $debugdata['item'];
-        $o .= 'itemid: ' . $debugdata['itemid'];
+        $o = 'Files table id: ' . $debugdata['id'];
+        $o .= ', itemid: ' . $debugdata['itemid'];
         $o .= ', filename:  ' . $debugdata['filename'];
         $o .= ', filemime: ' . $debugdata['filemime'];
         $o .= ', filesize: ' . $debugdata['filesize'];
-        $o .= ', creator user id: ' . $debugdata['userid'];
         $o .= ' and sectionid: ' . $debugdata['sectionid'] . '.  ';
         $o .= get_string('reporterror', 'format_grid');
         return $o;
