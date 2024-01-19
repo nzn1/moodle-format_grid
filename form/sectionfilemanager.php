@@ -136,6 +136,11 @@ class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager imp
                                 $toolbox = \format_grid\toolbox::get_instance();
                                 try {
                                     $toolbox->setup_displayed_image($sectionimage, $file, $course->id, $sectionid, $format);
+                                } catch (\moodle_exception $me) {
+                                    if (!defined('BEHAT_SITE_RUNNING')) {
+                                        $lock->release();
+                                    }
+                                    $failure = $me->getMessage();
                                 } catch (\Exception $e) {
                                     if (!defined('BEHAT_SITE_RUNNING')) {
                                         $lock->release();
