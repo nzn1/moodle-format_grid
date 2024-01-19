@@ -99,6 +99,12 @@
                 {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
             </div>
             {{/generatedimageuri}}
+            {{#imageerror}}
+            <div class="grid-image-error card-img-bottom text-center">
+                <p><small>{{imageerror}}</small></p>
+                {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
+            </div>
+            {{/imageerror}}
         {{^popup}}
         {{#notavailable}}</div>{{/notavailable}}
         {{^notavailable}}</a>{{/notavailable}}

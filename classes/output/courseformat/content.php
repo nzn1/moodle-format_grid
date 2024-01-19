@@ -125,16 +125,20 @@ class content extends content_base {
                 $fs = get_file_storage();
                 $coursecontext = \context_course::instance($course->id);
                 foreach ($coursesectionimages as $coursesectionimage) {
-                    $replacement = $toolbox->check_displayed_image(
-                        $coursesectionimage,
-                        $course->id,
-                        $coursecontext->id,
-                        $coursesectionimage->sectionid,
-                        $format,
-                        $fs
-                    );
-                    if (!empty($replacement)) {
-                        $coursesectionimages[$coursesectionimage->id] = $replacement;
+                    try {
+                        $replacement = $toolbox->check_displayed_image(
+                            $coursesectionimage,
+                            $course->id,
+                            $coursecontext->id,
+                            $coursesectionimage->sectionid,
+                            $format,
+                            $fs
+                        );
+                        if (!empty($replacement)) {
+                            $coursesectionimages[$coursesectionimage->id] = $replacement;
+                        }
+                    } catch (\moodle_exception $me) {
+                        $coursesectionimages[$coursesectionimage->id]->imageerror = $me->getMessage();
                     }
                 }
             }
@@ -176,13 +180,18 @@ class content extends content_base {
             }
             foreach ($sectionsforgrid as $section) {
                 // Do we have an image?
-                if ((array_key_exists($section->id, $sectionimages)) && ($sectionimages[$section->id]->displayedimagestate >= 1)) {
-                    $sectionimages[$section->id]->imageuri = $toolbox->get_displayed_image_uri(
-                        $sectionimages[$section->id],
-                        $coursecontext->id,
-                        $section->id,
-                        $displayediswebp
-                    );
+                if (array_key_exists($section->id, $sectionimages)) {
+                    if ($sectionimages[$section->id]->displayedimagestate >= 1) {
+                        $sectionimages[$section->id]->imageuri = $toolbox->get_displayed_image_uri(
+                            $sectionimages[$section->id],
+                            $coursecontext->id,
+                            $section->id,
+                            $displayediswebp
+                        );
+                    } else if (empty($sectionimages[$section->id]->imageerror)) {
+                        $sectionimages[$section->id]->imageerror =
+                            get_string('cannotconvertuploadedimagetodisplayedimage', 'format_grid', json_encode($sectionimages[$section->id]));
+                    }
                 } else {
                     // No.
                     $sectionimages[$section->id] = new stdClass();
