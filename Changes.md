@@ -1,7 +1,7 @@
 History
 =============
 
-Version 401.2.2 - TBR
+Version 401.2.2 - 22/01/2024
 ----------------------------
 1. Fix 'Import a format_grid course into a format_topics course fails and produces "undefined method"' - #193,
    thanks to @Syxton(Matt Davidson).
@@ -10,7 +10,7 @@ Version 401.2.2 - TBR
 4. Show warning if there is a stealth section with content, related to #196.
 
 Version 401.2.1b - 14/10/2023
-----------------------------
+-----------------------------
 1. Fix 'Webp image causes an error and makes course unaccessible' - #190.
 2. Fix "Hidden sections are shown as not available" doesn't seem to work. - #192.
 3. Add 'Flex containers' justify-content property options' - #191.
