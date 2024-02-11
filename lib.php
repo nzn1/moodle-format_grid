@@ -178,6 +178,30 @@ class format_grid extends core_courseformat\base {
     }
 
     /**
+     * Returns if an specific section is visible to the current user.
+     *
+     * Formats can overrride this method to implement any special section logic.
+     *
+     * @param section_info $section the section modinfo
+     * @return bool;
+     */
+    public function is_section_visible(section_info $section): bool {
+        if ($section->section > $this->get_last_section_number()) {
+            // Stealth section.
+            global $PAGE;
+            $context = context_course::instance($this->course->id);
+            if ($PAGE->user_is_editing() && has_capability('moodle/course:update', $context)) {
+                $modinfo = get_fast_modinfo($this->course);
+                // If the stealth section has modules then is visible.
+                return (!empty($modinfo->sections[$section->section]));
+            }
+            // Don't show.
+            return false;
+        }
+        return parent::is_section_visible($section);
+    }
+
+    /**
      * Generate the title for this section page.
      *
      * @return string the page title
