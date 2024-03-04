@@ -4,6 +4,7 @@ History
 Version 401.2.3 - TBR
 ----------------------------
 1. Fix 'Orphaned Section still appear in Index Drawer'.
+2. Fix 'Restrict access can cause no content in other sections to be shown.' - #202.
 
 Version 401.2.2 - 22/01/2024
 ----------------------------
