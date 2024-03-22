@@ -5,6 +5,7 @@ Version 402.2.3 - TBR
 ----------------------------
 1. Fix 'Orphaned Section still appear in Index Drawer'.
 2. Fix 'Restrict access can cause no content in other sections to be shown.' - #202.
+3. Fix 'Import quiz error + Number of topics reduced to 1' - #203.
 
 Version 402.2.2 - 22/01/2024
 ----------------------------
