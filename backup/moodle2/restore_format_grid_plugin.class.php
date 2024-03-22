@@ -187,7 +187,6 @@ class restore_format_grid_plugin extends restore_format_plugin {
         $target = $task->get_target();
         if (
             ($target == backup::TARGET_NEW_COURSE) ||
-            ($target == backup::TARGET_CURRENT_ADDING) ||
             ($target == backup::TARGET_CURRENT_DELETING) ||
             ($target == backup::TARGET_EXISTING_DELETING)
         ) {
