@@ -6,6 +6,7 @@ Version 401.2.3 - TBR
 1. Fix 'Orphaned Section still appear in Index Drawer'.
 2. Fix 'Restrict access can cause no content in other sections to be shown.' - #202.
 3. Fix 'Import quiz error + Number of topics reduced to 1' - #203.
+4. Improved solution to 'Problems with creating multiple courses from template via CSV in Grid Format' - #189, related to #203.
 
 Version 401.2.2 - 22/01/2024
 ----------------------------
