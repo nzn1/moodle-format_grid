@@ -114,7 +114,9 @@ class format_grid extends core_courseformat\base {
     public function get_last_section_number() {
         $course = $this->get_course();
         if (isset($course->gnumsections)) {
-            return $course->gnumsections;
+            if ($course->gnumsections >= 0) {
+                return $course->gnumsections;
+            }
         }
 
         return parent::get_last_section_number();
@@ -593,6 +595,14 @@ class format_grid extends core_courseformat\base {
             $maxsections = get_config('moodlecourse', 'maxsections');
             $numsections = $mform->getElementValue('gnumsections');
             $numsections = $numsections[0];
+            if ($numsections < 0) {
+                $numsections = $this->get_last_section_number();
+                /* Instead of setValue on the element as the default gets reused when the form is re-arranged by
+                   'definition_after_data' in '/course/edit_form.php', specifically the calls to 'insertElementBefore'
+                   after this method was called. */
+                $mform->setDefault('gnumsections', $numsections);
+                $this->restore_gnumsections($numsections);
+            }
             if ($numsections > $maxsections) {
                 $element = $mform->getElement('gnumsections');
                 for ($i = $maxsections + 1; $i <= $numsections; $i++) {

@@ -187,6 +187,8 @@ class restore_format_grid_plugin extends restore_format_plugin {
         $target = $task->get_target();
         if (
             ($target == backup::TARGET_NEW_COURSE) ||
+            // TARGET_CURRENT_ADDING used by both import and CSV course creation with template course, go figure!
+            ($target == backup::TARGET_CURRENT_ADDING) ||
             ($target == backup::TARGET_CURRENT_DELETING) ||
             ($target == backup::TARGET_EXISTING_DELETING)
         ) {
@@ -199,9 +201,13 @@ class restore_format_grid_plugin extends restore_format_plugin {
             // We don't know how many more sections there is and also don't know if this is the last.
             $courseformat = course_get_format($courseid);
             if ($courseformat->get_format() == 'grid') {
-                static $gnumsections = 0;
-                $gnumsections++;
-                $courseformat->restore_gnumsections($gnumsections);
+                // Not calling the format's 'restore_gnumsections' as '-1' fails validation.
+                $DB->set_field('course_format_options', 'value', -1,
+                    [
+                        'courseid' => $courseid,
+                        'name' => 'gnumsections',
+                    ]
+                );
             }
         }
         /* Allow this to process even if not in the grid format so that our event observer on 'course_restored'
