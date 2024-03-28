@@ -1,8 +1,11 @@
 History
 =============
 
+Version 402.2.3 - TBR
+----------------------------
+
 Version 402.2.2 - 22/01/2024
------------------------------
+----------------------------
 1. Fix 'Import a format_grid course into a format_topics course fails and produces "undefined method"' - #193,
    thanks to @Syxton(Matt Davidson).
 2. Fix 'Sections showing beyond the number set in the settings', related to #196.
