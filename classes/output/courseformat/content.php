@@ -38,8 +38,11 @@ use stdClass;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class content extends content_base {
+    /** @var array sectioncompletionpercentage */
     private $sectioncompletionpercentage = [];
+    /** @var array sectioncompletionmarkup */
     private $sectioncompletionmarkup = [];
+    /** @var array sectioncompletioncalculated */
     private $sectioncompletioncalculated = [];
 
     /**
@@ -193,7 +196,8 @@ class content extends content_base {
                         );
                     } else if (empty($sectionimages[$section->id]->imageerror)) {
                         $sectionimages[$section->id]->imageerror =
-                            get_string('cannotconvertuploadedimagetodisplayedimage', 'format_grid', json_encode($sectionimages[$section->id]));
+                            get_string('cannotconvertuploadedimagetodisplayedimage', 'format_grid',
+                                json_encode($sectionimages[$section->id]));
                     }
                 } else {
                     // No.
