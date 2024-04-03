@@ -18,7 +18,6 @@
  * Grid Format.
  *
  * @package    format_grid
- * @version    See the value of '$plugin->version' in below.
  * @copyright  2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard -
  *               {@link https://moodle.org/user/profile.php?id=442195}

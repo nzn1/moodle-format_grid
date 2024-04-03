@@ -22,13 +22,21 @@
  * @author    G J Barnard - gjbarnard at gmail dot com and {@link http://moodle.org/user/profile.php?id=442195}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+// phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
+// phpcs:disable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
 require_once($CFG->dirroot . "/lib/form/filemanager.php");
 
+/**
+ * Section file manager form.
+ */
 class MoodleQuickForm_sectionfilemanager extends MoodleQuickForm_filemanager implements templatable {
+    /** @var array $options The options */
     private static $options = [
         'maxfiles' => 1,
         'subdirs' => 0,
