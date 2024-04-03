@@ -18,7 +18,6 @@
  * Grid Format.
  *
  * @package   format_grid
- * @version   See the value of '$plugin->version' in version.php.
  * @copyright &copy; 2021-onwards G J Barnard based upon work done by Marina Glancy.
  * @author    G J Barnard - {@link http://about.me/gjbarnard} and
  *                          {@link http://moodle.org/user/profile.php?id=442195}
@@ -34,15 +33,13 @@ namespace format_grid;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
  */
 class toolbox {
-    /**
-     * @var toolbox Singleton instance of us.
-     */
+    /** @var toolbox $instance Singleton instance of us. */
     protected static $instance = null;
 
-    // Width constants - 128, 192, 210, 256, 320, 384, 448, 512, 576, 640, 704 and 768:...
+    /** @var array $imagecontainerwidths Width constants - 128, 192, 210, 256, 320, 384, 448, 512, 576, 640, 704 and 768:... */
     private static $imagecontainerwidths = [128 => '128', 192 => '192', 210 => '210', 256 => '256', 320 => '320',
         384 => '384', 448 => '448', 512 => '512', 576 => '576', 640 => '640', 704 => '704', 768 => '768', ];
-    // Ratio constants - 3-2, 3-1, 3-3, 2-3, 1-3, 4-3 and 3-4:...
+    /** @var array $imagecontainerratios Ratio constants - 3-2, 3-1, 3-3, 2-3, 1-3, 4-3 and 3-4:... */
     private static $imagecontainerratios = [
         1 => '3-2', 2 => '3-1', 3 => '3-3', 4 => '2-3', 5 => '1-3', 6 => '4-3', 7 => '3-4', ];
 
@@ -638,6 +635,13 @@ class toolbox {
         return $data;
     }
 
+    /**
+     * Decode the debug data.
+     *
+     * @param array $debugdata Debug data.
+     *
+     * @return string Debug information.
+     */
     private static function debugdata_decode($debugdata) {
         $o = 'Files table id: ' . $debugdata['id'];
         $o .= ', itemid: ' . $debugdata['itemid'];
@@ -699,7 +703,8 @@ class toolbox {
                 }
                 if (($lock instanceof \core\lock\lock) || (defined('BEHAT_SITE_RUNNING'))) {
                     try {
-                        $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage', $coursesectionimage->sectionid);
+                        $files = $fs->get_area_files($coursecontext->id, 'format_grid', 'sectionimage',
+                            $coursesectionimage->sectionid);
                         foreach ($files as $file) {
                             if (!$file->is_directory()) {
                                     $coursesectionimage = $toolbox->setup_displayed_image(
