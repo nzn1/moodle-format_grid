@@ -3,6 +3,7 @@ History
 
 Version 401.2.4 - In development
 --------------------------------
+1. Fix updating of course when adding or removing sections.  Note: Known issue of the section not looking as it should.
 
 Version 401.2.3 - 08/04/2024
 ----------------------------

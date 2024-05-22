@@ -81,7 +81,7 @@ class content extends content_base {
         $data = (object)[
             'title' => $format->page_title(),
             'format' => $format->get_format(),
-            'sectionreturn' => 0,
+            'sectionreturn' => null,
         ];
 
         $singlesection = $this->format->get_section_number();
