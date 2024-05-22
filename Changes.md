@@ -8,6 +8,7 @@ Version 401.2.4 - In development
 3. Use section anchors in links when editing.
 4. Add badges to grid - #215.
 5. Adjust section titles in grid and move 'title' attribute to cover whole grid box.
+6. Add 'sectionzeroingrid' course and 'defaultsectionzeroingrid' site settings to state if section zero should be in the grid.
 
 Version 401.2.3 - 08/04/2024
 ----------------------------
