@@ -89,11 +89,12 @@ class content extends content_base {
         $initialsection = '';
         $course = $format->get_course();
         $currentsectionid = 0;
+        $sectionzeroingrid = true;
 
         if (!empty($sections)) {
             // Is first entry section 0?
             if ($sections[0]->num === 0) {
-                if (!$singlesectionid) {
+                if ((!$singlesectionid) && (!$sectionzeroingrid)) {
                     // Most formats uses section 0 as a separate section so we remove from the list.
                     $initialsection = array_shift($sections);
                     $data->initialsection = $initialsection;
@@ -324,9 +325,13 @@ class content extends content_base {
         $sections = [];
         $numsections = $format->get_last_section_number();
         $sectioninfos = $modinfo->get_section_info_all();
-        // Get rid of section 0.
-        if (!empty($sectioninfos)) {
-            array_shift($sectioninfos);
+
+        $sectionzeroingrid = true;
+        if (!$sectionzeroingrid) {
+            // Get rid of section 0.
+            if (!empty($sectioninfos)) {
+                array_shift($sectioninfos);
+            }
         }
         foreach ($sectioninfos as $thissection) {
             // The course/view.php check the section existence but the output can be called from other parts so we need to check it.
