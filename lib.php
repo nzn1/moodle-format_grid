@@ -961,15 +961,28 @@ class format_grid extends core_courseformat\base {
      * A section has been added.  Should only be called from the state actions instance.
      */
     public function section_added() {
-        $data = ['gnumsections' => $this->settings['gnumsections'] + 1];
-        $this->update_format_options($data);
+        $this->change_gnumsections(true);
     }
 
     /**
      * A section has been deleted.  Should only be called from the state actions instance.
      */
     public function section_deleted() {
-        $data = ['gnumsections' => $this->settings['gnumsections'] - 1];
+        $this->change_gnumsections(false);
+    }
+
+    /**
+     * A section has been added or deleted.  Should only be called via the state actions instance.
+     *
+     * @param bool $add Add a section or delete if false.
+     */
+    protected function change_gnumsections($add) {
+        if ($add) {
+            $newgnumsetions = $this->settings['gnumsections'] + 1;
+        } else {
+            $newgnumsetions = $this->settings['gnumsections'] - 1;
+        }
+        $data = ['gnumsections' => $newgnumsetions];
         $this->update_format_options($data);
     }
 
