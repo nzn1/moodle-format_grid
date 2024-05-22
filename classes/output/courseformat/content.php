@@ -89,13 +89,15 @@ class content extends content_base {
         $initialsection = '';
         $course = $format->get_course();
         $currentsectionid = 0;
+        $coursesettings = $format->get_settings();
+        $sectionzeronotingrid = ($coursesettings['sectionzeroingrid'] == 1);
 
         if (!empty($sections)) {
             // Is first entry section 0?
             if ($sections[0]->num === 0) {
-                // Most formats uses section 0 as a separate section so we remove from the list.
-                $initialsection = array_shift($sections);
-                if (!$singlesection) {
+                if ((!$singlesection) && ($sectionzeronotingrid)) {
+                    // Most formats uses section 0 as a separate section so we remove from the list.
+                    $initialsection = array_shift($sections);
                     $data->initialsection = $initialsection;
                 }
             }
@@ -124,7 +126,6 @@ class content extends content_base {
             $data->sectionreturn = $singlesection;
             $data->maincoursepage = new \moodle_url('/course/view.php', ['id' => $course->id]);
         } else {
-            $coursesettings = $format->get_settings();
             $toolbox = \format_grid\toolbox::get_instance();
             $coursesectionimages = $DB->get_records('format_grid_image', ['courseid' => $course->id]);
             if (!empty($coursesectionimages)) {
@@ -225,8 +226,8 @@ class content extends content_base {
                 } else {
                     // Section link.
                     $sectionimages[$section->id]->sectionurl = new \moodle_url(
-                        '/course/view.php',
-                        ['id' => $course->id, 'section' => $section->num]
+                        '/course/section.php',
+                        ['id' => $section->id]
                     );
                     $sectionimages[$section->id]->sectionurl = $sectionimages[$section->id]->sectionurl->out(false);
 
@@ -323,9 +324,14 @@ class content extends content_base {
         $sections = [];
         $numsections = $format->get_last_section_number();
         $sectioninfos = $modinfo->get_section_info_all();
-        // Get rid of section 0.
-        if (!empty($sectioninfos)) {
-            array_shift($sectioninfos);
+
+        $coursesettings = $format->get_settings();
+        $sectionzeronotingrid = ($coursesettings['sectionzeroingrid'] == 1);
+        if ($sectionzeronotingrid) {
+            // Get rid of section 0.
+            if (!empty($sectioninfos)) {
+                array_shift($sectioninfos);
+            }
         }
         foreach ($sectioninfos as $thissection) {
             // The course/view.php check the section existence but the output can be called from other parts so we need to check it.
