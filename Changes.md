@@ -7,6 +7,7 @@ Version 404.0.2 - TBR
 2. Section navigation visibility improvements.
 3. Fix display of section zero on a single section page.
 4. Fix 'Unable to update defaultimageresizemethod setting' - #211.
+5. Add 'sectionzeroingrid' course and 'defaultsectionzeroingrid' site settings to state if section zero should be in the grid.
 
 Version 404.0.1 - 22/04/2024
 ----------------------------
