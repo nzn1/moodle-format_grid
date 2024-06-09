@@ -1,6 +1,9 @@
 History
 =============
 
+Version 401.2.4 - In development
+--------------------------------
+
 Version 401.2.3 - 08/04/2024
 ----------------------------
 1. Fix 'Orphaned Section still appear in Index Drawer'.
