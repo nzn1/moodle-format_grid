@@ -6,6 +6,7 @@ Version 401.2.4 - In development
 1. Fix updating of course when adding or removing sections.  Note: Known issue of the section not looking as it should.
 2. Fix 'Unable to update defaultimageresizemethod setting' - #211.
 3. Use section anchors in links when editing.
+4. Add badges to grid - #215.
 
 Version 401.2.3 - 08/04/2024
 ----------------------------
