@@ -183,6 +183,14 @@ class content extends content_base {
                 foreach ($data->sections as $datasectionkey => $datasection) {
                     $datasectionmap[$datasection->id] = $datasectionkey;
                 }
+            } else {
+                // Visibility info for grid.
+                $sectionvisiblity = [];
+                foreach ($sections as $section) {
+                    $sectionvisiblity[$section->id] = new stdClass;
+                    $sectionvisiblity[$section->id]->ishidden = $section->ishidden;
+                    $sectionvisiblity[$section->id]->visibility = $section->visibility;
+                }
             }
             foreach ($sectionsforgrid as $section) {
                 // Do we have an image?
@@ -213,7 +221,9 @@ class content extends content_base {
 
                 // Current section?
                 if ((!empty($currentsectionid)) && ($currentsectionid == $section->id)) {
-                    $sectionimages[$section->id]->currentsection = true;
+                    $sectionimages[$section->id]->iscurrent = true;
+                    $sectionimages[$section->id]->hasbadge = true;
+                    $sectionimages[$section->id]->highlightedlabel = $format->get_section_highlighted_name();
                 }
 
                 if ($editing) {
@@ -233,10 +243,11 @@ class content extends content_base {
                     // Section name.
                     $sectionimages[$section->id]->sectionname = $section->name;
 
-                    /* User visible.  For more info, see: $format->is_section_visible($thissection) method in relation
-                       to 'hiddensections' course format setting. */
-                    if (!$section->uservisible) {
-                        $sectionimages[$section->id]->notavailable = true;
+                    // Visibility information.
+                    $sectionimages[$section->id]->ishidden = $sectionvisiblity[$section->id]->ishidden;
+                    if ($sectionimages[$section->id]->ishidden) {
+                        $sectionimages[$section->id]->visibility = $sectionvisiblity[$section->id]->visibility;
+                        $sectionimages[$section->id]->hasbadge = true;
                     }
 
                     // Section break.
