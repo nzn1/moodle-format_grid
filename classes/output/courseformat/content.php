@@ -154,6 +154,15 @@ class content extends content_base {
             // Justification.
             $data->gridjustification = $coursesettings['gridjustification'];
 
+            // Section title in grid box.
+            $data->sectiontitleingridbox = ($coursesettings['sectiontitleingridbox'] == 2);
+
+            // Section badge in grid box.
+            $data->sectionbadgeingridbox = ($coursesettings['sectionbadgeingridbox'] == 2);
+
+            // Title and / org badge?
+            $data->sectiontitleandorbadgeingridbox = ($data->sectiontitleingridbox || $data->sectionbadgeingridbox);
+
             // Popup.
             if (!$editing) {
                 $data->popup = false;
