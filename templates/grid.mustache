@@ -73,7 +73,7 @@
     {{/sectionbreakheading}}
     <div class="thegrid d-flex flex-wrap grid-justify-{{gridjustification}}">
     {{/sectionbreak}}
-    <div id="section-{{number}}" class="grid-section card{{#iscurrent}} currentgridsection{{/iscurrent}}">
+    <div id="section-{{number}}" class="grid-section card{{#iscurrent}} currentgridsection{{/iscurrent}}" title="{{sectionname}}">
         {{^popup}}
         {{#hasbadge}}<div class="grid-section-inner">{{/hasbadge}}
         {{^hasbadge}}<a class="grid-section-inner" href="{{sectionurl}}">{{/hasbadge}}
@@ -81,13 +81,16 @@
         {{#popup}}
         <div class="grid-modal grid-section-inner d-flex flex-column h-100 justify-content-between" data-toggle="modal" data-target="#gridPopup" data-section="{{number}}" tabindex="0">
         {{/popup}}
-            <div class="card-header text-truncate h-100" title="{{sectionname}}">{{{sectionname}}}{{#hasbadge}}
+            <div class="card-header text-truncate h-100">
+                <h3 class="h4">{{{sectionname}}}</h3>
+                {{#hasbadge}}
                 <div data-region="sectionbadges" class="sectionbadges d-flex">
                     {{$ core_courseformat/local/content/section/badges }}
                         {{> core_courseformat/local/content/section/badges }}
                     {{/ core_courseformat/local/content/section/badges }}
                 </div>
-            {{/hasbadge}}</div>
+                {{/hasbadge}}
+            </div>
             {{#imageuri}}
             <div class="grid-image card-img-bottom text-center">
                 <img src="{{imageuri}}" alt="{{imagealttext}}" loading="lazy">
@@ -121,7 +124,7 @@
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="gridPopupLabel">Section X</h5>
+                <h2 class="modal-title h4" id="gridPopupLabel">Section X</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="{{#str}}close, form{{/str}}">
                     <span class="fa fa-times" aria-hidden="true"></span>
                 </button>
