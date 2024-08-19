@@ -74,6 +74,12 @@
     position: relative;
 }
 
+.format-grid .thegrid .grid-image .grid-badge-middle {
+    left: 0;
+    position: absolute;
+    right: 0;
+}
+
 .format-grid .thegrid .grid-generatedimage {
     background-size: contain;
     height: 140px;

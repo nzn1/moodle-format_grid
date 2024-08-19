@@ -160,9 +160,6 @@ class content extends content_base {
             // Section badge in grid box.
             $data->sectionbadgeingridbox = ($coursesettings['sectionbadgeingridbox'] == 2);
 
-            // Title and / org badge?
-            $data->sectiontitleandorbadgeingridbox = ($data->sectiontitleingridbox || $data->sectionbadgeingridbox);
-
             // Popup.
             if (!$editing) {
                 $data->popup = false;
