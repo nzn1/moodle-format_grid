@@ -26,6 +26,9 @@
     * sectionbreak - There is a section break for this section.
     * sectionbreakheading - Section break heading.
     * number - Section number.
+    * sectiontitleingridbox - Show the section title?
+    * sectionbadgeingridbox - Show the section bagde if any?
+    * sectiontitleandorbadgeingridbox - Is the title and or badge in the grid box?
     * iscurrent - Current section?
     * sectionurl - Section URL.
     * sectionname - Section name.
@@ -61,6 +64,9 @@
                 "sectioncompletionmarkup": ""
             }
         ],
+        "sectiontitleingridbox": true,
+        "sectionbadgeingridbox": true,
+        "sectiontitleandorbadgeingridbox": true,
         "showcompletion": true
     }
 }}
@@ -81,18 +87,20 @@
         {{#popup}}
         <div class="grid-modal grid-section-inner d-flex flex-column h-100 justify-content-between" data-toggle="modal" data-target="#gridPopup" data-section="{{number}}" tabindex="0">
         {{/popup}}
-            <div class="card-body p-0">
-                <div class="card-header h-100">
-                    <h3 class="h4 text-truncate">{{{sectionname}}}</h3>
-                    {{#hasbadge}}
-                    <div data-region="sectionbadges" class="sectionbadges d-flex">
-                        {{$ core_courseformat/local/content/section/badges }}
-                            {{> core_courseformat/local/content/section/badges }}
-                        {{/ core_courseformat/local/content/section/badges }}
-                    </div>
-                    {{/hasbadge}}
+            {{#sectiontitleandorbadgeingridbox}}
+            <div class="card-header h-100">
+                {{#sectiontitleingridbox}}
+                <h3 class="h4 text-truncate">{{{sectionname}}}</h3>
+                {{/sectiontitleingridbox}}
+                {{#sectionbadgeingridbox}}{{#hasbadge}}
+                <div data-region="sectionbadges" class="sectionbadges d-flex">
+                    {{$ core_courseformat/local/content/section/badges }}
+                        {{> core_courseformat/local/content/section/badges }}
+                    {{/ core_courseformat/local/content/section/badges }}
                 </div>
+                {{/hasbadge}}{{/sectionbadgeingridbox}}
             </div>
+            {{/sectiontitleandorbadgeingridbox}}
             {{#imageuri}}
             <div class="grid-image card-img-bottom text-center">
                 <img src="{{imageuri}}" alt="{{imagealttext}}" loading="lazy">
@@ -100,12 +108,12 @@
             </div>
             {{/imageuri}}
             {{#generatedimageuri}}
-            <div class="grid-generatedimage card-img-bottom text-center" style="background-image: url('{{generatedimageuri}}');">
+            <div class="grid-generatedimage card-img-bottom{{^sectiontitleandorbadgeingridbox}} card-img-top{{/sectiontitleandorbadgeingridbox}} text-center" style="background-image: url('{{generatedimageuri}}');">
                 {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
             </div>
             {{/generatedimageuri}}
             {{#imageerror}}
-            <div class="grid-image-error card-img-bottom text-center">
+            <div class="grid-image-error card-img-bottom{{^sectiontitleandorbadgeingridbox}} card-img-top{{/sectiontitleandorbadgeingridbox}} text-center">
                 <p><small>{{imageerror}}</small></p>
                 {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
             </div>
