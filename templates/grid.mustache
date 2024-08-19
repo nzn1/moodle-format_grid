@@ -99,9 +99,9 @@
             {{/sectiontitleingridbox}}
             {{#imageuri}}
             <div class="grid-image card-img-bottom{{^sectiontitleingridbox}} card-img-top{{/sectiontitleingridbox}} text-center">
-                <img src="{{imageuri}}" alt="{{imagealttext}}" loading="lazy">
+                <img src="{{imageuri}}" alt="{{imagealttext}}" loading="lazy"{{^sectiontitleingridbox}} class="card-img-bottom card-img-top"{{/sectiontitleingridbox}}>
                 {{^sectiontitleingridbox}}{{#hasbadge}}
-                <div data-region="sectionbadges" class="sectionbadges d-flex justify-content-center align-items-center h-100 grid-badge-middle">
+                <div data-region="sectionbadges" class="sectionbadges d-flex justify-content-center align-items-end h-100 grid-badge-bottom">
                     {{$ core_courseformat/local/content/section/badges }}
                         {{> core_courseformat/local/content/section/badges }}
                     {{/ core_courseformat/local/content/section/badges }}
