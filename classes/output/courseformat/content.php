@@ -188,7 +188,7 @@ class content extends content_base {
                 $sectionvisiblity = [];
                 foreach ($sections as $section) {
                     $sectionvisiblity[$section->id] = new stdClass;
-                    $sectionvisiblity[$section->id]->ishidden = $section->ishidden;
+                    $sectionvisiblity[$section->id]->ishidden = (!empty($section->ishidden));
                     $sectionvisiblity[$section->id]->visibility = $section->visibility;
                 }
             }
