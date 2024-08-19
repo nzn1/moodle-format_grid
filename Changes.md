@@ -7,6 +7,7 @@ Version 401.2.4 - In development
 2. Fix 'Unable to update defaultimageresizemethod setting' - #211.
 3. Use section anchors in links when editing.
 4. Add badges to grid - #215.
+5. Adjust section titles in grid and move 'title' attribute to cover whole grid box.
 
 Version 401.2.3 - 08/04/2024
 ----------------------------
