@@ -189,7 +189,8 @@ class content extends content_base {
                 foreach ($sections as $section) {
                     $sectionvisiblity[$section->id] = new stdClass;
                     $sectionvisiblity[$section->id]->ishidden = (!empty($section->ishidden));
-                    $sectionvisiblity[$section->id]->visibility = $section->visibility;
+                    $sectionvisiblity[$section->id]->hiddenfromstudents = (!empty($section->hiddenfromstudents));
+                    $sectionvisiblity[$section->id]->notavailable = (!empty($section->notavailable));
                 }
             }
             foreach ($sectionsforgrid as $section) {
@@ -246,7 +247,8 @@ class content extends content_base {
                     // Visibility information.
                     $sectionimages[$section->id]->ishidden = $sectionvisiblity[$section->id]->ishidden;
                     if ($sectionimages[$section->id]->ishidden) {
-                        $sectionimages[$section->id]->visibility = $sectionvisiblity[$section->id]->visibility;
+                        $sectionimages[$section->id]->hiddenfromstudents = $sectionvisiblity[$section->id]->hiddenfromstudents;
+                        $sectionimages[$section->id]->notavailable = $sectionvisiblity[$section->id]->notavailable;
                         $sectionimages[$section->id]->hasbadge = true;
                     }
 
