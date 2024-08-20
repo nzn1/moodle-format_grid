@@ -95,7 +95,7 @@ class content extends content_base {
         if (!empty($sections)) {
             // Is first entry section 0?
             if ($sections[0]->num === 0) {
-                if ((!$singlesectionid) && ($sectionzeronotingrid)) {
+                if ((!$singlesection) && ($sectionzeronotingrid)) {
                     // Most formats uses section 0 as a separate section so we remove from the list.
                     $initialsection = array_shift($sections);
                     $data->initialsection = $initialsection;
