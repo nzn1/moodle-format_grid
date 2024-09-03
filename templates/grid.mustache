@@ -100,32 +100,32 @@
             </div>
             {{/sectiontitleingridbox}}
             {{#imageuri}}
-            <div class="grid-image card-img-bottom{{^sectiontitleingridbox}} card-img-top{{/sectiontitleingridbox}} text-center">
+            <div class="grid-image {{#sectiontitleingridbox}}card-img-bottom{{/sectiontitleingridbox}}{{^sectiontitleingridbox}}card-img-top{{/sectiontitleingridbox}} text-center">
                 <img src="{{imageuri}}" alt="{{imagealttext}}" loading="lazy"{{#imageresizemethodcrop}} class="h-100 card-img-bottom{{^sectiontitleingridbox}} card-img-top{{/sectiontitleingridbox}}"{{/imageresizemethodcrop}}>
-                {{^sectiontitleingridbox}}{{#hasbadge}}
+                {{^sectiontitleingridbox}}{{#sectionbadgeingridbox}}{{#hasbadge}}
                 <div data-region="sectionbadges" class="sectionbadges d-flex {{^sectioncompletionmarkup}}justify-content-center{{/sectioncompletionmarkup}}{{#sectioncompletionmarkup}}ml-2{{/sectioncompletionmarkup}} align-items-end h-100 grid-badge-bottom">
                     {{$ core_courseformat/local/content/section/badges }}
                         {{> core_courseformat/local/content/section/badges }}
                     {{/ core_courseformat/local/content/section/badges }}
                 </div>
-                {{/hasbadge}}{{/sectiontitleingridbox}}
+                {{/hasbadge}}{{/sectionbadgeingridbox}}{{/sectiontitleingridbox}}
                 {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
             </div>
             {{/imageuri}}
             {{#generatedimageuri}}
-            <div class="grid-generatedimage card-img-bottom{{^sectiontitleingridbox}} card-img-top{{/sectiontitleingridbox}} text-center" style="background-image: url('{{generatedimageuri}}');">
-                {{^sectiontitleingridbox}}{{#hasbadge}}
+            <div class="grid-generatedimage {{#sectiontitleingridbox}}card-img-bottom{{/sectiontitleingridbox}}{{^sectiontitleingridbox}}card-img-top{{/sectiontitleingridbox}} text-center" style="background-image: url('{{generatedimageuri}}');">
+                {{^sectiontitleingridbox}}{{#sectionbadgeingridbox}}{{#hasbadge}}
                 <div data-region="sectionbadges" class="sectionbadges d-flex justify-content-center align-items-center h-100">
                     {{$ core_courseformat/local/content/section/badges }}
                         {{> core_courseformat/local/content/section/badges }}
                     {{/ core_courseformat/local/content/section/badges }}
                 </div>
-                {{/hasbadge}}{{/sectiontitleingridbox}}
+                {{/hasbadge}}{{/sectionbadgeingridbox}}{{/sectiontitleingridbox}}
                 {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
             </div>
             {{/generatedimageuri}}
             {{#imageerror}}
-            <div class="grid-image-error card-img-bottom{{^sectiontitleingridbox}} card-img-top{{/sectiontitleingridbox}} text-center">
+            <div class="grid-image-error {{#sectiontitleingridbox}}card-img-bottom{{/sectiontitleingridbox}}{{^sectiontitleingridbox}}card-img-top{{/sectiontitleingridbox}} text-center">
                 <p><small>{{imageerror}}</small></p>
                 {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
             </div>
