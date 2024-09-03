@@ -249,6 +249,8 @@ class content extends content_base {
                     $sectionimages[$section->id]->ishidden = $sectionvisiblity[$section->id]->ishidden;
                     if ($sectionimages[$section->id]->ishidden) {
                         $sectionimages[$section->id]->visibility = $sectionvisiblity[$section->id]->visibility;
+                        $sectionimages[$section->id]->hiddenfromstudents = (!empty($sectionimages[$section->id]->visibility->hiddenfromstudents));
+                        $sectionimages[$section->id]->notavailable = (!empty($sectionimages[$section->id]->visibility->notavailable));
                         $sectionimages[$section->id]->hasbadge = true;
                     }
 
