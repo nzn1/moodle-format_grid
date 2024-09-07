@@ -153,6 +153,9 @@ class content extends content_base {
             // Justification.
             $data->gridjustification = $coursesettings['gridjustification'];
 
+            // Image resize is crop.
+            $data->imageresizemethodcrop = ($coursesettings['imageresizemethod'] == 2);
+
             // Popup.
             if (!$editing) {
                 $data->popup = false;
