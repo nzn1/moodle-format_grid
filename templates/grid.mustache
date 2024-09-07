@@ -26,6 +26,7 @@
     * sectionbreak - There is a section break for this section.
     * sectionbreakheading - Section break heading.
     * number - Section number.
+    * imageresizemethodcrop - Image resize method is crop.
     * iscurrent - Current section?
     * sectionurl - Section URL.
     * sectionname - Section name.
@@ -61,6 +62,7 @@
                 "sectioncompletionmarkup": ""
             }
         ],
+        "imageresizemethodcrop": true,
         "showcompletion": true
     }
 }}
@@ -96,7 +98,7 @@
             <div class="grid-image-container">
                 {{#imageuri}}
                 <div class="grid-image text-center">
-                    <img class="card-img-bottom" src="{{imageuri}}" alt="{{imagealttext}}" loading="lazy">
+                    <img{{#imageresizemethodcrop}} class="card-img-bottom" {{/imageresizemethodcrop}} src="{{imageuri}}" alt="{{imagealttext}}" loading="lazy">
                     {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
                 </div>
                 {{/imageuri}}
@@ -106,7 +108,7 @@
                 </div>
                 {{/generatedimageuri}}
                 {{#imageerror}}
-                <div class="grid-image-error card-img-bottom text-center">
+                <div class="grid-image-error text-center">
                     <p><small>{{imageerror}}</small></p>
                     {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
                 </div>
