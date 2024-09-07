@@ -9,6 +9,7 @@ Version 403.1.3 - In development
 4. Add badges to grid - #215.
 5. Adjust section titles in grid and move 'title' attribute to cover whole grid box.
 6. Add 'sectionzeroingrid' course and 'defaultsectionzeroingrid' site settings to state if section zero should be in the grid.
+7. Fix not using course image resize method.
 
 Version 403.1.2 - 08/04/2024
 ----------------------------
