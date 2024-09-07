@@ -65,8 +65,16 @@
     width: 210px;
 }
 
+.format-grid .thegrid .grid-section.card {
+    border-width: 2px;
+}
+
 .format-grid .thegrid .grid-section.currentgridsection {
     border: 2px solid var(--primary);
+}
+
+.format-grid .thegrid .grid-section-inner .card-body {
+    min-height: 0;
 }
 
 .format-grid .thegrid .grid-image-container {
