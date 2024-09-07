@@ -86,6 +86,19 @@
     position: relative;
 }
 
+.format-grid .thegrid .grid-image.grid-scaled {
+    height: 100%;
+}
+
+/*rtl:begin:ignore*/
+.format-grid .thegrid .grid-image.grid-scaled img {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+/*rtl:end:ignore*/
+
 .format-grid .thegrid .grid-image .grid-badge-middle {
     bottom: 0;
     left: 0;
