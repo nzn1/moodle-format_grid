@@ -97,7 +97,7 @@
             </div>
             <div class="grid-image-container">
                 {{#imageuri}}
-                <div class="grid-image text-center">
+                <div class="grid-image{{^imageresizemethodcrop}} grid-scaled{{/imageresizemethodcrop}} text-center">
                     <img{{#imageresizemethodcrop}} class="card-img-bottom" {{/imageresizemethodcrop}} src="{{imageuri}}" alt="{{imagealttext}}" loading="lazy">
                     {{#sectioncompletionmarkup}}{{{sectioncompletionmarkup}}}{{/sectioncompletionmarkup}}
                 </div>
