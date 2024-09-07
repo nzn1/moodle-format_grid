@@ -154,9 +154,6 @@ class content extends content_base {
             // Justification.
             $data->gridjustification = $coursesettings['gridjustification'];
 
-            // Image resize is crop.
-            $data->imageresizemethodcrop = ($coursesettings['imageresizemethod'] == 2);
-
             // Section title in grid box.
             $data->sectiontitleingridbox = ($coursesettings['sectiontitleingridbox'] == 2);
 
