@@ -210,7 +210,7 @@ class toolbox {
             $tmpfilepath = $tmproot . '/' . $sectionfile->get_contenthash();
             $sectionfile->copy_content_to($tmpfilepath);
 
-            $crop = (get_config('format_grid', 'defaultimageresizemethod') == 1) ? false : true;
+            $crop = ($settings['imageresizemethod'] == 1) ? false : true;
 
             $newmime = $mime;
             $isdisplayedwebponly = false;
