@@ -71,24 +71,25 @@
 
 .format-grid .thegrid .grid-image-container {
     height: 140px;
+    min-height: 140px;
 }
 
 .format-grid .thegrid .grid-image {
     position: relative;
 }
 
-.format-grid .thegrid .grid-image.grid-scaled {
-    height: 100%;
+.format-grid .thegrid .grid-image .grid-badge-middle {
+    left: 0;
+    position: absolute;
+    right: 0;
 }
 
-/*rtl:begin:ignore*/
-.format-grid .thegrid .grid-image.grid-scaled img {
-    left: 50%;
+.format-grid .thegrid .grid-image .grid-badge-bottom {
+    bottom: 1.5rem;
+    left: 0;
     position: absolute;
-    top: 50%;
-    transform: translate(-50%,-50%);
+    right: 0;
 }
-/*rtl:end:ignore*/
 
 .format-grid .thegrid .grid-generatedimage {
     background-size: contain;
@@ -117,14 +118,14 @@
     border-radius: 45px;
     border-style: solid;
     border-width: 3px;
-    bottom: 8%;
+    bottom: 1rem;
     display: flex;
     flex-direction: column;
     height: 42px;
     justify-content: center;
     padding: 4px;
     position: absolute;
-    right: 8%;
+    right: 0.5rem;
     width: 42px;
 }
 
