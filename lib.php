@@ -1038,7 +1038,7 @@ function format_grid_pluginfile($course, $birecordorcm, $context, $filearea, $ar
     // Check if user has capability to access course.
     require_course_login($course);
 
-    if ($filearea !== 'displayedsectionimage') {
+    if ($filearea !== 'sectionimage' && $filearea !== 'displayedsectionimage') {
         send_file_not_found();
     }
 
@@ -1047,7 +1047,7 @@ function format_grid_pluginfile($course, $birecordorcm, $context, $filearea, $ar
     $filename = $args[2];
     $sectionid = $args[0];
 
-    $file = $fs->get_file($context->id, 'format_grid', 'displayedsectionimage', $sectionid, '/', $filename);
+    $file = $fs->get_file($context->id, 'format_grid', $filearea, $sectionid, '/', $filename);
     if (!$file || $file->is_directory()) {
         send_file_not_found();
     }
